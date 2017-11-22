@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "pandaman",
+      "avatar": "pandaman.png"
+    },
+    {
+      "id": 2,
+      "name": "kumassy",
+      "avatar": "kumassy.png"
+    },
+    {
+      "id": 3,
+      "name": "furikake",
+      "avatar": "furikake.png"
+    }
+  ]
+}
