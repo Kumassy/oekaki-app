@@ -1,0 +1,13 @@
+{
+    "name": "kumassy/insta",
+    "description": "insta-app for labo2",
+    "authors": [
+        {
+            "name": "Kumassy",
+            "email": "kumassyii@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/bulletphp": "^1.7"
+    }
+}
