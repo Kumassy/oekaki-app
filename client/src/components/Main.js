@@ -112,7 +112,7 @@ class PostComponent extends React.Component {
         <ul>
           <li>{post.id}</li>
           <li>{post.text}</li>
-          <li>{post.image}</li>
+          <img src={`${_host}/${post.image}`} />
         </ul>
       </div>
     );
