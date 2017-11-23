@@ -33,12 +33,12 @@ $app->path('posts', function($request) use($app) {
   $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
   $posts = json_decode($json,true);
 
-  $app->get(function($request, $id) use($posts) {
-    return $posts;
+  $app->get(function($request, $id) use($app, $posts) {
+    return $app->response(200, $posts)->header('Access-Control-Allow-Origin', '*');
   });
   $app->param('int', function($request, $id) use($app, $posts) {
-    $app->get(function($request) use($posts, $id) {
-      return $posts['posts'][$id];
+    $app->get(function($request) use($app, $posts, $id) {
+      return $app->response(200, $posts['posts'][$id])->header('Access-Control-Allow-Origin', '*');
     });
   });
 });
