@@ -3,17 +3,17 @@
     {
       "id": 1,
       "text": "textbody",
-      "image": "image.png"
+      "image": "images/image1.png"
     },
     {
       "id": 2,
       "text": "aasdfbody",
-      "image": "image.jpg"
+      "image": "images/image2.png"
     },
     {
       "id": 3,
       "text": "ssssfdsfsdf",
-      "image": "fsdfsdds.jpg"
+      "image": "images/image3.png"
     }
   ]
 }
