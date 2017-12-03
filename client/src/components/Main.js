@@ -9,6 +9,18 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {Tabs, Tab} from 'material-ui/Tabs';
+import FontIcon from 'material-ui/FontIcon';
+
+import Header from './HeaderComponent';
+import Post from './PostComponent';
+
+
 const _posts = [
   {
     'id': 1,
@@ -108,15 +120,24 @@ class PostComponent extends React.Component {
     const post = this.state.post;
 
     return (
-      <div>
-        <ul>
-          <li>{post.id}</li>
-          <li>{post.text}</li>
-          <img src={`${_host}/${post.image}`} />
-        </ul>
-      </div>
+      <Post image={`${_host}/${post.image}`}
+            text={post.text} />
     );
   }
+  // render() {
+  //   // const post = this.fetchData(this.props.match.params.id);
+  //   const post = this.state.post;
+  //
+  //   return (
+  //     <div>
+  //       <ul>
+  //         <li>{post.id}</li>
+  //         <li>{post.text}</li>
+  //         <img src={`${_host}/${post.image}`} />
+  //       </ul>
+  //     </div>
+  //   );
+  // }
 }
 
 class PostsComponent extends React.Component {
@@ -165,21 +186,39 @@ class AppComponent extends React.Component {
       //   <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
       // </div>
       <Router>
-        <div>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/topics">Topics</Link></li>
-            <li><Link to="/posts">Posts</Link></li>
-          </ul>
+        <MuiThemeProvider>
+          <div>
+            <Tabs>
+              <Tab
+                icon={<FontIcon className="material-icons">home</FontIcon>}
+                label="Home"
+              />
+              <Tab
+                icon={<FontIcon className="material-icons">search</FontIcon>}
+                label="Search"
+              />
+              <Tab
+                icon={<FontIcon className="material-icons">settings</FontIcon>}
+                label="Settings"
+              />
+            </Tabs>
+            <div>
+              <ul>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/topics">Topics</Link></li>
+                <li><Link to="/posts">Posts</Link></li>
+              </ul>
 
-          <hr/>
+              <hr/>
 
-          <Route exact path="/" component={Home}/>
-          <Route path="/about" component={About}/>
-          <Route path="/topics" component={Topics}/>
-          <Route path="/posts" component={PostsComponent}/>
-        </div>
+              <Route exact path="/" component={Home}/>
+              <Route path="/about" component={About}/>
+              <Route path="/topics" component={Topics}/>
+              <Route path="/posts" component={PostsComponent}/>
+            </div>
+          </div>
+        </MuiThemeProvider>
       </Router>
     );
   }

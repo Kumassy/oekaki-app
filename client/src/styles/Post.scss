@@ -1,0 +1,36 @@
+.post-component {
+  background: #FFFFFF;
+  border: 1px solid #979797;
+  box-shadow: 0 0 0 1px #EDEEEE;
+  border-radius: 2px;
+
+  width: 800px;
+
+  .post-image img {
+    max-height: 530px;
+  }
+
+  .post-meta {
+    padding: 24px 20px;
+
+    .post-account {
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+      .screen-name {
+        margin-left: 8px;
+      }
+      .timestamp {
+        margin-left: 20px;
+        color: gray;
+      }
+    }
+    .post-text {
+      padding: 12px 0;
+    }
+  }
+}
