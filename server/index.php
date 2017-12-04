@@ -38,8 +38,33 @@ $app->path('posts', function($request) use($app) {
   });
   $app->param('int', function($request, $id) use($app, $posts) {
     $app->get(function($request) use($app, $posts, $id) {
-      return $app->response(200, $posts['posts'][$id])->header('Access-Control-Allow-Origin', '*');
+      return $app->response(200, $posts['posts'][$id - 1])->header('Access-Control-Allow-Origin', '*');
     });
+  });
+});
+
+$app->path('threads', function($request) use($app) {
+  $json = file_get_contents('data/threads.json');
+  $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
+  $threads = json_decode($json,true);
+
+  $app->get(function($request, $id) use($app, $threads) {
+    return $app->response(200, $threads)->header('Access-Control-Allow-Origin', '*');
+  });
+  $app->param('int', function($request, $id) use($app, $threads) {
+    $app->get(function($request) use($app, $threads, $id) {
+      return $app->response(200, $threads['threads'][$id - 1])->header('Access-Control-Allow-Origin', '*');
+    });
+  });
+});
+
+$app->path('home', function($request) use($app) {
+  $json = file_get_contents('data/home.json');
+  $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
+  $home = json_decode($json,true);
+
+  $app->get(function($request, $id) use($app, $home) {
+    return $app->response(200, $home)->header('Access-Control-Allow-Origin', '*');
   });
 });
 
@@ -53,7 +78,7 @@ $app->path('comments', function($request) use($app) {
   });
   $app->param('int', function($request, $id) use($app, $comments) {
     $app->get(function($request) use($app, $comments, $id) {
-      return $app->response(200, $comments['comments'][$id])->header('Access-Control-Allow-Origin', '*');
+      return $app->response(200, $comments['comments'][$id - 1])->header('Access-Control-Allow-Origin', '*');
     });
   });
 });
