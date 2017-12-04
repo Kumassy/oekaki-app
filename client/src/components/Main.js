@@ -67,7 +67,7 @@ class Home extends React.Component {
 
     const list = threads.map(thread =>
       <li key={thread.post.id}>
-        <Link to={`${this.props.match.url}/${thread.id}`}>
+        <Link to={`thread/${thread.id}`}>
           <Post image={`${_host}/${thread.post.image}`}
                 timestamp={thread.post.timestamp}
                 text={thread.post.answer}
@@ -79,6 +79,64 @@ class Home extends React.Component {
     return (
       <div>
         {list}
+      </div>
+    );
+  }
+}
+
+
+class ThreadPage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+        thread: {}
+    };
+  }
+
+  componentDidMount() {
+    this.fetchData(this.props.match.params.id);
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.match.params.id !== nextProps.match.params.id) {
+      this.fetchData(nextProps.match.params.id);
+    }
+  }
+
+  fetchData(id) {
+    // return _posts[id];
+    axios.get(`${_host}/threads/${id}`).then((json) => {
+      this.setState({
+        thread: json.data
+      });
+    });
+  }
+
+  render() {
+    const thread = this.state.thread;
+    const posts = thread.posts || [];
+    const comments = thread.comments || [];
+
+    return (
+      <div className="thread">
+        <ul className="posts">
+          {posts.map(post =>
+            <li key={post.id}>
+              <Post image={`${_host}/${post.image}`}
+                    timestamp={post.timestamp}
+                    text={post.answer}
+                    userName={post.user.username}
+                    userAvatar={`${_host}/${post.user.avatar}`} />
+            </li>)}
+        </ul>
+        <ul className="comments">
+          {comments.map(comment =>
+            <li key={comment.id}>
+              <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
+                        userName={comment.user.username}
+                        comment={comment.comment}
+                        timestamp={comment.timestamp} />
+            </li>)}
+        </ul>
       </div>
     );
   }
@@ -271,6 +329,7 @@ class AppComponent extends React.Component {
                 <Route path="/about" component={About}/>
                 <Route path="/topics" component={Topics}/>
                 <Route path="/posts" component={PostsPage}/>
+                <Route path="/thread/:id" component={ThreadPage}/>
               </Switch>
             </div>
           </div>
