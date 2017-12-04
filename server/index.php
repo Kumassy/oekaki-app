@@ -21,7 +21,9 @@ $app->path('users', function($request) use($app) {
     });
   });
   // $app->path('admin', function($request) use($app) {
-  //   $app->get(function() {
+  //   $app->get(function($request) {
+  //     // file_put_contents('php://stderr', print_r($request, TRUE));
+  //     file_put_contents('php://stderr', print_r($request->header, TRUE));
   //     return "Admin page";
   //   });
   //
@@ -80,6 +82,26 @@ $app->path('comments', function($request) use($app) {
     $app->get(function($request) use($app, $comments, $id) {
       return $app->response(200, $comments['comments'][$id - 1])->header('Access-Control-Allow-Origin', '*');
     });
+  });
+
+  $app->path('new', function($request) use($app) {
+    $app->options(function($request) use($app, $request) {
+      // file_put_contents('php://stderr', print_r($request, TRUE));
+      // file_put_contents('php://stderr', print_r($request->header('content-type'), TRUE));
+      // file_put_contents('php://stderr', print_r($request->_headers['Access-Control-Request-Headers'], TRUE));
+      return $app->response(200, "new")
+               ->header('Access-Control-Allow-Origin', '*')
+               ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+               ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+      // return "ok";
+    });
+    $app->post(function($request) use($app, $request) {
+      file_put_contents('php://stderr', print_r($request, TRUE));
+      // file_put_contents('php://stderr', print_r($request->header, TRUE));
+      return $app->response(200, "new")
+              ->header('Access-Control-Allow-Origin', '*');
+    });
+
   });
 });
 
