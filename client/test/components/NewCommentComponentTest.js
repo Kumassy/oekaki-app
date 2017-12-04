@@ -6,10 +6,11 @@
 // Uncomment the following lines to use the react test utilities
 // import TestUtils from 'react-addons-test-utils';
 import createComponent from 'helpers/shallowRenderHelper';
+import {findDOMNode} from 'react-dom';
 
 import NewCommentComponent from 'components//NewCommentComponent.js';
 import MockAdapter from 'axios-mock-adapter';
-import {clientHttp, newComment} from '../clientHttp';
+import {client, newComment} from '../../src/clientHttp';
 const mockAxios = new MockAdapter(client);
 
 describe('NewCommentComponent', () => {
@@ -18,7 +19,7 @@ describe('NewCommentComponent', () => {
   beforeEach(() => {
     component = createComponent(NewCommentComponent);
 
-    mockAxios.onPost('/comment/new').reply(200, {id: 1});
+    mockAxios.onPost('/comment/new').reply(200, {id: 10});
   });
 
   it('should have its component name as default className', () => {
@@ -28,9 +29,11 @@ describe('NewCommentComponent', () => {
 
   // TODO: ajax test
   // it('should send post request', () => {
-  //   const params = component.getParams();
-  //   newComment(params).then(res => {
-  //     expect(res.data).toEqual({id: 1});
+  //   const dom = findDOMNode(component);
+  //   dom.querySelector('form input[name=\'comment\']').value = 'comment';
+  //
+  //   component.onSubmit({e: {preventDefault: () => ''}}).then(res => {
+  //     expect(res.data).toEqual({id: 10});
   //   });
   // });
 });

@@ -14,3 +14,21 @@ export function newComment(comment) {
   }
   return client.post('/comments/new', comment, config);
 }
+
+export function newPost(post) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.post('/posts/new', post, config);
+}
+
+export function newThread(post) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.post('/threads/new', post, config);
+}

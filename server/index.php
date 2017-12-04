@@ -43,6 +43,22 @@ $app->path('posts', function($request) use($app) {
       return $app->response(200, $posts['posts'][$id - 1])->header('Access-Control-Allow-Origin', '*');
     });
   });
+
+  $app->path('new', function($request) use($app) {
+    $app->options(function($request) use($app, $request) {
+      return $app->response(200, "new")
+               ->header('Access-Control-Allow-Origin', '*')
+               ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+               ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+    });
+    $app->post(function($request) use($app, $request) {
+      file_put_contents('php://stderr', print_r($request->params(), TRUE));
+      file_put_contents('php://stderr', print_r($_FILES['image'], TRUE));
+      return $app->response(200, "new")
+              ->header('Access-Control-Allow-Origin', '*');
+    });
+
+  });
 });
 
 $app->path('threads', function($request) use($app) {
@@ -57,6 +73,21 @@ $app->path('threads', function($request) use($app) {
     $app->get(function($request) use($app, $threads, $id) {
       return $app->response(200, $threads['threads'][$id - 1])->header('Access-Control-Allow-Origin', '*');
     });
+  });
+  $app->path('new', function($request) use($app) {
+    $app->options(function($request) use($app, $request) {
+      return $app->response(200, "new")
+               ->header('Access-Control-Allow-Origin', '*')
+               ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+               ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+    });
+    $app->post(function($request) use($app, $request) {
+      file_put_contents('php://stderr', print_r($request->params(), TRUE));
+      file_put_contents('php://stderr', print_r($_FILES['image'], TRUE));
+      return $app->response(200, "new")
+              ->header('Access-Control-Allow-Origin', '*');
+    });
+
   });
 });
 
@@ -86,22 +117,16 @@ $app->path('comments', function($request) use($app) {
 
   $app->path('new', function($request) use($app) {
     $app->options(function($request) use($app, $request) {
-      // file_put_contents('php://stderr', print_r($request, TRUE));
-      // file_put_contents('php://stderr', print_r($request->header('content-type'), TRUE));
-      // file_put_contents('php://stderr', print_r($request->_headers['Access-Control-Request-Headers'], TRUE));
       return $app->response(200, "new")
                ->header('Access-Control-Allow-Origin', '*')
                ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
                ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
-      // return "ok";
     });
     $app->post(function($request) use($app, $request) {
-      file_put_contents('php://stderr', print_r($request, TRUE));
-      // file_put_contents('php://stderr', print_r($request->header, TRUE));
+      file_put_contents('php://stderr', print_r($request->params(), TRUE));
       return $app->response(200, "new")
               ->header('Access-Control-Allow-Origin', '*');
     });
-
   });
 });
 

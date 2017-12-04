@@ -22,6 +22,7 @@ import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';
 import NewComment from './NewCommentComponent';
+import NewPost from './NewPostComponent';
 
 
 const _posts = [
@@ -128,6 +129,9 @@ class ThreadPage extends React.Component {
                     userName={post.user.username}
                     userAvatar={`${_host}/${post.user.avatar}`} />
             </li>)}
+            <li key="new-post">
+              <NewPost></NewPost>
+            </li>
         </ul>
         <ul className="comments">
           {comments.map(comment =>
@@ -137,7 +141,7 @@ class ThreadPage extends React.Component {
                         comment={comment.comment}
                         timestamp={comment.timestamp} />
             </li>)}
-            <li key="comment-new">
+            <li key="new-comment">
               <NewComment></NewComment>
             </li>
         </ul>

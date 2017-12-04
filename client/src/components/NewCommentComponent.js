@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import {clientHttp, newComment} from '../clientHttp';
+import {newComment} from '../clientHttp';
 
 require('styles//NewComment.css');
 
@@ -11,17 +11,17 @@ class NewCommentComponent extends React.Component {
     e.preventDefault();
 
     const params = new FormData();
-    params.append('image', document.querySelector('.newcomment-component input[name=\'image\']'));
     params.append('user_id', 1);
-    params.append('answer', 'ついったー');
+    params.append('thread_id', 1);
+    params.append('comment', 'コメント');
 
-    newComment(params);
+    return newComment(params);
   }
   render() {
     return (
       <div className="newcomment-component">
         <form method="POST" onSubmit={this.onSubmit}>
-          <input type="file" name="image"/>
+          <input type="text" name="comment"/>
           <button type="submit">Submit</button>
         </form>
         Please edit src/components///NewCommentComponent.js to update this component!
