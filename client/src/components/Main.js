@@ -21,6 +21,7 @@ import FontIcon from 'material-ui/FontIcon';
 import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';
+import NewComment from './NewCommentComponent';
 
 
 const _posts = [
@@ -136,6 +137,9 @@ class ThreadPage extends React.Component {
                         comment={comment.comment}
                         timestamp={comment.timestamp} />
             </li>)}
+            <li key="comment-new">
+              <NewComment></NewComment>
+            </li>
         </ul>
       </div>
     );
