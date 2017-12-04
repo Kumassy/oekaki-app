@@ -7,7 +7,7 @@
       "user": {
         "id": 1,
         "username": "pandaman",
-        "avatar": "pandaman.png"
+        "avatar": "images/pandaman.jpg"
       }
     },
     {
@@ -17,7 +17,7 @@
       "user": {
         "id": 1,
         "username": "kumassy",
-        "avatar": "kumassy.png"
+        "avatar": "images/kumassy.jpg"
       }
     },
     {
@@ -27,7 +27,7 @@
       "user": {
         "id": 1,
         "username": "furikake",
-        "avatar": "furikake.png"
+        "avatar": "images/furikake.jpg"
       }
     }
   ]

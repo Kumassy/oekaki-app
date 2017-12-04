@@ -20,6 +20,7 @@ import FontIcon from 'material-ui/FontIcon';
 
 import Header from './HeaderComponent';
 import Post from './PostComponent';
+import Comment from './CommentComponent';
 
 
 const _posts = [
@@ -141,22 +142,34 @@ class PostComponent extends React.Component {
   // }
 }
 
-const PostsIndex = ({posts, match}) => (
-  <ul>
-    {posts.map(post =>
-      <li key={post.id}>
-        <Link to={`${match.url}/${post.id}`}>
-          <Post image={`${_host}/${post.image}`}
-                text={post.text} />
-        </Link>
-      </li>)}
-  </ul>
+const PostsIndex = ({posts, comments, match}) => (
+  <div>
+    <ul className="post-index">
+      {posts.map(post =>
+        <li key={post.id}>
+          <Link to={`${match.url}/${post.id}`}>
+            <Post image={`${_host}/${post.image}`}
+                  text={post.text} />
+          </Link>
+        </li>)}
+    </ul>
+    <ul className="comment-index">
+      {comments.map(comment =>
+        <li key={comment.id}>
+          <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
+                    userName={comment.user.username}
+                    comment={comment.comment}
+                    timestamp="2017-01-01 12:22" />
+        </li>)}
+    </ul>
+  </div>
 )
-class PostsComponent extends React.Component {
+class PostsPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-        posts: []
+        posts: [],
+        comments: []
     };
   }
 
@@ -173,6 +186,11 @@ class PostsComponent extends React.Component {
       });
       console.log(this.state);
     });
+    axios.get(`${_host}/comments`).then((json) => {
+      this.setState({
+        comments: json.data.comments
+      });
+    });
   }
 
   render() {
@@ -182,7 +200,7 @@ class PostsComponent extends React.Component {
         <h2>Posts</h2>
 
         <Switch>
-          <Route exact path={`${match.url}`} render={() => <PostsIndex posts={this.state.posts} match={match} />}/>
+          <Route exact path={`${match.url}`} render={() => <PostsIndex posts={this.state.posts} comments={this.state.comments} match={match} />}/>
 
           <Route path={`${match.url}/:id`} component={PostComponent}/>
         </Switch>
@@ -230,7 +248,7 @@ class AppComponent extends React.Component {
                 <Route exact path="/" component={Home}/>
                 <Route path="/about" component={About}/>
                 <Route path="/topics" component={Topics}/>
-                <Route path="/posts" component={PostsComponent}/>
+                <Route path="/posts" component={PostsPage}/>
               </Switch>
             </div>
           </div>

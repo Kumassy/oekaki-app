@@ -3,17 +3,17 @@
     {
       "id": 1,
       "name": "pandaman",
-      "avatar": "pandaman.png"
+      "avatar": "images/pandaman.png"
     },
     {
       "id": 2,
       "name": "kumassy",
-      "avatar": "kumassy.png"
+      "avatar": "images/kumassy.png"
     },
     {
       "id": 3,
       "name": "furikake",
-      "avatar": "furikake.png"
+      "avatar": "images/furikake.png"
     }
   ]
 }
