@@ -4,6 +4,7 @@
       "id": 1,
       "thread_id": 1,
       "comment": "sugoi",
+      "timestamp": "2017/01/01 12:23",
       "user": {
         "id": 1,
         "username": "pandaman",
@@ -14,8 +15,9 @@
       "id": 2,
       "thread_id": 1,
       "comment": "aaaaaaa",
+      "timestamp": "2017/01/01 12:23",
       "user": {
-        "id": 1,
+        "id": 2,
         "username": "kumassy",
         "avatar": "kumassy.png"
       }
@@ -24,10 +26,11 @@
       "id": 3,
       "thread_id": 2,
       "comment": "sugbbbbbboi",
+      "timestamp": "2017/01/01 12:23",
       "user": {
         "id": 1,
-        "username": "furikake",
-        "avatar": "furikake.png"
+        "username": "pandaman",
+        "avatar": "pandaman.png"
       }
     }
   ]
