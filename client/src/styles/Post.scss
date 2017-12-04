@@ -18,8 +18,14 @@
       align-items: center;
 
       img {
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
+        vertical-align: middle;
+        background-color: #fff;
+        padding: 1px;
+        border: 1px solid #ddd;
+        margin-right: 4px;
+        border-radius: 50%;
       }
       .screen-name {
         margin-left: 8px;

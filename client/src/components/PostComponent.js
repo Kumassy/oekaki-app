@@ -14,9 +14,9 @@ class PostComponent extends React.Component {
         </div>
         <div className="post-meta">
           <div className="post-account">
-            <img src="../images/account.png"/>
-            <span className="screen-name">Kumassy</span>
-            <span className="timestamp">8 hours ago</span>
+            <img src={this.props.userAvatar}/>
+            <span className="screen-name">{this.props.userName}</span>
+            <span className="timestamp">{this.props.timestamp}</span>
           </div>
           <div className="post-text">
             {this.props.text}

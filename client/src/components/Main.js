@@ -42,11 +42,47 @@ const _posts = [
 ];
 const _host = 'http://localhost:3000';
 
-const Home = () => (
-  <div>
-    <h2>Home</h2>
-  </div>
-)
+class Home extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+        threads: []
+    };
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData() {
+    axios.get(`${_host}/home`).then((json) => {
+      this.setState({
+        threads: json.data.threads
+      });
+    });
+  }
+
+  render() {
+    const threads = this.state.threads;
+
+    const list = threads.map(thread =>
+      <li key={thread.post.id}>
+        <Link to={`${this.props.match.url}/${thread.id}`}>
+          <Post image={`${_host}/${thread.post.image}`}
+                timestamp={thread.post.timestamp}
+                text={thread.post.answer}
+                userName={thread.post.user.username}
+                userAvatar={`${_host}/${thread.post.user.avatar}`} />
+        </Link>
+      </li>);
+
+    return (
+      <div>
+        {list}
+      </div>
+    );
+  }
+}
 
 const About = () => (
   <div>
@@ -219,20 +255,6 @@ class AppComponent extends React.Component {
       <Router>
         <MuiThemeProvider>
           <div>
-            <Tabs>
-              <Tab
-                icon={<FontIcon className="material-icons">home</FontIcon>}
-                label="Home"
-              />
-              <Tab
-                icon={<FontIcon className="material-icons">search</FontIcon>}
-                label="Search"
-              />
-              <Tab
-                icon={<FontIcon className="material-icons">settings</FontIcon>}
-                label="Settings"
-              />
-            </Tabs>
             <div>
               <ul>
                 <li><Link to="/">Home</Link></li>
