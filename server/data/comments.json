@@ -1,0 +1,34 @@
+{
+  "comments": [
+    {
+      "id": 1,
+      "thread_id": 1,
+      "comment": "sugoi",
+      "user": {
+        "id": 1,
+        "username": "pandaman",
+        "avatar": "pandaman.png"
+      }
+    },
+    {
+      "id": 2,
+      "thread_id": 1,
+      "comment": "aaaaaaa",
+      "user": {
+        "id": 1,
+        "username": "kumassy",
+        "avatar": "kumassy.png"
+      }
+    },
+    {
+      "id": 3,
+      "thread_id": 2,
+      "comment": "sugbbbbbboi",
+      "user": {
+        "id": 1,
+        "username": "furikake",
+        "avatar": "furikake.png"
+      }
+    }
+  ]
+}
