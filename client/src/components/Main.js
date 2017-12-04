@@ -5,6 +5,7 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Switch,
   Link
 } from 'react-router-dom';
 import axios from 'axios';
@@ -140,6 +141,17 @@ class PostComponent extends React.Component {
   // }
 }
 
+const PostsIndex = ({posts, match}) => (
+  <ul>
+    {posts.map(post =>
+      <li key={post.id}>
+        <Link to={`${match.url}/${post.id}`}>
+          <Post image={`${_host}/${post.image}`}
+                text={post.text} />
+        </Link>
+      </li>)}
+  </ul>
+)
 class PostsComponent extends React.Component {
   constructor(props) {
     super(props)
@@ -168,11 +180,12 @@ class PostsComponent extends React.Component {
     return (
       <div>
         <h2>Posts</h2>
-        <ul>
-          {this.state.posts.map(post => <li key={post.id}><Link to={`${match.url}/${post.id}`}>{post.text}</Link></li>)}
-        </ul>
 
-        <Route path={`${match.url}/:id`} component={PostComponent}/>
+        <Switch>
+          <Route exact path={`${match.url}`} render={() => <PostsIndex posts={this.state.posts} match={match} />}/>
+
+          <Route path={`${match.url}/:id`} component={PostComponent}/>
+        </Switch>
       </div>
     )
   }
@@ -212,10 +225,13 @@ class AppComponent extends React.Component {
 
               <hr/>
 
-              <Route exact path="/" component={Home}/>
-              <Route path="/about" component={About}/>
-              <Route path="/topics" component={Topics}/>
-              <Route path="/posts" component={PostsComponent}/>
+
+              <Switch>
+                <Route exact path="/" component={Home}/>
+                <Route path="/about" component={About}/>
+                <Route path="/topics" component={Topics}/>
+                <Route path="/posts" component={PostsComponent}/>
+              </Switch>
             </div>
           </div>
         </MuiThemeProvider>
