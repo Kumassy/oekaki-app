@@ -24,7 +24,6 @@ class NewCommentComponent extends React.Component {
           <input type="text" name="comment"/>
           <button type="submit">Submit</button>
         </form>
-        Please edit src/components///NewCommentComponent.js to update this component!
       </div>
     );
   }

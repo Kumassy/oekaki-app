@@ -93,17 +93,19 @@
           }
         }
       ],
-      "comments": {
-        "id": 3,
-        "thread_id": 2,
-        "comment": "sugbbbbbboi",
-        "timestamp": "2017/01/01 12:23",
-        "user": {
-          "id": 1,
-          "username": "pandaman",
-          "avatar": "images/pandaman.jpg"
+      "comments": [
+        {
+          "id": 3,
+          "thread_id": 2,
+          "comment": "sugbbbbbboi",
+          "timestamp": "2017/01/01 12:23",
+          "user": {
+            "id": 1,
+            "username": "pandaman",
+            "avatar": "images/pandaman.jpg"
+          }
         }
-      }
+      ]
     }
   ]
 }

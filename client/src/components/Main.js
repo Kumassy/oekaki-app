@@ -18,11 +18,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import FontIcon from 'material-ui/FontIcon';
 
+import { _host } from '../clientHttp';
 import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';
-import NewComment from './NewCommentComponent';
-import NewPost from './NewPostComponent';
+import ThreadPage from './ThreadPageComponent';
 
 
 const _posts = [
@@ -42,7 +42,6 @@ const _posts = [
     'image': 'fsdfsdds.jpg'
   }
 ];
-const _host = 'http://localhost:3000';
 
 class Home extends React.Component {
   constructor(props) {
@@ -87,68 +86,68 @@ class Home extends React.Component {
 }
 
 
-class ThreadPage extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-        thread: {}
-    };
-  }
-
-  componentDidMount() {
-    this.fetchData(this.props.match.params.id);
-  }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.match.params.id !== nextProps.match.params.id) {
-      this.fetchData(nextProps.match.params.id);
-    }
-  }
-
-  fetchData(id) {
-    // return _posts[id];
-    axios.get(`${_host}/threads/${id}`).then((json) => {
-      this.setState({
-        thread: json.data
-      });
-    });
-  }
-
-  render() {
-    const thread = this.state.thread;
-    const posts = thread.posts || [];
-    const comments = thread.comments || [];
-
-    return (
-      <div className="thread">
-        <ul className="posts">
-          {posts.map(post =>
-            <li key={post.id}>
-              <Post image={`${_host}/${post.image}`}
-                    timestamp={post.timestamp}
-                    text={post.answer}
-                    userName={post.user.username}
-                    userAvatar={`${_host}/${post.user.avatar}`} />
-            </li>)}
-            <li key="new-post">
-              <NewPost></NewPost>
-            </li>
-        </ul>
-        <ul className="comments">
-          {comments.map(comment =>
-            <li key={comment.id}>
-              <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
-                        userName={comment.user.username}
-                        comment={comment.comment}
-                        timestamp={comment.timestamp} />
-            </li>)}
-            <li key="new-comment">
-              <NewComment></NewComment>
-            </li>
-        </ul>
-      </div>
-    );
-  }
-}
+// class ThreadPage extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+//         thread: {}
+//     };
+//   }
+//
+//   componentDidMount() {
+//     this.fetchData(this.props.match.params.id);
+//   }
+//   componentWillReceiveProps(nextProps) {
+//     if (this.props.match.params.id !== nextProps.match.params.id) {
+//       this.fetchData(nextProps.match.params.id);
+//     }
+//   }
+//
+//   fetchData(id) {
+//     // return _posts[id];
+//     axios.get(`${_host}/threads/${id}`).then((json) => {
+//       this.setState({
+//         thread: json.data
+//       });
+//     });
+//   }
+//
+//   render() {
+//     const thread = this.state.thread;
+//     const posts = thread.posts || [];
+//     const comments = thread.comments || [];
+//
+//     return (
+//       <div className="thread">
+//         <ul className="posts">
+//           {posts.map(post =>
+//             <li key={post.id}>
+//               <Post image={`${_host}/${post.image}`}
+//                     timestamp={post.timestamp}
+//                     text={post.answer}
+//                     userName={post.user.username}
+//                     userAvatar={`${_host}/${post.user.avatar}`} />
+//             </li>)}
+//             <li key="new-post">
+//               <NewPost></NewPost>
+//             </li>
+//         </ul>
+//         <ul className="comments">
+//           {comments.map(comment =>
+//             <li key={comment.id}>
+//               <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
+//                         userName={comment.user.username}
+//                         comment={comment.comment}
+//                         timestamp={comment.timestamp} />
+//             </li>)}
+//             <li key="new-comment">
+//               <NewComment></NewComment>
+//             </li>
+//         </ul>
+//       </div>
+//     );
+//   }
+// }
 
 const About = () => (
   <div>

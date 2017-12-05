@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+export const _host = 'http://localhost:3000';
+
 export const client = axios.create({
   baseURL: 'http://localhost:3000',
   timeout: 5000
@@ -31,4 +33,13 @@ export function newThread(post) {
     }
   }
   return client.post('/threads/new', post, config);
+}
+
+export function getThread(id) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/threads/${id}`).then(json => json.data);
 }

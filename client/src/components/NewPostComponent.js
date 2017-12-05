@@ -24,7 +24,6 @@ class NewPostComponent extends React.Component {
           <input type="file" name="image"/>
           <button type="submit">Submit</button>
         </form>
-        Please edit src/components///NewPostComponent.js to update this component!
       </div>
     );
   }
