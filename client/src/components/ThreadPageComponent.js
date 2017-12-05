@@ -17,45 +17,30 @@ import NewPost from './NewPostComponent';
 
 require('styles//ThreadPage.css');
 
+const myuser = {
+  id: 1,
+  username: "pandaman",
+  avatar: "images/pandaman.jpg"
+};
+
 class ThreadPageComponent extends React.Component {
   constructor(props) {
-    super(props)
-    // this.state = {
-    //     thread: {}
-    // };
+    super(props);
   }
 
   componentDidMount() {
-    // this.fetchData(this.props.match.params.id);
-    // console.log(this.props);
     const { dispatch, match } = this.props;
     dispatch(fetchThreadIfNeeded(match.params.id));
   }
   componentWillReceiveProps(nextProps) {
-    // if (this.props.match.params.id !== nextProps.match.params.id) {
-    //   this.fetchData(nextProps.match.params.id);
-    // }
     const { dispatch, match } = this.props;
     if (match.params.id !== nextProps.match.params.id) {
       dispatch(fetchThreadIfNeeded(nextProps.match.params.id));
     }
   }
 
-  // fetchData(id) {
-  //   // return _posts[id];
-  //   getThread(id).then((thread) => {
-  //     this.setState({
-  //       thread: thread
-  //     });
-  //   });
-  // }
-
   render() {
-    console.log('render');
-    console.log(this.props);
-    // const thread = this.state.thread;
     const { isFetching, thread } = this.props;
-    // const thread = this.props.thread;
     const posts = thread.posts || [];
     const comments = thread.comments || [];
 
@@ -71,19 +56,20 @@ class ThreadPageComponent extends React.Component {
                     userAvatar={`${_host}/${post.user.avatar}`} />
             </li>)}
             <li key="new-post">
-              <NewPost></NewPost>
+              <NewPost dispatch={this.props.dispatch} user={myuser} threadId={thread.id}></NewPost>
             </li>
         </ul>
         <ul className="comments">
           {comments.map(comment =>
-            <li key={comment.id}>
+            <li key={comment.isSending ? 'sending-comment' : comment.id}>
               <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
                         userName={comment.user.username}
                         comment={comment.comment}
-                        timestamp={comment.timestamp} />
+                        timestamp={comment.timestamp}
+                        style={{ opacity: comment.isSending? 0.5 : 1 }} />
             </li>)}
             <li key="new-comment">
-              <NewComment></NewComment>
+              <NewComment dispatch={this.props.dispatch} user={myuser} threadId={thread.id}></NewComment>
             </li>
         </ul>
       </div>
@@ -98,8 +84,6 @@ ThreadPageComponent.displayName = 'ThreadPageComponent';
 // ThreadPageComponent.defaultProps = {};
 
 function mapStateToProps(state) {
-  console.log('beforemap')
-  console.log(state);
   // const {
   //   isFetching,
   //   lastUpdated,
@@ -108,19 +92,16 @@ function mapStateToProps(state) {
   //   isFetching: true,
   //   item: {}
   // };
-  const isFetching = state.thread.isFetching || true;
-  const item = state.thread.item || {};
-  const lastUpdated = state.thread.lastUpdated;
+  const { thread } = state;
+  const isFetching = thread.isFetching || true;
+  const item = thread.item || {};
+  const lastUpdated = thread.lastUpdated;
 
-  const ret =  {
+  return {
     thread: item,
     isFetching: isFetching,
     lastUpdated: lastUpdated
   };
-  console.log('aftermap')
-  console.log(ret);
-
-  return ret;
 }
 
 const ThreadPage = connect(mapStateToProps)(ThreadPageComponent);

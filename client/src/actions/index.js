@@ -1,11 +1,14 @@
 'use strict';
 
-import { getThread } from '../clientHttp';
+import { getThread, newComment } from '../clientHttp';
 
 // Action Creators
 // See: https://redux.js.org/docs/basics/ExampleTodoList.html
 export const REQUEST_THREAD = 'REQUEST_THREAD'
 export const RECEIVE_THREAD = 'RECEIVE_THREAD'
+
+export const SEND_NEW_COMMENT = 'SEND_NEW_COMMENT'
+export const RECEIVE_NEW_COMMENT = 'RECEIVE_NEW_COMMENT'
 
 function requestThread() {
   return {
@@ -28,6 +31,7 @@ function fetchThread(id) {
       .then(thread => dispatch(receiveThread(thread)));
   }
 }
+
 function shouldFetchThread(state, id) {
   const thread = state.thread.item;
 
@@ -45,5 +49,37 @@ export function fetchThreadIfNeeded(id) {
     if (shouldFetchThread(getState(), id)) {
       return dispatch(fetchThread(id))
     }
+  }
+}
+
+// comment:
+//   - user_id
+//   - comment
+function sendNewComment(comment) {
+  return {
+    type: SEND_NEW_COMMENT,
+    comment: comment
+  }
+}
+
+// receive result for `sendNewComment`
+// comment:
+//   - id
+//   - user_id
+//   - comment
+//   - timestamp
+function receiveNewComment(newComment) {
+  return {
+    type: RECEIVE_NEW_COMMENT,
+    comment: newComment,
+    receivedAt: Date.now()
+  }
+}
+
+export function createComment(comment) {
+  return dispatch => {
+    dispatch(sendNewComment(comment));
+    return newComment(comment)
+      .then(newComment => dispatch(receiveNewComment(newComment)))
   }
 }

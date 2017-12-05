@@ -14,7 +14,12 @@ export function newComment(comment) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/comments/new', comment, config);
+  const params = new FormData();
+  params.append('user_id', comment.user.id);
+  params.append('thread_id', comment.thread_id);
+  params.append('comment', comment.comment);
+
+  return client.post('/comments/new', params, config).then(json => json.data);
 }
 
 export function newPost(post) {

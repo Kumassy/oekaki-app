@@ -124,7 +124,20 @@ $app->path('comments', function($request) use($app) {
     });
     $app->post(function($request) use($app, $request) {
       file_put_contents('php://stderr', print_r($request->params(), TRUE));
-      return $app->response(200, "new")
+      file_put_contents('php://stderr', print_r($request->params()['comment'], TRUE));
+
+      $data = array(
+        'id' => rand(10, 200),
+        'thread_id' => intval($request->params()['thread_id']),
+        'comment' => $request->params()['comment'],
+        'timestamp' => '2017/12/05 22:08',
+        'user' => array(
+          'id'=> intval($request->params()['user_id']),
+          'username'=> 'bot',                  // get from DB
+          'avatar'=> 'images/kumassy.jpg'
+        )
+      );
+      return $app->response(200, $data)
               ->header('Access-Control-Allow-Origin', '*');
     });
   });

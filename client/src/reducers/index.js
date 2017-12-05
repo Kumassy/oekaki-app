@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 import {
   REQUEST_THREAD,
-  RECEIVE_THREAD
+  RECEIVE_THREAD,
+  SEND_NEW_COMMENT,
+  RECEIVE_NEW_COMMENT
 } from '../actions/index';
 
 
@@ -13,8 +15,6 @@ function thread(
   },
   action
 ) {
-  console.table(state);
-  console.table(action);
 
   switch(action.type) {
     case REQUEST_THREAD:
@@ -27,6 +27,41 @@ function thread(
         item: action.thread,
         lastUpdated: action.receivedAt
       })
+    case SEND_NEW_COMMENT:
+      {
+        const { comment } = action;
+        // comment.isSending = true;
+
+        // const newState = Object.assign({}, state, {});
+        // newState.item.comments = state.item.comments.concat(comment);
+        //
+        // return newState;
+        return {
+          ...state,
+          item: {
+            ...state.item,
+            comments: state.item.comments.concat({
+              ...comment,
+              isSending: true
+            })
+          }
+        }
+      }
+    case RECEIVE_NEW_COMMENT:
+      {
+        const { comment } = action;
+        // const newState = Object.assign({}, state, {});
+        // newState.item.comments = state.item.comments.filter(c => c.isSending == null).concat(comment);
+        //
+        // return newState;
+        return {
+          ...state,
+          item: {
+            ...state.item,
+            comments: state.item.comments.filter(c => c.isSending == null).concat(comment)
+          }
+        }
+      }
     default:
       return state
   }
