@@ -1,7 +1,8 @@
 <?php
 // namespace MyApp;
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../src/app.php';
+require_once __DIR__ . '/../src/app.php';
+require_once __DIR__ . '/../src/utils.php';
 
 require_once __DIR__ . '/DatabaseTestBase.php';
 
@@ -22,13 +23,13 @@ class DatabaseTest extends DatabaseTestBase
   public function testSelectUser()
   {
     $stmt = $this->getPOD()->query('SELECT * FROM users');
-    $users = array();
+    $_users = array();
     foreach ($stmt as $user) {
-      $u = array();
-      $u['id'] = $user['id'];
-      $u['login_name'] = $user['login_name'];
-      $users[] = $u;
+      $_users[] = $user;
     }
+    $users = array_map(function($user) {
+      return array_filter_keys($user, ['id', 'login_name']);
+    }, $_users);
     $json = json_encode($users);
 
 
