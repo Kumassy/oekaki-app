@@ -1,0 +1,50 @@
+import axios from 'axios';
+
+export const _host = 'http://localhost:3000';
+
+export const client = axios.create({
+  baseURL: 'http://localhost:3000',
+  timeout: 5000
+});
+
+export function newComment(comment) {
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data',
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  const params = new FormData();
+  params.append('user_id', comment.user.id);
+  params.append('thread_id', comment.thread_id);
+  params.append('comment', comment.comment);
+
+  return client.post('/comments/new', params, config).then(json => json.data);
+}
+
+export function newPost(post) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.post('/posts/new', post, config);
+}
+
+export function newThread(post) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.post('/threads/new', post, config);
+}
+
+export function getThread(id) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/threads/${id}`).then(json => json.data);
+}

@@ -2,18 +2,18 @@
   "users": [
     {
       "id": 1,
-      "name": "pandaman",
-      "avatar": "pandaman.png"
+      "username": "pandaman",
+      "avatar": "images/pandaman.png"
     },
     {
       "id": 2,
-      "name": "kumassy",
-      "avatar": "kumassy.png"
+      "username": "kumassy",
+      "avatar": "images/kumassy.png"
     },
     {
       "id": 3,
-      "name": "furikake",
-      "avatar": "furikake.png"
+      "username": "furikake",
+      "avatar": "images/furikake.png"
     }
   ]
 }

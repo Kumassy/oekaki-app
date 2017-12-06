@@ -1,0 +1,34 @@
+{
+  "threads": [
+    {
+      "id": 1,
+      "post": {
+        "id": 3,
+        "thread_id": 1,
+        "image": "images/image3.png",
+        "answer": "し",
+        "timestamp": "2017/01/01 12:28",
+        "user": {
+          "id": 1,
+          "username": "pandaman",
+          "avatar": "images/pandaman.jpg"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "post": {
+        "id": 5,
+        "thread_id": 2,
+        "image": "images/image2.png",
+        "answer": "だんらん",
+        "timestamp": "2017/01/03 10:25",
+        "user": {
+          "id": 2,
+          "username": "kumassy",
+          "avatar": "images/kumassy.jpg"
+        }
+      }
+    }
+  ]
+}

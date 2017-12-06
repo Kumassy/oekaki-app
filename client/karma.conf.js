@@ -25,6 +25,9 @@ module.exports = function(config) {
     webpackServer: {
       noInfo: true
     },
+    mochaReporter: {
+      showDiff: true
+    },
     coverageReporter: {
       dir: 'coverage/',
       reporters: [

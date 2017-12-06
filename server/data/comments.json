@@ -1,0 +1,37 @@
+{
+  "comments": [
+    {
+      "id": 1,
+      "thread_id": 1,
+      "comment": "sugoi",
+      "timestamp": "2017/01/01 12:23",
+      "user": {
+        "id": 1,
+        "username": "pandaman",
+        "avatar": "images/pandaman.jpg"
+      }
+    },
+    {
+      "id": 2,
+      "thread_id": 1,
+      "comment": "aaaaaaa",
+      "timestamp": "2017/01/01 12:23",
+      "user": {
+        "id": 2,
+        "username": "kumassy",
+        "avatar": "images/kumassy.jpg"
+      }
+    },
+    {
+      "id": 3,
+      "thread_id": 2,
+      "comment": "sugbbbbbboi",
+      "timestamp": "2017/01/01 12:23",
+      "user": {
+        "id": 1,
+        "username": "furikake",
+        "avatar": "images/furikake.jpg"
+      }
+    }
+  ]
+}
