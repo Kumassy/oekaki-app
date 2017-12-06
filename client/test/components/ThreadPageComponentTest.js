@@ -16,7 +16,7 @@ describe('ThreadPageComponent', () => {
     component = createComponent(ThreadPageComponent);
   });
 
-  it('should have its component name as default className', () => {
+  xit('should have its component name as default className', () => {
     expect(component.props.className).to.equal('threadpage-component');
   });
 });

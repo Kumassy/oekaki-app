@@ -28,12 +28,12 @@ describe('NewCommentComponent', () => {
 
 
   // TODO: ajax test
-  // it('should send post request', () => {
-  //   const dom = findDOMNode(component);
-  //   dom.querySelector('form input[name=\'comment\']').value = 'comment';
-  //
-  //   component.onSubmit({e: {preventDefault: () => ''}}).then(res => {
-  //     expect(res.data).toEqual({id: 10});
-  //   });
-  // });
+  xit('should send post request', () => {
+    const dom = findDOMNode(component);
+    dom.querySelector('form input[name=\'comment\']').value = 'comment';
+
+    component.onSubmit({e: {preventDefault: () => ''}}).then(res => {
+      expect(res.data).toEqual({id: 10});
+    });
+  });
 });

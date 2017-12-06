@@ -18,11 +18,13 @@ import {
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
-import { client } from '../../src/clientHttp';
+import { client, newPost, newComment } from '../../src/clientHttp';
 import MockAdapter from 'axios-mock-adapter';
-const mockAxios = new MockAdapter(client);
+const axios = require('axios');
+// const mockAxios = new MockAdapter(client);
+const mockAxios = new MockAdapter(axios);
 
-describe('async actions', () => {
+describe.skip('async actions', () => {
   // afterEach(() => {
   //   fetchMock.reset()
   //   fetchMock.restore()
@@ -41,28 +43,51 @@ describe('async actions', () => {
   };
 
   beforeEach(() => {
-    mockAxios.onPost('/comments/new').reply(200, data);
-    mockAxios.onAny(/.+/).reply(() => console.log('mockrequest!!!!'));
+    // mockAxios.onPost('comments/new').reply(200, data);
+    // mockAxios.onPost('/posts/new').reply(200, 'hoge');
+    // mockAxios.onAny(/.+/).reply(() => console.log('mockrequest!!!!'));
   });
 
   // TODO: fix test
 
-  // it('creates FETCH_TODOS_SUCCESS when fetching todos has been done', () => {
-  //   const expectedActions = [
-  //     { type: SEND_NEW_COMMENT },
-  //     { type: RECEIVE_NEW_COMMENT, comment: data }
-  //   ]
-  //   const store = mockStore({ item: {comments: []} })
-  //
-  //   const comment = {
-  //     'user': myuser,
-  //     'thread_id': 1,
-  //     'comment': 'abcde'
-  //   };
-  //
-  //   return store.dispatch(createComment(comment)).then(() => {
-  //     // return of async actions
-  //     expect(store.getActions()).to.equal(expectedActions)
-  //   })
-  // })
+  it('creates FETCH_TODOS_SUCCESS when fetching todos has been done', () => {
+    const expectedActions = [
+      { type: SEND_NEW_COMMENT },
+      { type: RECEIVE_NEW_COMMENT, comment: data }
+    ]
+    const store = mockStore({ item: {comments: []} })
+
+    const comment = {
+      'user': myuser,
+      'thread_id': 1,
+      'comment': 'abcde'
+    };
+
+    return store.dispatch(createComment(comment)).then(() => {
+      // return of async actions
+      expect(store.getActions()).to.equal(expectedActions)
+    })
+  })
+  it('mock server test', () => {
+    mockAxios.onPost('/posts/new').reply(200, 'hoge');
+    mockAxios.onPost('http://localhost:3000/posts/new').reply(200, 'hoge');
+
+    return newPost({
+      image: '/path/tp/image',
+      answer: 'aaaaa'
+    }).then((json) => {
+      expect(json.data).to.equal('hoge');
+    })
+  });
+  it('mock server test 2', () => {
+    return newComment({
+      thread_id: 1,
+      comment: 'comment',
+      user: {
+        id: 1
+      }
+    }).then((json) => {
+      expect(json.data).to.equal('hasdkfjksdf');
+    })
+  });
 })

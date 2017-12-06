@@ -137,6 +137,7 @@ $app->path('comments', function($request) use($app) {
           'avatar'=> 'images/kumassy.jpg'
         )
       );
+      sleep(2);
       return $app->response(200, $data)
               ->header('Access-Control-Allow-Origin', '*');
     });
