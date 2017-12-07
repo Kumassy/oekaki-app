@@ -10,9 +10,10 @@ export const RECEIVE_THREAD = 'RECEIVE_THREAD'
 export const SEND_NEW_COMMENT = 'SEND_NEW_COMMENT'
 export const RECEIVE_NEW_COMMENT = 'RECEIVE_NEW_COMMENT'
 
-function requestThread() {
+function requestThread(id) {
   return {
-    type: REQUEST_THREAD
+    type: REQUEST_THREAD,
+    threadId: id
   }
 }
 
@@ -26,7 +27,7 @@ function receiveThread(thread) {
 
 function fetchThread(id) {
   return dispatch => {
-    dispatch(requestThread());
+    dispatch(requestThread(id));
     return getThread(id)
       .then(thread => dispatch(receiveThread(thread)));
   }

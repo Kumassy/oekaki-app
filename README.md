@@ -7,19 +7,46 @@
 - [client] redux を ThreadPage ではなくルートにバインディング
 ```
 {
-  'page-home': {
-    lastUpdated
-    isFetching
-    threads: [
-      thread
+  'page_home': {
+    // ここがエントリーポイント
+    status: {
+      lastUpdated
+      isFetching
+    }
+    posts: [
+      post
     ]
   }
-  'page-threads': {
+  'page_threads': {
     threads: [
       {
-        lastUpdated
-        isFetching
-        thread
+        // ここがエントリーポイント
+        status: {
+          lastUpdated
+          isFetching
+        }
+        thread: {
+          id: 1,
+          is_open
+          posts: [
+            {
+              id: 1
+            },
+            {
+              id: 100
+              isSending: true
+            }
+          ],
+          comments: [
+            {
+              id: 1
+            },
+            {
+              id: 100
+              isSending: true
+            }
+          ]
+        }
       }
     ]
   }

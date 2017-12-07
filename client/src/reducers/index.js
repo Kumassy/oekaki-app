@@ -6,27 +6,70 @@ import {
   RECEIVE_NEW_COMMENT
 } from '../actions/index';
 
+export const initialState = {
+  threads: []
+};
 
 // change item: {} -> items: [] to store multiple thread
-function thread(
-  state = {
-    isFetching: false,
-    item: {}
-  },
-  action
-) {
-
+function pageThreads(state = initialState, action) {
   switch(action.type) {
     case REQUEST_THREAD:
-      return Object.assign({}, state, {
-        isFetching: true
-      })
+      // return Object.assign({}, state, {
+      //   isFetching: true
+      // })
+      const threads = state.threads.some(threadContainer => {
+        return threadContainer.thread.id === action.threadId
+      }) ? state.threads : state.threads.concat({
+        status: {
+
+        },
+        thread: {
+          id: action.threadId
+        }
+      });
+      return {
+        ...state,
+        threads: threads.map(threadContainer => {
+          if (threadContainer.thread.id !== action.threadId) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              status: {
+                ...threadContainer.status,
+                isFetching: true
+              }
+            }
+          }
+        })
+      }
     case RECEIVE_THREAD:
-      return Object.assign({}, state, {
-        isFetching: false,
-        item: action.thread,
-        lastUpdated: action.receivedAt
-      })
+      // return Object.assign({}, state, {
+      //   isFetching: false,
+      //   item: action.thread,
+      //   lastUpdated: action.receivedAt
+      // })
+      return {
+        ...state,
+        pageThreads: {
+          ...state.pageThreads,
+          threads: state.pageThreads.threads.map(threadContainer => {
+            if (threadContainer.thread.id === action.thread_id) {
+              return threadContainer;
+            } else {
+              return {
+                ...threadContainer,
+                status: {
+                  ...threadContainer.status,
+                  isFetching: false,
+                  lastUpdated: action.receivedAt
+                },
+                thread: action.thread
+              }
+            }
+          })
+        }
+      }
     case SEND_NEW_COMMENT:
       {
         const { comment } = action;
@@ -68,7 +111,7 @@ function thread(
 }
 
 const rootReducer = combineReducers({
-  thread
+  pageThreads
 })
 
 export default rootReducer
