@@ -139,30 +139,36 @@ $app->path('comments', function($request) use($app, $conn) {
     });
   });
 
-  $app->path('new', function($request) use($app) {
+  $app->path('new', function($request) use($app, $conn) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
                ->header('Access-Control-Allow-Origin', '*')
                ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
                ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $request) {
-      file_put_contents('php://stderr', print_r($request->params(), TRUE));
-      file_put_contents('php://stderr', print_r($request->params()['comment'], TRUE));
-
-      $data = array(
-        'id' => rand(10, 200),
-        'thread_id' => intval($request->params()['thread_id']),
-        'comment' => $request->params()['comment'],
-        'timestamp' => '2017/12/05 22:08',
-        'user' => array(
-          'id'=> intval($request->params()['user_id']),
-          'username'=> 'bot',                  // get from DB
-          'avatar'=> 'images/kumassy.jpg'
-        )
-      );
+    $app->post(function($request) use($app, $conn, $request) {
+      // file_put_contents('php://stderr', print_r($request->params(), TRUE));
+      // file_put_contents('php://stderr', print_r($request->params()['comment'], TRUE));
+      //
+      // $data = array(
+      //   'id' => rand(10, 200),
+      //   'thread_id' => intval($request->params()['thread_id']),
+      //   'comment' => $request->params()['comment'],
+      //   'timestamp' => '2017/12/05 22:08',
+      //   'user' => array(
+      //     'id'=> intval($request->params()['user_id']),
+      //     'username'=> 'bot',                  // get from DB
+      //     'avatar'=> 'images/kumassy.jpg'
+      //   )
+      // );
+      $comment = [
+        'user_id' => $request->params()['user_id'],
+        'thread_id' => $request->params()['thread_id'],
+        'comment' => $request->params()['comment']
+      ];
+      $newComment = createComment($conn, $comment);
       sleep(2);
-      return $app->response(200, $data)
+      return $app->response(200, $newComment)
               ->header('Access-Control-Allow-Origin', '*');
     });
   });

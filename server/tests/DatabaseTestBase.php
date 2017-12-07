@@ -15,6 +15,33 @@ class DatabaseTestBase extends PHPUnit_Extensions_Database_TestCase
 {
   // use TestCaseTrait;
 
+  public function setUp()
+  {
+    parent::setUp();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("comments_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("comments_thread_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("comments_user_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("images_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("posts_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("posts_image_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("posts_thread_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("posts_user_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("threads_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("users_id_seq", 1000)');
+    // $stmt->execute();
+    // $stmt = self::$pod->prepare('SELECT SETVAL("users_image_id_seq", 1000)');
+    // $stmt->execute();
+  }
+
   /**
   * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
   */
@@ -30,13 +57,15 @@ class DatabaseTestBase extends PHPUnit_Extensions_Database_TestCase
   public function getDataSet()
   {
     // return new YamlDataSet(__DIR__ .'/seed.yml');
-    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ .'/../db/seed.yml');
+
+    $dataSet = new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ .'/../db/seed.yml');
+    return $dataSet;
   }
 
   protected function getSetUpOperation()
   {
       // 引数にtrueを渡すように上書き
-      return \PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT(true);
+    return \PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT(true);
   }
 
 

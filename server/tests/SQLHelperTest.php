@@ -90,4 +90,16 @@ class SQLHelperTest extends DatabaseTestBase
 
     $this->assertEquals($expected, $posts);
   }
+
+  private function skip_testCreateComment()
+  {
+    $comment = [
+      'user_id' => 3,
+      'thread_id' => 2,
+      'comment' => 'test_comment'
+    ];
+    $newComment = createComment($this->getPOD(), $comment);
+
+    print_stderr($newComment);
+  }
 }

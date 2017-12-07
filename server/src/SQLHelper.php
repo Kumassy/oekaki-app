@@ -160,3 +160,30 @@ function getAllThreads($conn)
   }, $_threads);
   return $threads;
 }
+
+
+// $comment = [
+//   'user_id' => 3,
+//   'thread_id' => 2,
+//   'comment' => 'test_comment'
+// ];
+
+function createComment($conn, $comment)
+{
+  $conn->beginTransaction();
+  try {
+    $stmt = $conn->prepare('INSERT INTO comments (user_id, thread_id, comment, created_at, updated_at) VALUES (:user_id, :thread_id, :comment, NOW(), NOW())');
+    $stmt->bindValue("user_id", $comment['user_id']);
+    $stmt->bindValue("thread_id", $comment['thread_id']);
+    $stmt->bindValue("comment", $comment['comment']);
+    $stmt->execute();
+
+    $id = $conn->lastInsertId();
+    $conn->commit();
+    return getComment($conn, $id);
+  } catch (Exception $e) {
+    // トランザクション取り消し
+    $conn->rollBack();
+    throw $e;
+  }
+}
