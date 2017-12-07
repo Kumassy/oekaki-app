@@ -6,11 +6,22 @@ function getConnection() {
   return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
 }
 function getImage($conn, $id) {
-  $stmt = $conn->prepare('SELECT name FROM images WHERE id = :id');
+  $stmt = $conn->prepare('SELECT id, name FROM images WHERE id = :id');
   $stmt->bindValue("id", $id);
   $stmt->execute();
 
   return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+function getUser($conn, $id) {
+  $stmt = $conn->prepare('SELECT id, username, image_id FROM users WHERE id = :id');
+  $stmt->bindValue("id", $id);
+  $stmt->execute();
+
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+  $user['avatar'] = getImage($conn, $user['image_id'])['name'];
+  unset($user['image_id']);
+
+  return $user;
 }
 function getAllUsers($conn)
 {
@@ -25,9 +36,25 @@ function getAllUsers($conn)
   // }, $_users);
 
   $users = array_map(function($user) use($conn) {
-    $user['avatar'] = getImage($conn, $user['id'])['name'];
+    $user['avatar'] = getImage($conn, $user['image_id'])['name'];
     unset($user['image_id']);
     return $user;
   }, $_users);
   return $users;
+}
+function getAllPosts($conn)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts');
+  $stmt->execute();
+  $_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $posts = array_map(function($post) use($conn) {
+    $post['image'] = getImage($conn, $post['image_id'])['name'];
+    unset($post['image_id']);
+
+    $post['user'] = getUser($conn, $post['user_id']);
+    unset($post['user_id']);
+    return $post;
+  }, $_posts);
+  return $posts;
 }

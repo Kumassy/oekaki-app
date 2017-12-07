@@ -54,75 +54,78 @@ EOD;
 
   public function testPostsIndex()
   {
+    global $app;
+    $res = $app->run('GET', '/posts');
+
     $expectedJson = <<<EOD
 {
   "posts": [
     {
       "id": 1,
       "thread_id": 1,
-      "image": "images/image1.png",
-      "answer": "あいますく",
-      "timestamp": "2017/01/01 12:23",
+      "image": "images/pandaman.jpg",
+      "answer": "aimasuku",
+      "updated_at": "2017-12-14 12:00:00",
       "user": {
         "id": 1,
         "username": "pandaman",
-        "avatar": "pandaman.png"
+        "avatar": "images/pandaman.jpg"
       }
     },
     {
       "id": 2,
       "thread_id": 1,
-      "image": "images/image2.png",
-      "answer": "だんらん",
-      "timestamp": "2017/01/01 12:25",
+      "image": "images/pandaman.jpg",
+      "answer": "danran",
+      "updated_at": "2017-12-14 12:00:00",
       "user": {
         "id": 2,
         "username": "kumassy",
-        "avatar": "kumassy.png"
+        "avatar": "images/kumassy.jpg"
       }
     },
     {
       "id": 3,
       "thread_id": 1,
-      "image": "images/image3.png",
-      "answer": "し",
-      "timestamp": "2017/01/01 12:28",
+      "image": "images/pandaman.jpg",
+      "answer": "shi",
+      "updated_at": "2017-12-14 12:00:00",
       "user": {
         "id": 1,
         "username": "pandaman",
-        "avatar": "pandaman.png"
+        "avatar": "images/pandaman.jpg"
       }
     },
     {
       "id": 4,
       "thread_id": 2,
-      "image": "images/image1.png",
-      "answer": "つかれたひと",
-      "timestamp": "2017/01/03 10:23",
+      "image": "images/pandaman.jpg",
+      "answer": "tukaretahito",
+      "updated_at": "2017-12-14 12:00:00",
       "user": {
         "id": 1,
         "username": "pandaman",
-        "avatar": "pandaman.png"
+        "avatar": "images/pandaman.jpg"
       }
     },
     {
       "id": 5,
       "thread_id": 2,
-      "image": "images/image2.png",
-      "answer": "だんらん",
-      "timestamp": "2017/01/03 10:25",
+      "image": "images/kumassy.jpg",
+      "answer": "danran",
+      "updated_at": "2017-12-16 18:00:00",
       "user": {
         "id": 2,
         "username": "kumassy",
-        "avatar": "kumassy.png"
+        "avatar": "images/kumassy.jpg"
       }
     }
   ]
 }
 EOD;
+    $this->assertEquals(200, $res->status());
+    $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
   }
-
-
 
 
   public function testThreadsIndex()

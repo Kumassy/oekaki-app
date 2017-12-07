@@ -37,12 +37,16 @@ $app->path('users', function($request) use($app, $conn) {
   // });
 });
 
-$app->path('posts', function($request) use($app) {
+$app->path('posts', function($request) use($app, $conn) {
   $json = file_get_contents(__DIR__ . '/../data/posts.json');
   $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
   $posts = json_decode($json,true);
 
-  $app->get(function($request, $id) use($app, $posts) {
+  $app->get(function($request, $id) use($app, $conn) {
+    $_posts = getAllPosts($conn);
+    $posts = [
+      'posts' => $_posts
+    ];
     return $app->response(200, $posts)->header('Access-Control-Allow-Origin', '*');
   });
   $app->param('int', function($request, $id) use($app, $posts) {
