@@ -145,6 +145,31 @@ EOD;
     $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
   }
 
+  public function testGetPost()
+  {
+    global $app;
+    $res = $app->run('GET', '/posts/4');
+
+    $expectedJson = <<<EOD
+{
+  "post": {
+    "id": 4,
+    "thread_id": 2,
+    "image": "images/pandaman.jpg",
+    "answer": "tukaretahito",
+    "updated_at": "2017-12-14 12:00:00",
+    "user": {
+      "id": 1,
+      "username": "pandaman",
+      "avatar": "images/pandaman.jpg"
+    }
+  }
+}
+EOD;
+    $this->assertEquals(200, $res->status());
+    $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
+  }
+
 
   public function testGetThreads()
   {

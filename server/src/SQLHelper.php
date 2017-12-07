@@ -42,6 +42,21 @@ function getAllUsers($conn)
   }, $_users);
   return $users;
 }
+
+function getPost($conn, $id)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts WHERE id = :id');
+  $stmt->bindValue("id", $id);
+  $stmt->execute();
+  $post = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $post['image'] = getImage($conn, $post['image_id'])['name'];
+  unset($post['image_id']);
+  $post['user'] = getUser($conn, $post['user_id']);
+  unset($post['user_id']);
+
+  return $post;
+}
 function getAllPosts($conn)
 {
   $stmt = $conn->prepare('SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts');
