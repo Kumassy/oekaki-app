@@ -106,7 +106,7 @@ comments:
     thread_id: 1
     comment: aaaaaaa
     created_at: '2017-12-14 12:00:00'
-    updated_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-18 12:00:00'
   -
     id: 3
     user_id: 3

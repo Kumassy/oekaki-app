@@ -11,10 +11,6 @@ $app->path('/', function($request) {
 });
 
 $app->path('users', function($request) use($app, $conn) {
-  $json = file_get_contents(__DIR__ . '/../data/users.json');
-  $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-  // $users = json_decode($json,true);
-
   $app->get(function($request, $id) use($app, $conn) {
     $_users = getAllUsers($conn);
     $users = [
@@ -43,10 +39,6 @@ $app->path('users', function($request) use($app, $conn) {
 });
 
 $app->path('posts', function($request) use($app, $conn) {
-  $json = file_get_contents(__DIR__ . '/../data/posts.json');
-  $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-  // $posts = json_decode($json,true);
-
   $app->get(function($request, $id) use($app, $conn) {
     $_posts = getAllPosts($conn);
     $posts = [
@@ -122,17 +114,25 @@ $app->path('home', function($request) use($app) {
   });
 });
 
-$app->path('comments', function($request) use($app) {
+$app->path('comments', function($request) use($app, $conn) {
   $json = file_get_contents(__DIR__ . '/../data/comments.json');
   $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
   $comments = json_decode($json,true);
 
-  $app->get(function($request, $id) use($app, $comments) {
+  $app->get(function($request, $id) use($app, $conn) {
+    $_comments = getAllComments($conn);
+    $comments = [
+      'comments' => $_comments
+    ];
     return $app->response(200, $comments)->header('Access-Control-Allow-Origin', '*');
   });
-  $app->param('int', function($request, $id) use($app, $comments) {
-    $app->get(function($request) use($app, $comments, $id) {
-      return $app->response(200, $comments['comments'][$id - 1])->header('Access-Control-Allow-Origin', '*');
+  $app->param('int', function($request, $id) use($app, $conn) {
+    $app->get(function($request) use($app, $conn, $id) {
+      $_comment = getComment($conn, $id);
+      $comment = [
+        'comment' => $_comment
+      ];
+      return $app->response(200, $comment)->header('Access-Control-Allow-Origin', '*');
     });
   });
 

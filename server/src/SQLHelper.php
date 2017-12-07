@@ -57,6 +57,7 @@ function getPost($conn, $id)
 
   return $post;
 }
+
 function getAllPosts($conn)
 {
   $stmt = $conn->prepare('SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts');
@@ -72,4 +73,30 @@ function getAllPosts($conn)
     return $post;
   }, $_posts);
   return $posts;
+}
+
+function getComment($conn, $id)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, comment,  updated_at FROM comments WHERE id = :id');
+  $stmt->bindValue("id", $id);
+  $stmt->execute();
+  $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $comment['user'] = getUser($conn, $comment['user_id']);
+  unset($comment['user_id']);
+
+  return $comment;
+}
+function getAllComments($conn)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, comment,  updated_at FROM comments');
+  $stmt->execute();
+  $_comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $comments = array_map(function($comment) use($conn) {
+    $comment['user'] = getUser($conn, $comment['user_id']);
+    unset($comment['user_id']);
+    return $comment;
+  }, $_comments);
+  return $comments;
 }
