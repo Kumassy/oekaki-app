@@ -73,13 +73,17 @@ $app->path('posts', function($request) use($app, $conn) {
   });
 });
 
-$app->path('threads', function($request) use($app) {
+$app->path('threads', function($request) use($app, $conn) {
   $json = file_get_contents(__DIR__ . '/../data/threads.json');
   $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
 
   $threads = json_decode($json,true);
 
-  $app->get(function($request) use($app, $threads) {
+  $app->get(function($request) use($app, $conn) {
+    $_threads = getAllThreads($conn);
+    $threads = [
+      'threads' => $_threads
+    ];
     return $app->response(200, $threads)->header('Access-Control-Allow-Origin', '*');
   });
   $app->param('int', function($request, $id) use($app, $threads) {

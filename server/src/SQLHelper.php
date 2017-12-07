@@ -100,3 +100,50 @@ function getAllComments($conn)
   }, $_comments);
   return $comments;
 }
+
+function getPostsForThread($conn, $thread_id)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts WHERE thread_id = :id');
+  $stmt->bindValue("id", $thread_id);
+  $stmt->execute();
+  $_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $posts = array_map(function($post) use($conn) {
+    $post['image'] = getImage($conn, $post['image_id'])['name'];
+    unset($post['image_id']);
+
+    $post['user'] = getUser($conn, $post['user_id']);
+    unset($post['user_id']);
+    return $post;
+  }, $_posts);
+  return $posts;
+}
+
+function getCommentsForThread($conn, $thread_id)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, comment,  updated_at FROM comments WHERE thread_id = :id');
+  $stmt->bindValue("id", $thread_id);
+  $stmt->execute();
+  $_comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $comments = array_map(function($comment) use($conn) {
+    $comment['user'] = getUser($conn, $comment['user_id']);
+    unset($comment['user_id']);
+    return $comment;
+  }, $_comments);
+  return $comments;
+}
+
+function getAllThreads($conn)
+{
+  $stmt = $conn->prepare('SELECT id, is_open, updated_at FROM threads');
+  $stmt->execute();
+  $_threads = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $threads = array_map(function($thread) use($conn) {
+    $thread['posts'] = getPostsForThread($conn, $thread['id']);
+    $thread['comments'] = getCommentsForThread($conn, $thread['id']);
+    return $thread;
+  }, $_threads);
+  return $threads;
+}
