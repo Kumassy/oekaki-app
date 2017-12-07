@@ -56,9 +56,10 @@ export function fetchThreadIfNeeded(id) {
 // comment:
 //   - user_id
 //   - comment
-function sendNewComment(comment) {
+function sendNewComment(threadId, comment) {
   return {
     type: SEND_NEW_COMMENT,
+    threadId: threadId,
     comment: comment
   }
 }

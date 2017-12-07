@@ -112,6 +112,59 @@ describe('todos reducer', () => {
     expect(reducer(state, action)).to.deep.equal(expected);
   })
 
+  it('should handle RECEIVE_THREAD', () => {
+    const state = {
+      pageThreads: {
+        threads: [
+          {
+            status: {
+              isFetching: true,
+              lastUpdated: '12345'
+            },
+            thread: {
+              id: 2
+            }
+          }
+        ]
+      }
+    };
+
+    const action = {
+      type: RECEIVE_THREAD,
+      thread: {
+        id: 2,
+        comments: [
+          {
+            id: 1
+          }
+        ]
+      },
+      receivedAt: '5678'
+    };
+    const expected = {
+      pageThreads: {
+        threads: [
+          {
+            status: {
+              isFetching: false,
+              lastUpdated: '5678'
+            },
+            thread: {
+              id: 2,
+              comments: [
+                {
+                  id: 1
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
+
+    expect(reducer(state, action)).to.deep.equal(expected);
+  })
+
 
 
   it('should handle SEND_NEW_COMMENT', () => {
@@ -119,10 +172,32 @@ describe('todos reducer', () => {
       pageThreads: {
         threads: [
           {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
             status: {
               isFetching: false
             },
             thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
               comments: [
                 {
                   id: 1,
@@ -137,7 +212,7 @@ describe('todos reducer', () => {
     const action = {
       type: SEND_NEW_COMMENT,
       comment: {
-        id: 2,
+        thread_id: 2,
         comment: 'text2'
       }
     };
@@ -145,17 +220,39 @@ describe('todos reducer', () => {
       pageThreads: {
         threads: [
           {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
             status: {
               isFetching: false
             },
             thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
               comments: [
                 {
                   id: 1,
                   comment: 'text'
                 },
                 {
-                  id: 2,
+                  thread_id: 2,
                   comment: 'text2',
                   isSending: true
                 }
@@ -173,18 +270,39 @@ describe('todos reducer', () => {
       pageThreads: {
         threads: [
           {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
             status: {
               isFetching: false
             },
             thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
               comments: [
                 {
                   id: 1,
-                  comment: 'text',
-                  timestamp: '**timestamp**'
+                  comment: 'text'
                 },
                 {
-                  id: 2,
+                  thread_id: 2,
                   comment: 'text2',
                   isSending: true
                 }
@@ -198,28 +316,49 @@ describe('todos reducer', () => {
       type: RECEIVE_NEW_COMMENT,
       comment: {
         id: 2,
-        comment: 'text2',
-        timestamp: '**timestamp2**'
+        thread_id: 2,
+        comment: 'text2'
       }
     };
     const newState = {
       pageThreads: {
         threads: [
           {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
             status: {
               isFetching: false
             },
             thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
               comments: [
                 {
                   id: 1,
-                  comment: 'text',
-                  timestamp: '**timestamp**'
+                  comment: 'text'
                 },
                 {
                   id: 2,
-                  comment: 'text2',
-                  timestamp: '**timestamp2**'
+                  thread_id: 2,
+                  comment: 'text2'
                 }
               ]
             }

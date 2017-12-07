@@ -10,99 +10,107 @@ export const initialState = {
   threads: []
 };
 
-// change item: {} -> items: [] to store multiple thread
 function pageThreads(state = initialState, action) {
   switch(action.type) {
     case REQUEST_THREAD:
-      // return Object.assign({}, state, {
-      //   isFetching: true
-      // })
-      const threads = state.threads.some(threadContainer => {
-        return threadContainer.thread.id === action.threadId
-      }) ? state.threads : state.threads.concat({
-        status: {
+      {
+        const { threadId } = action;
+        const threads = state.threads.some(threadContainer => {
+          return threadContainer.thread.id === threadId
+        }) ? state.threads : state.threads.concat({
+          status: {
 
-        },
-        thread: {
-          id: action.threadId
-        }
-      });
-      return {
-        ...state,
-        threads: threads.map(threadContainer => {
-          if (threadContainer.thread.id !== action.threadId) {
-            return threadContainer;
-          } else {
-            return {
-              ...threadContainer,
-              status: {
-                ...threadContainer.status,
-                isFetching: true
-              }
-            }
+          },
+          thread: {
+            id: threadId
           }
-        })
-      }
-    case RECEIVE_THREAD:
-      // return Object.assign({}, state, {
-      //   isFetching: false,
-      //   item: action.thread,
-      //   lastUpdated: action.receivedAt
-      // })
-      return {
-        ...state,
-        pageThreads: {
-          ...state.pageThreads,
-          threads: state.pageThreads.threads.map(threadContainer => {
-            if (threadContainer.thread.id === action.thread_id) {
+        });
+        return {
+          ...state,
+          threads: threads.map(threadContainer => {
+            if (threadContainer.thread.id !== threadId) {
               return threadContainer;
             } else {
               return {
                 ...threadContainer,
                 status: {
                   ...threadContainer.status,
-                  isFetching: false,
-                  lastUpdated: action.receivedAt
-                },
-                thread: action.thread
+                  isFetching: true
+                }
               }
             }
           })
         }
       }
+    case RECEIVE_THREAD:
+      {
+        const { thread, receivedAt } = action;
+
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== thread.id) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              status: {
+                ...threadContainer.status,
+                isFetching: false,
+                lastUpdated: receivedAt
+              },
+              thread: thread
+            }
+          }
+        });
+
+        return {
+          ...state,
+          threads
+        }
+      }
     case SEND_NEW_COMMENT:
       {
         const { comment } = action;
-        // comment.isSending = true;
-
-        // const newState = Object.assign({}, state, {});
-        // newState.item.comments = state.item.comments.concat(comment);
-        //
-        // return newState;
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== comment.thread_id) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              thread: {
+                ...threadContainer.thread,
+                comments: threadContainer.thread.comments.concat({
+                  ...comment,
+                  isSending: true
+                })
+              }
+            }
+          }
+        });
         return {
           ...state,
-          item: {
-            ...state.item,
-            comments: state.item.comments.concat({
-              ...comment,
-              isSending: true
-            })
-          }
+          threads
         }
       }
     case RECEIVE_NEW_COMMENT:
       {
         const { comment } = action;
-        // const newState = Object.assign({}, state, {});
-        // newState.item.comments = state.item.comments.filter(c => c.isSending == null).concat(comment);
-        //
-        // return newState;
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== comment.thread_id) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              thread: {
+                ...threadContainer.thread,
+                comments: threadContainer.thread.comments.filter(c => c.isSending == null).concat(comment)
+              }
+            }
+          }
+        });
+
         return {
           ...state,
-          item: {
-            ...state.item,
-            comments: state.item.comments.filter(c => c.isSending == null).concat(comment)
-          }
+          threads
         }
       }
     default:
