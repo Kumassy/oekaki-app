@@ -1,9 +1,0 @@
-users:
-  -
-    id: 1
-    login_name: aaaaa
-    pwd: pass_a
-  -
-    id: 2
-    login_name: bbbbb
-    pwd: pass_b

@@ -1,0 +1,116 @@
+images:
+  -
+    id: 1
+    name: images/pandaman.jpg
+    created_at: '2012-09-28 01:00:00'
+    updated_at: '2012-09-28 01:00:00'
+  -
+    id: 2
+    name: images/kumassy.jpg
+    created_at: '2012-09-28 01:00:00'
+    updated_at: '2012-09-28 01:00:00'
+  -
+    id: 3
+    name: images/furikake.jpg
+    created_at: '2013-09-28 01:00:00'
+    updated_at: '2013-09-28 01:00:00'
+
+users:
+  -
+    id: 1
+    username: pandaman
+    password: SUPER_SECRET_KUMASSY
+    image_id: 1
+    created_at: '2017-12-01 01:00:00'
+    updated_at: '2017-12-01 01:00:00'
+  -
+    id: 2
+    username: kumassy
+    password: SUPER_SECRET_KUMASSY
+    image_id: 2
+    created_at: '2017-12-11 01:00:00'
+    updated_at: '2017-12-11 01:00:00'
+  -
+    id: 3
+    username: furikake
+    password: SUPER_SECRET_FURIKAKE
+    image_id: 3
+    created_at: '2017-12-13 01:00:00'
+    updated_at: '2017-12-13 01:00:00'
+
+threads:
+  -
+    id: 1
+    is_open: true
+    created_at: '2017-12-13 01:00:00'
+    updated_at: '2017-12-16 12:00:00'
+  -
+    id: 2
+    is_open: true
+    created_at: '2017-12-15 01:00:00'
+    updated_at: '2017-12-19 12:00:00'
+
+posts:
+  -
+    id: 1
+    user_id: 1
+    thread_id: 1
+    image_id: 1
+    answer: aimasuku
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+  -
+    id: 2
+    user_id: 2
+    thread_id: 1
+    image_id: 1
+    answer: danran
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+  -
+    id: 3
+    user_id: 1
+    thread_id: 1
+    image_id: 1
+    answer: shi
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+  -
+    id: 4
+    user_id: 1
+    thread_id: 2
+    image_id: 1
+    answer: tukaretahito
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+  -
+    id: 5
+    user_id: 2
+    thread_id: 2
+    image_id: 2
+    answer: danran
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+
+comments:
+  -
+    id: 1
+    user_id: 1
+    thread_id: 1
+    comment: sugoi
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+  -
+    id: 2
+    user_id: 2
+    thread_id: 1
+    comment: aaaaaaa
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'
+  -
+    id: 3
+    user_id: 3
+    thread_id: 2
+    comment: sugbbbbbboi
+    created_at: '2017-12-14 12:00:00'
+    updated_at: '2017-12-14 12:00:00'

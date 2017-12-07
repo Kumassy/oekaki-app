@@ -30,8 +30,15 @@ class DatabaseTestBase extends PHPUnit_Extensions_Database_TestCase
   public function getDataSet()
   {
     // return new YamlDataSet(__DIR__ .'/seed.yml');
-    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ .'/seed.yml');
+    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ .'/../db/seed.yml');
   }
+
+  protected function getSetUpOperation()
+  {
+      // 引数にtrueを渡すように上書き
+      return \PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT(true);
+  }
+
 
   public function getPOD()
   {

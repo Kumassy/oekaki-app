@@ -15,12 +15,12 @@ class DatabaseTest extends DatabaseTestBase
     parent::setUp();
   }
 
-  public function testUserRowCount()
+  public function testUsersRowCount()
   {
-    $this->assertEquals(2, $this->getConnection()->getRowCount('users'), "Pre-Condition");
+    $this->assertEquals(3, $this->getConnection()->getRowCount('users'), "Pre-Condition");
   }
 
-  public function testSelectUser()
+  public function testUsersIndex()
   {
     $stmt = $this->getPOD()->query('SELECT * FROM users');
     $_users = array();
@@ -28,7 +28,7 @@ class DatabaseTest extends DatabaseTestBase
       $_users[] = $user;
     }
     $users = array_map(function($user) {
-      return array_filter_keys($user, ['id', 'login_name']);
+      return array_filter_keys($user, ['id', 'username', 'image_id']);
     }, $_users);
     $json = json_encode($users);
 
@@ -37,11 +37,18 @@ class DatabaseTest extends DatabaseTestBase
 [
   {
     "id": 1,
-    "login_name": "aaaaa"
+    "username": "pandaman",
+    "avatar": "images/pandaman.jpg"
   },
   {
     "id": 2,
-    "login_name": "bbbbb"
+    "username": "kumassy",
+    "avatar": "images/kumassy.jpg"
+  },
+  {
+    "id": 3,
+    "username": "furikake",
+    "avatar": "images/furikake.jpg"
   }
 ]
 EOD;
