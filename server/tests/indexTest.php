@@ -21,7 +21,7 @@ class DatabaseTest extends DatabaseTestBase
     $this->assertEquals(3, $this->getConnection()->getRowCount('users'), "Pre-Condition");
   }
 
-  public function testUsersIndex()
+  public function testGetUsers()
   {
     global $app;
     $res = $app->run('GET', '/users');
@@ -51,8 +51,26 @@ EOD;
     $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
   }
 
+  public function testGetUser()
+  {
+    global $app;
+    $res = $app->run('GET', '/users/3');
 
-  public function testPostsIndex()
+    $expectedJson = <<<EOD
+{
+  "user": {
+    "id": 3,
+    "username": "furikake",
+    "avatar": "images/furikake.jpg"
+  }
+}
+EOD;
+    $this->assertEquals(200, $res->status());
+    $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
+  }
+
+
+  public function testGetPosts()
   {
     global $app;
     $res = $app->run('GET', '/posts');
@@ -128,7 +146,7 @@ EOD;
   }
 
 
-  public function testThreadsIndex()
+  public function testGetThreads()
   {
     global $app;
     $res = $app->run('GET', '/threads');

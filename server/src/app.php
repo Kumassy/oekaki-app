@@ -15,16 +15,21 @@ $app->path('users', function($request) use($app, $conn) {
   $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
   // $users = json_decode($json,true);
 
-  $app->get(function($request, $id) use($conn) {
+  $app->get(function($request, $id) use($app, $conn) {
     $_users = getAllUsers($conn);
     $users = [
       'users' => $_users
     ];
-    return $users;
+
+    return $app->response(200, $users)->header('Access-Control-Allow-Origin', '*');
   });
-  $app->param('int', function($request, $id) use($app, $users) {
-    $app->get(function($request) use($users, $id) {
-      return $users['users'][$id];
+  $app->param('int', function($request, $id) use($app, $conn) {
+    $app->get(function($request) use($app, $conn, $id) {
+      $_user = getUser($conn, $id);
+      $user = [
+        'user' => $_user
+      ];
+      return $app->response(200, $user)->header('Access-Control-Allow-Origin', '*');
     });
   });
   // $app->path('admin', function($request) use($app) {
