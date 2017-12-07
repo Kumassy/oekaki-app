@@ -370,4 +370,62 @@ EOD;
     $this->assertEquals(200, $res->status());
     $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
   }
+
+  public function testGetThread()
+  {
+    global $app;
+    $res = $app->run('GET', '/threads/2');
+
+    $expectedJson = <<<EOD
+{
+  "thread": {
+    "id": 2,
+    "is_open": true,
+    "updated_at": "2017-12-19 12:00:00",
+    "posts": [
+      {
+        "id": 4,
+        "thread_id": 2,
+        "image": "images/pandaman.jpg",
+        "answer": "tukaretahito",
+        "updated_at": "2017-12-14 12:00:00",
+        "user": {
+          "id": 1,
+          "username": "pandaman",
+          "avatar": "images/pandaman.jpg"
+        }
+      },
+      {
+        "id": 5,
+        "thread_id": 2,
+        "image": "images/kumassy.jpg",
+        "answer": "danran",
+        "updated_at": "2017-12-16 18:00:00",
+        "user": {
+          "id": 2,
+          "username": "kumassy",
+          "avatar": "images/kumassy.jpg"
+        }
+      }
+    ],
+    "comments": [
+      {
+        "id": 3,
+        "thread_id": 2,
+        "comment": "sugbbbbbboi",
+        "updated_at": "2017-12-14 12:00:00",
+        "user": {
+          "id": 3,
+          "username": "furikake",
+          "avatar": "images/furikake.jpg"
+        }
+      }
+    ]
+  }
+}
+EOD;
+
+    $this->assertEquals(200, $res->status());
+    $this->assertJsonStringEqualsJsonString($expectedJson, $res->content());
+  }
 }

@@ -134,6 +134,19 @@ function getCommentsForThread($conn, $thread_id)
   return $comments;
 }
 
+function getThread($conn, $id)
+{
+  $stmt = $conn->prepare('SELECT id, is_open, updated_at FROM threads WHERE id = :id');
+  $stmt->bindValue("id", $id);
+  $stmt->execute();
+  $thread = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $thread['posts'] = getPostsForThread($conn, $thread['id']);
+  $thread['comments'] = getCommentsForThread($conn, $thread['id']);
+
+  return $thread;
+}
+
 function getAllThreads($conn)
 {
   $stmt = $conn->prepare('SELECT id, is_open, updated_at FROM threads');
