@@ -1,19 +1,25 @@
 <?php
 // namespace MyApp;
 require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/SQLHelper.php';
 
 // Your App
+$conn = getConnection();
 $app = new Bullet\App();
 $app->path('/', function($request) {
   return "Hello World!";
 });
 
-$app->path('users', function($request) use($app) {
+$app->path('users', function($request) use($app, $conn) {
   $json = file_get_contents(__DIR__ . '/../data/users.json');
   $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-  $users = json_decode($json,true);
+  // $users = json_decode($json,true);
 
-  $app->get(function($request, $id) use($users) {
+  $app->get(function($request, $id) use($conn) {
+    $_users = getAllUsers($conn);
+    $users = [
+      'users' => $_users
+    ];
     return $users;
   });
   $app->param('int', function($request, $id) use($app, $users) {
