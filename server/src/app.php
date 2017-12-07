@@ -56,17 +56,23 @@ $app->path('posts', function($request) use($app, $conn) {
     });
   });
 
-  $app->path('new', function($request) use($app) {
+  $app->path('new', function($request) use($app, $conn) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
                ->header('Access-Control-Allow-Origin', '*')
                ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
                ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $request) {
-      file_put_contents('php://stderr', print_r($request->params(), TRUE));
-      file_put_contents('php://stderr', print_r($_FILES['image'], TRUE));
-      return $app->response(200, "new")
+    $app->post(function($request) use($app, $conn, $request) {
+      $post = [
+        'user_id' => $request->params()['user_id'],
+        'thread_id' => $request->params()['thread_id'],
+        'answer' => $request->params()['answer'],
+        'image' => $_FILES['image']
+      ];
+      $newPost = createPost($conn, $post);
+
+      return $app->response(200, $newPost)
               ->header('Access-Control-Allow-Origin', '*');
     });
 
@@ -118,10 +124,6 @@ $app->path('home', function($request) use($app) {
 });
 
 $app->path('comments', function($request) use($app, $conn) {
-  $json = file_get_contents(__DIR__ . '/../data/comments.json');
-  $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-  $comments = json_decode($json,true);
-
   $app->get(function($request, $id) use($app, $conn) {
     $_comments = getAllComments($conn);
     $comments = [
@@ -167,6 +169,8 @@ $app->path('comments', function($request) use($app, $conn) {
         'comment' => $request->params()['comment']
       ];
       $newComment = createComment($conn, $comment);
+
+      // TODO: remove it!
       sleep(2);
       return $app->response(200, $newComment)
               ->header('Access-Control-Allow-Origin', '*');
