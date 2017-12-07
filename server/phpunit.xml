@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<phpunit
+        bootstrap="./tests/bootstrap.php"
+        colors="true"
+        convertErrorsToExceptions="false"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        verbose="true"
+        stopOnFailure="true"
+        processIsolation="false"
+        backupGlobals="false"
+        syntaxCheck="true"
+        >
+    <php>
+      <var name="DB_CONNECT" value="pgsql:host=localhost dbname=j150989k user=j150989k" />
+      <var name="DB_DBNAME" value="j150989k" />
+    </php>
+    <testsuite name="server tests">
+        <directory suffix=".php">./tests</directory>
+    </testsuite>
+</phpunit>
