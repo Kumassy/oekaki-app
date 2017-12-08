@@ -130,7 +130,7 @@ function pageThreads(state = initialState, action) {
                 ...threadContainer.thread,
                 posts: threadContainer.thread.posts.concat({
                   ...post,
-                  image: post.image.name,
+                  image: post.image, // base64
                   isSending: true
                 })
               }

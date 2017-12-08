@@ -75,6 +75,8 @@ $app->path('posts', function($request) use($app, $conn) {
         'post' => $_newPost
       ];
 
+      sleep(2);
+
       return $app->response(200, $newPost)
               ->header('Access-Control-Allow-Origin', '*');
     });

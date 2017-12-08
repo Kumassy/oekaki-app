@@ -1,6 +1,7 @@
 'use strict';
 
 import { getThread, newComment, newPost } from '../clientHttp';
+import { getBase64 } from '../utils';
 
 // Action Creators
 // See: https://redux.js.org/docs/basics/ExampleTodoList.html
@@ -111,8 +112,14 @@ function receiveNewPost(newPost) {
 //   - answer
 export function createPost(post) {
   return dispatch => {
-    dispatch(sendNewPost(post));
-    return newPost(post)
-      .then(newPost => dispatch(receiveNewPost(newPost)));
+    return getBase64(post.image).then((base64) => {
+      const postbase64 = {
+        ...post,
+        image: base64
+      };
+      dispatch(sendNewPost(postbase64));
+      return newPost(post)
+        .then(newPost => dispatch(receiveNewPost(newPost)));
+    })
   }
 }

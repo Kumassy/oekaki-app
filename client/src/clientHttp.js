@@ -1,3 +1,4 @@
+'use strict';
 import axios from 'axios';
 
 export const _host = 'http://localhost:3000';
