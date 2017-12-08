@@ -36,6 +36,28 @@ $app->path('users', function($request) use($app, $conn) {
   //   });
   //
   // });
+
+  // sign in
+  $app->path('new', function($request) use($app, $conn) {
+    $app->options(function($request) use($app, $request) {
+      return $app->response(200, "new")
+               ->header('Access-Control-Allow-Origin', '*')
+               ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+               ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+    });
+    $app->post(function($request) use($app, $conn, $request) {
+      $credentials = [
+        'username' => $request->params()['username'],
+        'password' => $request->params()['password']
+      ];
+
+      $user = createUser($conn, $credentials);
+
+      return $app->response(200, $user)
+              ->header('Access-Control-Allow-Origin', '*');
+    });
+
+  });
 });
 
 $app->path('posts', function($request) use($app, $conn) {
@@ -119,7 +141,7 @@ $app->path('threads', function($request) use($app, $conn) {
 });
 
 $app->path('home', function($request) use($app, $conn) {
-  $app->get(function($request, $id) use($app, $conn, $home) {
+  $app->get(function($request, $id) use($app, $conn) {
     $_posts = getHomePosts($conn);
     $posts = [
       'posts' => $_posts
@@ -183,6 +205,20 @@ $app->path('comments', function($request) use($app, $conn) {
       return $app->response(200, $newComment)
               ->header('Access-Control-Allow-Origin', '*');
     });
+  });
+});
+
+
+$app->path('login', function($request) use($app, $conn) {
+  $app->post(function($request) use($app, $conn) {
+    $credentials = [
+      'username' => $request->params()['username'],
+      'password' => $request->params()['password']
+    ];
+
+    $user = tryLogin($conn, $credentials);
+
+    return $app->response(200, $user)->header('Access-Control-Allow-Origin', '*');
   });
 });
 

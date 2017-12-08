@@ -18,7 +18,7 @@ create table users(
   id serial,
   username varchar,
   password varchar,
-  image_id serial,
+  image_id integer,
 
   created_at timestamp,
   updated_at timestamp,
@@ -37,9 +37,9 @@ create table threads(
 
 create table posts(
   id serial,
-  user_id serial,
-  thread_id serial,
-  image_id serial,
+  user_id integer,
+  thread_id integer,
+  image_id integer,
   answer varchar,
 
   created_at timestamp,
@@ -52,8 +52,8 @@ create table posts(
 
 create table comments(
   id serial,
-  user_id serial,
-  thread_id serial,
+  user_id integer,
+  thread_id integer,
   comment varchar,
 
   created_at timestamp,

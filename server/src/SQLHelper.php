@@ -269,3 +269,37 @@ function createPost($conn, $post)
     throw $e;
   }
 }
+
+
+function createUser($conn, $credentials)
+{
+  $hash = password_hash($credentials['password'], PASSWORD_DEFAULT);
+
+  $conn->beginTransaction();
+  try {
+    $stmt = $conn->prepare('INSERT INTO users (username, password, image_id, created_at, updated_at) VALUES (:username, :password, NULL, NOW(), NOW())');
+    $stmt->bindValue("username", $credentials['username']);
+    $stmt->bindValue("password", $hash);
+    $stmt->execute();
+
+    $id = $conn->lastInsertId();
+    $conn->commit();
+    return getUser($conn, $id);
+  } catch (Exception $e) {
+    $conn->rollBack();
+    throw $e;
+  }
+}
+
+function tryLogin($conn, $credentials)
+{
+  $stmt = $conn->prepare('SELECT * FROM users WHERE username = :username');
+  $stmt->bindValue("username", $credentials['username']);
+  $stmt->execute();
+
+  $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  if (count($users) == 1 && password_verify($credentials['password'], $users[0]['password'])) {
+    return getUser($conn, $users[0]['id']);
+  }
+}
