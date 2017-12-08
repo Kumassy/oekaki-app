@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import {
   REQUEST_THREAD,
   RECEIVE_THREAD,
@@ -6,13 +5,13 @@ import {
   RECEIVE_NEW_COMMENT,
   SEND_NEW_POST,
   RECEIVE_NEW_POST
-} from '../actions/index';
+} from '../actions/actionTypes';
 
 export const initialState = {
   threads: []
 };
 
-function pageThreads(state = initialState, action) {
+export function threadsReducer(state = initialState, action) {
   switch(action.type) {
     case REQUEST_THREAD:
       {
@@ -130,7 +129,6 @@ function pageThreads(state = initialState, action) {
                 ...threadContainer.thread,
                 posts: threadContainer.thread.posts.concat({
                   ...post,
-                  image: post.image, // base64
                   isSending: true
                 })
               }
@@ -168,9 +166,3 @@ function pageThreads(state = initialState, action) {
       return state
   }
 }
-
-const rootReducer = combineReducers({
-  pageThreads
-})
-
-export default rootReducer

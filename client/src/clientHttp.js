@@ -55,3 +55,12 @@ export function getThread(id) {
   }
   return client.get(`/threads/${id}`).then(json => json.data.thread);
 }
+
+export function getHomePosts() {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/home`).then(json => json.data.posts);
+}

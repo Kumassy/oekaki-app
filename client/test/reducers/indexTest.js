@@ -1,6 +1,6 @@
 'use strict';
 
-import reducer from '../../src/reducers/index'
+import { threadsReducer } from '../../src/reducers/threadsReducer'
 import {
   REQUEST_THREAD,
   RECEIVE_THREAD,
@@ -8,22 +8,20 @@ import {
   RECEIVE_NEW_COMMENT,
   SEND_NEW_POST,
   RECEIVE_NEW_POST
-} from '../../src/actions/index';
+} from '../../src/actions/actionTypes';
+
+const reducer = threadsReducer;
 
 describe('todos reducer', () => {
   it('should return the initial state', () => {
     expect(reducer(undefined, {})).to.deep.equal({
-      pageThreads: {
-        threads: []
-      }
+      threads: []
     })
   })
 
   it('should add new thread with REQUEST_THREAD', () => {
     const state = {
-      pageThreads: {
-        threads: []
-      }
+      threads: []
     };
 
     const action = {
@@ -31,20 +29,18 @@ describe('todos reducer', () => {
       threadId: 1
     };
     const expected = {
-      pageThreads: {
-        threads: [
-          {
-            status: {
-              isFetching: true
-            },
-            thread: {
-              id: 1,
-              posts: [],
-              comments: []
-            }
+      threads: [
+        {
+          status: {
+            isFetching: true
+          },
+          thread: {
+            id: 1,
+            posts: [],
+            comments: []
           }
-        ]
-      }
+        }
+      ]
     };
 
     expect(reducer(state, action)).to.deep.equal(expected);
@@ -52,32 +48,30 @@ describe('todos reducer', () => {
 
   it('should refresh thread state with REQUEST_THREAD', () => {
     const state = {
-      pageThreads: {
-        threads: [
-          {
-            status: {
-              isFetching: false,
-              lastUpdated: '123456'
-            },
-            thread: {
-              id: 1,
-              comments: [],
-              posts: []
-            }
+      threads: [
+        {
+          status: {
+            isFetching: false,
+            lastUpdated: '123456'
           },
-          {
-            status: {
-              isFetching: false,
-              lastUpdated: '56789'
-            },
-            thread: {
-              id: 2,
-              comments: [],
-              posts: []
-            }
+          thread: {
+            id: 1,
+            comments: [],
+            posts: []
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false,
+            lastUpdated: '56789'
+          },
+          thread: {
+            id: 2,
+            comments: [],
+            posts: []
+          }
+        }
+      ]
     };
 
     const action = {
@@ -85,32 +79,30 @@ describe('todos reducer', () => {
       threadId: 2
     };
     const expected = {
-      pageThreads: {
-        threads: [
-          {
-            status: {
-              isFetching: false,
-              lastUpdated: '123456'
-            },
-            thread: {
-              id: 1,
-              comments: [],
-              posts: []
-            }
+      threads: [
+        {
+          status: {
+            isFetching: false,
+            lastUpdated: '123456'
           },
-          {
-            status: {
-              isFetching: true,
-              lastUpdated: '56789'
-            },
-            thread: {
-              id: 2,
-              comments: [],
-              posts: []
-            }
+          thread: {
+            id: 1,
+            comments: [],
+            posts: []
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: true,
+            lastUpdated: '56789'
+          },
+          thread: {
+            id: 2,
+            comments: [],
+            posts: []
+          }
+        }
+      ]
     };
 
     expect(reducer(state, action)).to.deep.equal(expected);
@@ -118,21 +110,19 @@ describe('todos reducer', () => {
 
   it('should handle RECEIVE_THREAD', () => {
     const state = {
-      pageThreads: {
-        threads: [
-          {
-            status: {
-              isFetching: true,
-              lastUpdated: '12345'
-            },
-            thread: {
-              id: 2,
-              comments: [],
-              posts: []
-            }
+      threads: [
+        {
+          status: {
+            isFetching: true,
+            lastUpdated: '12345'
+          },
+          thread: {
+            id: 2,
+            comments: [],
+            posts: []
           }
-        ]
-      }
+        }
+      ]
     };
 
     const action = {
@@ -153,29 +143,27 @@ describe('todos reducer', () => {
       receivedAt: '5678'
     };
     const expected = {
-      pageThreads: {
-        threads: [
-          {
-            status: {
-              isFetching: false,
-              lastUpdated: '5678'
-            },
-            thread: {
-              id: 2,
-              comments: [
-                {
-                  id: 1
-                }
-              ],
-              posts: [
-                {
-                  id: 10
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {
+            isFetching: false,
+            lastUpdated: '5678'
+          },
+          thread: {
+            id: 2,
+            comments: [
+              {
+                id: 1
+              }
+            ],
+            posts: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        }
+      ]
     };
 
     expect(reducer(state, action)).to.deep.equal(expected);
@@ -185,45 +173,43 @@ describe('todos reducer', () => {
 
   it('should handle SEND_NEW_COMMENT', () => {
     const state = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              }
+            ]
+          }
+        }
+      ]
     };
     const action = {
       type: SEND_NEW_COMMENT,
@@ -233,100 +219,96 @@ describe('todos reducer', () => {
       }
     };
     const newState = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                },
-                {
-                  thread_id: 2,
-                  comment: 'text2',
-                  isSending: true
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              },
+              {
+                thread_id: 2,
+                comment: 'text2',
+                isSending: true
+              }
+            ]
+          }
+        }
+      ]
     };
     expect(reducer(state, action)).to.deep.equal(newState);
   })
 
   it('should handle RECEIVE_NEW_COMMENT', () => {
     const state =  {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                },
-                {
-                  thread_id: 2,
-                  comment: 'text2',
-                  isSending: true
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              },
+              {
+                thread_id: 2,
+                comment: 'text2',
+                isSending: true
+              }
+            ]
+          }
+        }
+      ]
     };
     const action = {
       type: RECEIVE_NEW_COMMENT,
@@ -337,50 +319,48 @@ describe('todos reducer', () => {
       }
     };
     const newState = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                },
-                {
-                  id: 2,
-                  thread_id: 2,
-                  comment: 'text2'
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              },
+              {
+                id: 2,
+                thread_id: 2,
+                comment: 'text2'
+              }
+            ]
+          }
+        }
+      ]
     };
     expect(reducer(state, action)).to.deep.equal(newState);
   })
@@ -388,45 +368,43 @@ describe('todos reducer', () => {
 
   it('should handle SEND_NEW_POST', () => {
     const state = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              }
+            ]
+          }
+        }
+      ]
     };
     const action = {
       type: SEND_NEW_POST,
@@ -436,99 +414,95 @@ describe('todos reducer', () => {
       }
     };
     const newState = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                },
-                {
-                  thread_id: 2,
-                  answer: 'text2',
-                  isSending: true
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              },
+              {
+                thread_id: 2,
+                answer: 'text2',
+                isSending: true
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              }
+            ]
+          }
+        }
+      ]
     };
     expect(reducer(state, action)).to.deep.equal(newState);
   })
 
   it('should handle RECEIVE_NEW_POST', () => {
     const state = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                },
-                {
-                  answer: 'text2',
-                  isSending: true
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              },
+              {
+                answer: 'text2',
+                isSending: true
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              }
+            ]
+          }
+        }
+      ]
     };
     const action = {
       type: RECEIVE_NEW_POST,
@@ -539,50 +513,48 @@ describe('todos reducer', () => {
       }
     };
     const newState = {
-      pageThreads: {
-        threads: [
-          {
-            status: {},
-            thread: {
-              id: 1,
-              posts: [
-                {
-                  id: 1
-                }
-              ],
-              comments: [
-                {
-                  id: 10
-                }
-              ]
-            }
-          },
-          {
-            status: {
-              isFetching: false
-            },
-            thread: {
-              id: 2,
-              posts: [
-                {
-                  id: 1
-                },
-                {
-                  id: 2,
-                  thread_id: 2,
-                  answer: 'text2'
-                }
-              ],
-              comments: [
-                {
-                  id: 1,
-                  comment: 'text'
-                }
-              ]
-            }
+      threads: [
+        {
+          status: {},
+          thread: {
+            id: 1,
+            posts: [
+              {
+                id: 1
+              }
+            ],
+            comments: [
+              {
+                id: 10
+              }
+            ]
           }
-        ]
-      }
+        },
+        {
+          status: {
+            isFetching: false
+          },
+          thread: {
+            id: 2,
+            posts: [
+              {
+                id: 1
+              },
+              {
+                id: 2,
+                thread_id: 2,
+                answer: 'text2'
+              }
+            ],
+            comments: [
+              {
+                id: 1,
+                comment: 'text'
+              }
+            ]
+          }
+        }
+      ]
     };
     expect(reducer(state, action)).to.deep.equal(newState);
   })

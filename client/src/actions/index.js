@@ -1,18 +1,20 @@
 'use strict';
 
-import { getThread, newComment, newPost } from '../clientHttp';
+import { getThread, newComment, newPost, getHomePosts } from '../clientHttp';
 import { getBase64 } from '../utils';
 
 // Action Creators
 // See: https://redux.js.org/docs/basics/ExampleTodoList.html
-export const REQUEST_THREAD = 'REQUEST_THREAD'
-export const RECEIVE_THREAD = 'RECEIVE_THREAD'
-
-export const SEND_NEW_COMMENT = 'SEND_NEW_COMMENT'
-export const RECEIVE_NEW_COMMENT = 'RECEIVE_NEW_COMMENT'
-
-export const SEND_NEW_POST = 'SEND_NEW_POST'
-export const RECEIVE_NEW_POST = 'RECEIVE_NEW_POST'
+import {
+  REQUEST_HOME_POSTS,
+  RECEIVE_HOME_POSTS,
+  REQUEST_THREAD,
+  RECEIVE_THREAD,
+  SEND_NEW_COMMENT,
+  RECEIVE_NEW_COMMENT,
+  SEND_NEW_POST,
+  RECEIVE_NEW_POST
+} from './actionTypes'
 
 function requestThread(id) {
   return {
@@ -121,5 +123,28 @@ export function createPost(post) {
       return newPost(post)
         .then(newPost => dispatch(receiveNewPost(newPost)));
     })
+  }
+}
+
+
+function requestHomePosts() {
+  return {
+    type: REQUEST_HOME_POSTS
+  }
+}
+
+function receiveHomePosts(posts) {
+  return {
+    type: RECEIVE_HOME_POSTS,
+    posts: posts,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchHomePosts(id) {
+  return dispatch => {
+    dispatch(requestHomePosts());
+    return getHomePosts()
+      .then(posts => dispatch(receiveHomePosts(posts)));
   }
 }

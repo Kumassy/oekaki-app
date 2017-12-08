@@ -126,18 +126,22 @@ function mapStateToProps(state) {
   };
 }
 
-const ThreadPage = connect(mapStateToProps)(ThreadPageComponent);
+const ThreadPageContainer = connect(mapStateToProps)(ThreadPageComponent);
+export default ThreadPageContainer;
 
-const store = configureStore();
 
-export default class ThreadPageContainer extends React.Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <ThreadPage match={this.props.match}/>
-      </Provider>
-    )
-  }
-}
+// const ThreadPage = connect(mapStateToProps)(ThreadPageComponent);
+
+// const store = configureStore();
+//
+// export default class ThreadPageContainer extends React.Component {
+//   render() {
+//     return (
+//       <Provider store={store}>
+//         <ThreadPage match={this.props.match}/>
+//       </Provider>
+//     )
+//   }
+// }
 
 // export default ThreadPageComponent;
