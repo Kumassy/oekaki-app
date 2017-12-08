@@ -5,7 +5,9 @@ import {
   REQUEST_THREAD,
   RECEIVE_THREAD,
   SEND_NEW_COMMENT,
-  RECEIVE_NEW_COMMENT
+  RECEIVE_NEW_COMMENT,
+  SEND_NEW_POST,
+  RECEIVE_NEW_POST
 } from '../../src/actions/index';
 
 describe('todos reducer', () => {
@@ -36,7 +38,9 @@ describe('todos reducer', () => {
               isFetching: true
             },
             thread: {
-              id: 1
+              id: 1,
+              posts: [],
+              comments: []
             }
           }
         ]
@@ -122,7 +126,9 @@ describe('todos reducer', () => {
               lastUpdated: '12345'
             },
             thread: {
-              id: 2
+              id: 2,
+              comments: [],
+              posts: []
             }
           }
         ]
@@ -136,6 +142,11 @@ describe('todos reducer', () => {
         comments: [
           {
             id: 1
+          }
+        ],
+        posts: [
+          {
+            id: 10
           }
         ]
       },
@@ -154,6 +165,11 @@ describe('todos reducer', () => {
               comments: [
                 {
                   id: 1
+                }
+              ],
+              posts: [
+                {
+                  id: 10
                 }
               ]
             }
@@ -359,6 +375,208 @@ describe('todos reducer', () => {
                   id: 2,
                   thread_id: 2,
                   comment: 'text2'
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
+    expect(reducer(state, action)).to.deep.equal(newState);
+  })
+
+
+  it('should handle SEND_NEW_POST', () => {
+    const state = {
+      pageThreads: {
+        threads: [
+          {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
+            status: {
+              isFetching: false
+            },
+            thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 1,
+                  comment: 'text'
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
+    const action = {
+      type: SEND_NEW_POST,
+      post: {
+        thread_id: 2,
+        answer: 'text2'
+      }
+    };
+    const newState = {
+      pageThreads: {
+        threads: [
+          {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
+            status: {
+              isFetching: false
+            },
+            thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                },
+                {
+                  thread_id: 2,
+                  answer: 'text2',
+                  isSending: true
+                }
+              ],
+              comments: [
+                {
+                  id: 1,
+                  comment: 'text'
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
+    expect(reducer(state, action)).to.deep.equal(newState);
+  })
+
+  it('should handle RECEIVE_NEW_POST', () => {
+    const state = {
+      pageThreads: {
+        threads: [
+          {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
+            status: {
+              isFetching: false
+            },
+            thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                },
+                {
+                  answer: 'text2',
+                  isSending: true
+                }
+              ],
+              comments: [
+                {
+                  id: 1,
+                  comment: 'text'
+                }
+              ]
+            }
+          }
+        ]
+      }
+    };
+    const action = {
+      type: RECEIVE_NEW_POST,
+      post: {
+        id: 2,
+        thread_id: 2,
+        answer: 'text2'
+      }
+    };
+    const newState = {
+      pageThreads: {
+        threads: [
+          {
+            status: {},
+            thread: {
+              id: 1,
+              posts: [
+                {
+                  id: 1
+                }
+              ],
+              comments: [
+                {
+                  id: 10
+                }
+              ]
+            }
+          },
+          {
+            status: {
+              isFetching: false
+            },
+            thread: {
+              id: 2,
+              posts: [
+                {
+                  id: 1
+                },
+                {
+                  id: 2,
+                  thread_id: 2,
+                  answer: 'text2'
+                }
+              ],
+              comments: [
+                {
+                  id: 1,
+                  comment: 'text'
                 }
               ]
             }

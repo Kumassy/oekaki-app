@@ -40,23 +40,32 @@ class ThreadPageComponent extends React.Component {
   }
 
   render() {
-    const { isFetching, thread } = this.props;
-    const posts = thread.posts || [];
-    const comments = thread.comments || [];
+    const { match, isFetching, threads } = this.props;
+    const myThreadId = parseInt(match.params.id);
+    const myThreadContainer = threads.find(th => th.thread.id === myThreadId) || {
+      thread: {
+        posts: [],
+        comments: []
+      }
+    };
+    const myThread = myThreadContainer.thread;
+    console.log(myThread);
+    const { posts, comments } = myThread;
 
     return (
       <div className="threadpage-component">
         <ul className="posts">
           {posts.map(post =>
-            <li key={post.id}>
+            <li key={post.isSending ? 'sending-post' : post.id}>
               <Post image={`${_host}/${post.image}`}
-                    timestamp={post.timestamp}
+                    timestamp={post.updated_at}
                     text={post.answer}
                     userName={post.user.username}
-                    userAvatar={`${_host}/${post.user.avatar}`} />
+                    userAvatar={`${_host}/${post.user.avatar}`}
+                    style={{ opacity: post.isSending? 0.5 : 1 }} />
             </li>)}
             <li key="new-post">
-              <NewPost dispatch={this.props.dispatch} user={myuser} threadId={thread.id}></NewPost>
+              <NewPost dispatch={this.props.dispatch} user={myuser} threadId={myThreadId}></NewPost>
             </li>
         </ul>
         <ul className="comments">
@@ -65,11 +74,11 @@ class ThreadPageComponent extends React.Component {
               <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
                         userName={comment.user.username}
                         comment={comment.comment}
-                        timestamp={comment.timestamp}
+                        timestamp={comment.updated_at}
                         style={{ opacity: comment.isSending? 0.5 : 1 }} />
             </li>)}
             <li key="new-comment">
-              <NewComment dispatch={this.props.dispatch} user={myuser} threadId={thread.id}></NewComment>
+              <NewComment dispatch={this.props.dispatch} user={myuser} threadId={myThreadId}></NewComment>
             </li>
         </ul>
       </div>
@@ -84,6 +93,18 @@ ThreadPageComponent.displayName = 'ThreadPageComponent';
 // ThreadPageComponent.defaultProps = {};
 
 function mapStateToProps(state) {
+  // TODO:
+  // ```
+  // myThreadContainer = threads.find(th => th.thread.id === myThreadId) || {
+  //   thread: {
+  //     posts: [],
+  //     comments: []
+  //   }
+  // };
+  // ```
+  // あたりのロジックをここにかく
+
+
   // const {
   //   isFetching,
   //   lastUpdated,
@@ -92,15 +113,16 @@ function mapStateToProps(state) {
   //   isFetching: true,
   //   item: {}
   // };
-  const { thread } = state;
-  const isFetching = thread.isFetching || true;
-  const item = thread.item || {};
-  const lastUpdated = thread.lastUpdated;
+  const { pageThreads } = state;
+  // const isFetching = thread.isFetching || true;
+  const { threads } = pageThreads;
+  // const lastUpdated = thread.lastUpdated;
 
   return {
-    thread: item,
-    isFetching: isFetching,
-    lastUpdated: lastUpdated
+    // thread: item,
+    // isFetching: isFetching,
+    // lastUpdated: lastUpdated
+    threads
   };
 }
 

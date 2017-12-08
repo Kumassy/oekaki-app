@@ -70,7 +70,10 @@ $app->path('posts', function($request) use($app, $conn) {
         'answer' => $request->params()['answer'],
         'image' => $_FILES['image']
       ];
-      $newPost = createPost($conn, $post);
+      $_newPost = createPost($conn, $post);
+      $newPost = [
+        'post' => $_newPost
+      ];
 
       return $app->response(200, $newPost)
               ->header('Access-Control-Allow-Origin', '*');
@@ -168,7 +171,10 @@ $app->path('comments', function($request) use($app, $conn) {
         'thread_id' => $request->params()['thread_id'],
         'comment' => $request->params()['comment']
       ];
-      $newComment = createComment($conn, $comment);
+      $_newComment = createComment($conn, $comment);
+      $newComment = [
+        'comment' => $_newComment
+      ];
 
       // TODO: remove it!
       sleep(2);

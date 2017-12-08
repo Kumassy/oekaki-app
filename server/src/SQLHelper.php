@@ -12,7 +12,12 @@ function getImage($conn, $id) {
   $stmt->bindValue("id", $id);
   $stmt->execute();
 
-  return $stmt->fetch(PDO::FETCH_ASSOC);
+  $image = $stmt->fetch(PDO::FETCH_ASSOC);
+  if (strpos($image['name'], 'images/') === false) {
+    $image['name'] = 'images/' . $image['name'];
+  }
+
+  return $image;
 }
 function getUser($conn, $id) {
   $stmt = $conn->prepare('SELECT id, username, image_id FROM users WHERE id = :id');

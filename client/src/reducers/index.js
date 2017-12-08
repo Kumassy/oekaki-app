@@ -3,7 +3,9 @@ import {
   REQUEST_THREAD,
   RECEIVE_THREAD,
   SEND_NEW_COMMENT,
-  RECEIVE_NEW_COMMENT
+  RECEIVE_NEW_COMMENT,
+  SEND_NEW_POST,
+  RECEIVE_NEW_POST
 } from '../actions/index';
 
 export const initialState = {
@@ -22,7 +24,9 @@ function pageThreads(state = initialState, action) {
 
           },
           thread: {
-            id: threadId
+            id: threadId,
+            posts: [],
+            comments: []
           }
         });
         return {
@@ -65,7 +69,7 @@ function pageThreads(state = initialState, action) {
         return {
           ...state,
           threads
-        }
+        };
       }
     case SEND_NEW_COMMENT:
       {
@@ -103,6 +107,53 @@ function pageThreads(state = initialState, action) {
               thread: {
                 ...threadContainer.thread,
                 comments: threadContainer.thread.comments.filter(c => c.isSending == null).concat(comment)
+              }
+            }
+          }
+        });
+
+        return {
+          ...state,
+          threads
+        }
+      }
+    case SEND_NEW_POST:
+      {
+        const { post } = action;
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== post.thread_id) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              thread: {
+                ...threadContainer.thread,
+                posts: threadContainer.thread.posts.concat({
+                  ...post,
+                  image: post.image.name,
+                  isSending: true
+                })
+              }
+            }
+          }
+        });
+        return {
+          ...state,
+          threads
+        }
+      }
+    case RECEIVE_NEW_POST:
+      {
+        const { post } = action;
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== post.thread_id) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              thread: {
+                ...threadContainer.thread,
+                posts: threadContainer.thread.posts.filter(p => p.isSending == null).concat(post)
               }
             }
           }

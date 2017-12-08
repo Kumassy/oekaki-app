@@ -1,6 +1,6 @@
 'use strict';
 
-import { getThread, newComment } from '../clientHttp';
+import { getThread, newComment, newPost } from '../clientHttp';
 
 // Action Creators
 // See: https://redux.js.org/docs/basics/ExampleTodoList.html
@@ -9,6 +9,9 @@ export const RECEIVE_THREAD = 'RECEIVE_THREAD'
 
 export const SEND_NEW_COMMENT = 'SEND_NEW_COMMENT'
 export const RECEIVE_NEW_COMMENT = 'RECEIVE_NEW_COMMENT'
+
+export const SEND_NEW_POST = 'SEND_NEW_POST'
+export const RECEIVE_NEW_POST = 'RECEIVE_NEW_POST'
 
 function requestThread(id) {
   return {
@@ -34,18 +37,19 @@ function fetchThread(id) {
 }
 
 function shouldFetchThread(state, id) {
-  const thread = state.thread.item;
+  const threadContainer = state.pageThreads.threads.find(th => th.thread.id === id);
 
-  if (!thread) {
+  if (!threadContainer) {
     return true;
-  } else if (!thread.isFetching) {
+  } else if (!threadContainer.status.isFetching) {
     return true;
   } else {
     return false;
   }
 }
 
-export function fetchThreadIfNeeded(id) {
+export function fetchThreadIfNeeded(_id) {
+  const id = parseInt(_id);
   return (dispatch, getState) => {
     if (shouldFetchThread(getState(), id)) {
       return dispatch(fetchThread(id))
@@ -56,10 +60,9 @@ export function fetchThreadIfNeeded(id) {
 // comment:
 //   - user_id
 //   - comment
-function sendNewComment(threadId, comment) {
+function sendNewComment(comment) {
   return {
     type: SEND_NEW_COMMENT,
-    threadId: threadId,
     comment: comment
   }
 }
@@ -83,5 +86,33 @@ export function createComment(comment) {
     dispatch(sendNewComment(comment));
     return newComment(comment)
       .then(newComment => dispatch(receiveNewComment(newComment)))
+  }
+}
+
+function sendNewPost(post) {
+  return {
+    type: SEND_NEW_POST,
+    post: post
+  }
+}
+
+function receiveNewPost(newPost) {
+  return {
+    type: RECEIVE_NEW_POST,
+    post: newPost,
+    receivedAt: Date.now()
+  }
+}
+
+// comment:
+//   - user
+//   - thread_id
+//   - image: file
+//   - answer
+export function createPost(post) {
+  return dispatch => {
+    dispatch(sendNewPost(post));
+    return newPost(post)
+      .then(newPost => dispatch(receiveNewPost(newPost)));
   }
 }

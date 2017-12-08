@@ -19,7 +19,7 @@ export function newComment(comment) {
   params.append('thread_id', comment.thread_id);
   params.append('comment', comment.comment);
 
-  return client.post('/comments/new', params, config).then(json => json.data);
+  return client.post('/comments/new', params, config).then(json => json.data.comment);
 }
 
 export function newPost(post) {
@@ -28,7 +28,13 @@ export function newPost(post) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/posts/new', post, config);
+  const params = new FormData();
+  params.append('image', post.image);
+  params.append('user_id', post.user.id);
+  params.append('thread_id', post.thread_id);
+  params.append('answer', post.answer);
+
+  return client.post('/posts/new', params, config).then(json => json.data.post);
 }
 
 export function newThread(post) {
@@ -46,5 +52,5 @@ export function getThread(id) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.get(`/threads/${id}`).then(json => json.data);
+  return client.get(`/threads/${id}`).then(json => json.data.thread);
 }
