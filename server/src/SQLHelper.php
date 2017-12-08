@@ -168,6 +168,24 @@ function getAllThreads($conn)
   return $threads;
 }
 
+function getHomePosts($conn)
+{
+  $stmt = $conn->prepare('SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts WHERE thread_id = :id');
+  $stmt->bindValue("id", 1);
+  $stmt->execute();
+  $_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  $posts = array_map(function($post) use($conn) {
+    $post['image'] = getImage($conn, $post['image_id'])['name'];
+    unset($post['image_id']);
+
+    $post['user'] = getUser($conn, $post['user_id']);
+    unset($post['user_id']);
+    return $post;
+  }, $_posts);
+  return $posts;
+}
+
 
 // $comment = [
 //   'user_id' => 3,
