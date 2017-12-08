@@ -1,9 +1,11 @@
 'use strict';
 
 import React from 'react';
+import { connect } from 'react-redux';
+
 import {
-  tryLogin,
   trySignIn,
+  trySignUp,
 } from '../actions/index';
 
 require('styles//Login.css');
@@ -18,25 +20,15 @@ class LoginComponent extends React.Component {
   onSubmit(e) {
     e.preventDefault();
 
-
-    const { mode } = this.props;
-    if (mode === 'login') {
-      doLogin();
-    } else if (mode === 'signin') {
-      doSignIn();
-    }
+    // const { mode } = this.props;
+    // if (mode === 'signin') {
+    //   trySignIn();
+    // } else if (mode === 'signup') {
+    //   trySignUp();
+    // }
+    this.doSignIn();
   }
 
-  doLogin() {
-    const { dispatch } = this.props;
-    const credentials = {
-      'username': this.refs.username.value,
-      'password': this.refs.password.value
-    }
-    dispatch(tryLogin(credentials));
-    this.refs.username.value = '';
-    this.refs.password.value = '';
-  }
   doSignIn() {
     const { dispatch } = this.props;
     const credentials = {
@@ -47,12 +39,25 @@ class LoginComponent extends React.Component {
     this.refs.username.value = '';
     this.refs.password.value = '';
   }
+  doSignUp() {
+    const { dispatch } = this.props;
+    const credentials = {
+      'username': this.refs.username.value,
+      'password': this.refs.password.value
+    }
+    dispatch(trySignUp(credentials));
+    this.refs.username.value = '';
+    this.refs.password.value = '';
+  }
 
   render() {
     return (
       <div className="login-component">
         <form method="POST" onSubmit={this.onSubmit}>
+          <label>username</label>
           <input type="text" name="username" ref="username"/>
+          <br/>
+          <label>password</label>
           <input type="text" name="password" ref="password"/>
           <button type="submit">Submit</button>
         </form>
@@ -67,4 +72,13 @@ LoginComponent.displayName = 'LoginComponent';
 // LoginComponent.propTypes = {};
 // LoginComponent.defaultProps = {};
 
-export default LoginComponent;
+
+function mapStateToProps(state) {
+  const { userInfo } = state;
+
+  return {
+    userInfo
+  }
+}
+const LoginContainer = connect(mapStateToProps)(LoginComponent);
+export default LoginContainer;

@@ -36,28 +36,6 @@ $app->path('users', function($request) use($app, $conn) {
   //   });
   //
   // });
-
-  // sign in
-  $app->path('new', function($request) use($app, $conn) {
-    $app->options(function($request) use($app, $request) {
-      return $app->response(200, "new")
-               ->header('Access-Control-Allow-Origin', '*')
-               ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
-               ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
-    });
-    $app->post(function($request) use($app, $conn, $request) {
-      $credentials = [
-        'username' => $request->params()['username'],
-        'password' => $request->params()['password']
-      ];
-
-      $user = createUser($conn, $credentials);
-
-      return $app->response(200, $user)
-              ->header('Access-Control-Allow-Origin', '*');
-    });
-
-  });
 });
 
 $app->path('posts', function($request) use($app, $conn) {
@@ -120,7 +98,9 @@ $app->path('threads', function($request) use($app, $conn) {
       $thread = [
         'thread' => $_thread
       ];
-      return $app->response(200, $thread)->header('Access-Control-Allow-Origin', '*');
+      return $app->response(200, $thread)
+        ->header('Access-Control-Allow-Origin', 'http://localhost:8000')
+        ->header('Access-Control-Allow-Credentials', 'true');
     });
   });
   $app->path('new', function($request) use($app) {
@@ -171,9 +151,10 @@ $app->path('comments', function($request) use($app, $conn) {
   $app->path('new', function($request) use($app, $conn) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
-               ->header('Access-Control-Allow-Origin', '*')
-               ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
-               ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+        ->header('Access-Control-Allow-Origin', 'http://localhost:8000')
+        ->header('Access-Control-Allow-Credentials', 'true')
+        ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+        ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
     $app->post(function($request) use($app, $conn, $request) {
       // file_put_contents('php://stderr', print_r($request->params(), TRUE));
@@ -190,35 +171,106 @@ $app->path('comments', function($request) use($app, $conn) {
       //     'avatar'=> 'images/kumassy.jpg'
       //   )
       // );
+      session_name('j150989k');
+      session_start();
       $comment = [
-        'user_id' => $request->params()['user_id'],
+        'user_id' => $_SESSION['user_id'],
         'thread_id' => $request->params()['thread_id'],
         'comment' => $request->params()['comment']
       ];
+      print_stderr($comment);
       $_newComment = createComment($conn, $comment);
       $newComment = [
         'comment' => $_newComment
       ];
+      print_stderr($newComment);
 
       // TODO: remove it!
       sleep(2);
+      session_write_close();
       return $app->response(200, $newComment)
-              ->header('Access-Control-Allow-Origin', '*');
+        ->header('Access-Control-Allow-Origin', 'http://localhost:8000')
+        ->header('Access-Control-Allow-Credentials', 'true');
     });
   });
 });
 
 
-$app->path('login', function($request) use($app, $conn) {
+$app->path('signin', function($request) use($app, $conn) {
+  $app->options(function($request) use($app, $request) {
+    return $app->response(200, "new")
+             ->header('Access-Control-Allow-Origin', 'http://localhost:8000')
+             ->header('Access-Control-Allow-Credentials', 'true')
+             ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+             ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+  });
   $app->post(function($request) use($app, $conn) {
+    session_name('j150989k');
+    session_start();
     $credentials = [
       'username' => $request->params()['username'],
       'password' => $request->params()['password']
     ];
 
-    $user = tryLogin($conn, $credentials);
+    $_user = tryLogin($conn, $credentials);
+    $user = [
+      'user' => $_user
+    ];
 
-    return $app->response(200, $user)->header('Access-Control-Allow-Origin', '*');
+    // TODO: check whether success or not
+    $_SESSION['user_id'] = $_user['id'];
+
+    session_write_close();
+    return $app->response(200, $user)
+      ->header('Access-Control-Allow-Origin', 'http://localhost:8000')
+      ->header('Access-Control-Allow-Credentials', 'true');
+  });
+});
+// sign up
+$app->path('signup', function($request) use($app, $conn) {
+  $app->options(function($request) use($app, $request) {
+    return $app->response(200, "new")
+             ->header('Access-Control-Allow-Origin', '*')
+             ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+             ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+  });
+  $app->post(function($request) use($app, $conn, $request) {
+    $credentials = [
+      'username' => $request->params()['username'],
+      'password' => $request->params()['password']
+    ];
+
+    $_user = createUser($conn, $credentials);
+    $user = [
+      'user' => $_user
+    ];
+
+    return $app->response(200, $user)
+            ->header('Access-Control-Allow-Origin', '*');
+  });
+});
+
+
+$app->path('test', function($request) use($app, $conn) {
+  $app->path('set-session', function($request) use($app, $conn) {
+    $app->get(function($request) use($app, $conn) {
+      session_name('j150989k');
+      session_start();
+      $_SESSION['message'] = 'hogemessage';
+
+      session_write_close();
+      return $app->response(200, 'set-session')->header('Access-Control-Allow-Origin', '*');
+    });
+  });
+  $app->path('get-session', function($request) use($app, $conn) {
+    $app->get(function($request) use($app, $conn) {
+      session_name('j150989k');
+      session_start();
+      $message = $_SESSION['message'];
+
+      session_write_close();
+      return $app->response(200, $message)->header('Access-Control-Allow-Origin', '*');
+    });
   });
 });
 

@@ -24,6 +24,7 @@ import { _host } from '../clientHttp';
 import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';
+import Login from './LoginComponent';
 import ThreadPage from './ThreadPageComponent';
 import HomePage from './HomePageComponent';
 import SettingsPage from './SettingsPageComponent';
@@ -336,6 +337,7 @@ class AppComponent extends React.Component {
                   <li><Link to="/thread/2">/thread/2</Link></li>
                   <li><Link to="/settings">/settings</Link></li>
                 </ul>
+                <Login></Login>
 
                 <hr/>
 

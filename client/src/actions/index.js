@@ -1,6 +1,13 @@
 'use strict';
 
-import { getThread, newComment, newPost, getHomePosts } from '../clientHttp';
+import {
+  getThread,
+  newComment,
+  newPost,
+  getHomePosts,
+  doSignIn,
+  doSignUp
+} from '../clientHttp';
 import { getBase64 } from '../utils';
 
 // Action Creators
@@ -13,7 +20,12 @@ import {
   SEND_NEW_COMMENT,
   RECEIVE_NEW_COMMENT,
   SEND_NEW_POST,
-  RECEIVE_NEW_POST
+  RECEIVE_NEW_POST,
+
+  REQUEST_SIGN_IN,
+  RECEIVE_SIGN_IN,
+  REQUEST_SIGN_UP,
+  RECEIVE_SIGN_UP
 } from './actionTypes'
 
 function requestThread(id) {
@@ -149,12 +161,49 @@ export function fetchHomePosts(id) {
   }
 }
 
+function requestSignIn() {
+  return {
+    type: REQUEST_SIGN_IN
+  }
+}
+
+function receiveSignIn(user) {
+  return {
+    type: RECEIVE_SIGN_IN,
+    user: user,
+    receivedAt: Date.now()
+  }
+}
+
 // credentials
 //   - username
 //   - password
-export function tryLogin(credentials) {
-
-}
 export function trySignIn(credentials) {
+  return dispatch => {
+    dispatch(requestSignIn());
+    return doSignIn(credentials)
+      .then(user => dispatch(receiveSignIn(user)));
+  }
+}
 
+function requestSignUp() {
+  return {
+    type: REQUEST_SIGN_UP
+  }
+}
+
+function receiveSignUp(user) {
+  return {
+    type: RECEIVE_SIGN_UP,
+    user: user,
+    receivedAt: Date.now()
+  }
+}
+
+export function trySignUp(credentials) {
+  return dispatch => {
+    dispatch(requestSignUp());
+    return doSignUp(credentials)
+      .then(user => dispatch(receiveSignUp(user)));
+  }
 }
