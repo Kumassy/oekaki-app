@@ -1,18 +1,25 @@
 'use strict';
 
-import { getThread, newComment } from '../clientHttp';
+import { getThread, newComment, newPost, getHomePosts } from '../clientHttp';
+import { getBase64 } from '../utils';
 
 // Action Creators
 // See: https://redux.js.org/docs/basics/ExampleTodoList.html
-export const REQUEST_THREAD = 'REQUEST_THREAD'
-export const RECEIVE_THREAD = 'RECEIVE_THREAD'
+import {
+  REQUEST_HOME_POSTS,
+  RECEIVE_HOME_POSTS,
+  REQUEST_THREAD,
+  RECEIVE_THREAD,
+  SEND_NEW_COMMENT,
+  RECEIVE_NEW_COMMENT,
+  SEND_NEW_POST,
+  RECEIVE_NEW_POST
+} from './actionTypes'
 
-export const SEND_NEW_COMMENT = 'SEND_NEW_COMMENT'
-export const RECEIVE_NEW_COMMENT = 'RECEIVE_NEW_COMMENT'
-
-function requestThread() {
+function requestThread(id) {
   return {
-    type: REQUEST_THREAD
+    type: REQUEST_THREAD,
+    threadId: id
   }
 }
 
@@ -26,25 +33,26 @@ function receiveThread(thread) {
 
 function fetchThread(id) {
   return dispatch => {
-    dispatch(requestThread());
+    dispatch(requestThread(id));
     return getThread(id)
       .then(thread => dispatch(receiveThread(thread)));
   }
 }
 
 function shouldFetchThread(state, id) {
-  const thread = state.thread.item;
+  const threadContainer = state.pageThreads.threads.find(th => th.thread.id === id);
 
-  if (!thread) {
+  if (!threadContainer) {
     return true;
-  } else if (!thread.isFetching) {
+  } else if (!threadContainer.status.isFetching) {
     return true;
   } else {
     return false;
   }
 }
 
-export function fetchThreadIfNeeded(id) {
+export function fetchThreadIfNeeded(_id) {
+  const id = parseInt(_id);
   return (dispatch, getState) => {
     if (shouldFetchThread(getState(), id)) {
       return dispatch(fetchThread(id))
@@ -82,4 +90,71 @@ export function createComment(comment) {
     return newComment(comment)
       .then(newComment => dispatch(receiveNewComment(newComment)))
   }
+}
+
+function sendNewPost(post) {
+  return {
+    type: SEND_NEW_POST,
+    post: post
+  }
+}
+
+function receiveNewPost(newPost) {
+  return {
+    type: RECEIVE_NEW_POST,
+    post: newPost,
+    receivedAt: Date.now()
+  }
+}
+
+// comment:
+//   - user
+//   - thread_id
+//   - image: file
+//   - answer
+export function createPost(post) {
+  return dispatch => {
+    return getBase64(post.image).then((base64) => {
+      const postbase64 = {
+        ...post,
+        image: base64
+      };
+      dispatch(sendNewPost(postbase64));
+      return newPost(post)
+        .then(newPost => dispatch(receiveNewPost(newPost)));
+    })
+  }
+}
+
+
+function requestHomePosts() {
+  return {
+    type: REQUEST_HOME_POSTS
+  }
+}
+
+function receiveHomePosts(posts) {
+  return {
+    type: RECEIVE_HOME_POSTS,
+    posts: posts,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchHomePosts(id) {
+  return dispatch => {
+    dispatch(requestHomePosts());
+    return getHomePosts()
+      .then(posts => dispatch(receiveHomePosts(posts)));
+  }
+}
+
+// credentials
+//   - username
+//   - password
+export function tryLogin(credentials) {
+
+}
+export function trySignIn(credentials) {
+
 }

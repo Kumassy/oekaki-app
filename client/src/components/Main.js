@@ -2,6 +2,8 @@ require('normalize.css/normalize.css');
 require('styles/App.css');
 
 import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from '../stores/configureStore';
 import {
   BrowserRouter as Router,
   Route,
@@ -23,6 +25,8 @@ import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';
 import ThreadPage from './ThreadPageComponent';
+import HomePage from './HomePageComponent';
+import SettingsPage from './SettingsPageComponent';
 
 
 const _posts = [
@@ -43,47 +47,47 @@ const _posts = [
   }
 ];
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-        threads: []
-    };
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    axios.get(`${_host}/home`).then((json) => {
-      this.setState({
-        threads: json.data.threads
-      });
-    });
-  }
-
-  render() {
-    const threads = this.state.threads;
-
-    const list = threads.map(thread =>
-      <li key={thread.post.id}>
-        <Link to={`thread/${thread.id}`}>
-          <Post image={`${_host}/${thread.post.image}`}
-                timestamp={thread.post.timestamp}
-                text={thread.post.answer}
-                userName={thread.post.user.username}
-                userAvatar={`${_host}/${thread.post.user.avatar}`} />
-        </Link>
-      </li>);
-
-    return (
-      <div>
-        {list}
-      </div>
-    );
-  }
-}
+// class Home extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.state = {
+//         threads: []
+//     };
+//   }
+//
+//   componentDidMount() {
+//     this.fetchData();
+//   }
+//
+//   fetchData() {
+//     axios.get(`${_host}/home`).then((json) => {
+//       this.setState({
+//         threads: json.data.threads
+//       });
+//     });
+//   }
+//
+//   render() {
+//     const threads = this.state.threads;
+//
+//     const list = threads.map(thread =>
+//       <li key={thread.post.id}>
+//         <Link to={`thread/${thread.id}`}>
+//           <Post image={`${_host}/${thread.post.image}`}
+//                 timestamp={thread.post.timestamp}
+//                 text={thread.post.answer}
+//                 userName={thread.post.user.username}
+//                 userAvatar={`${_host}/${thread.post.user.avatar}`} />
+//         </Link>
+//       </li>);
+//
+//     return (
+//       <div>
+//         {list}
+//       </div>
+//     );
+//   }
+// }
 
 
 // class ThreadPage extends React.Component {
@@ -310,6 +314,8 @@ class PostsPage extends React.Component {
   }
 }
 
+const store = configureStore();
+
 class AppComponent extends React.Component {
   render() {
     return (
@@ -317,31 +323,35 @@ class AppComponent extends React.Component {
       //   <img src={yeomanImage} alt="Yeoman Generator" />
       //   <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
       // </div>
-      <Router>
-        <MuiThemeProvider>
-          <div>
+      <Provider store={store}>
+        <Router>
+          <MuiThemeProvider>
             <div>
-              <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/about">About</Link></li>
-                <li><Link to="/topics">Topics</Link></li>
-                <li><Link to="/posts">Posts</Link></li>
-              </ul>
+              <div>
+                <ul>
+                  <li><Link to="/">Home</Link></li>
+                  <li><Link to="/about">About</Link></li>
+                  <li><Link to="/topics">Topics</Link></li>
+                  <li><Link to="/thread/1">/thread/1</Link></li>
+                  <li><Link to="/thread/2">/thread/2</Link></li>
+                  <li><Link to="/settings">/settings</Link></li>
+                </ul>
 
-              <hr/>
+                <hr/>
 
 
-              <Switch>
-                <Route exact path="/" component={Home}/>
-                <Route path="/about" component={About}/>
-                <Route path="/topics" component={Topics}/>
-                <Route path="/posts" component={PostsPage}/>
-                <Route path="/thread/:id" component={ThreadPage}/>
-              </Switch>
+                <Switch>
+                  <Route exact path="/" component={HomePage}/>
+                  <Route path="/about" component={About}/>
+                  <Route path="/topics" component={Topics}/>
+                  <Route path="/settings" component={SettingsPage}/>
+                  <Route path="/thread/:id" component={ThreadPage}/>
+                </Switch>
+              </div>
             </div>
-          </div>
-        </MuiThemeProvider>
-      </Router>
+          </MuiThemeProvider>
+        </Router>
+      </Provider>
     );
   }
 }

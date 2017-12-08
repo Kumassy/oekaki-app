@@ -70,7 +70,12 @@ $app->path('posts', function($request) use($app, $conn) {
         'answer' => $request->params()['answer'],
         'image' => $_FILES['image']
       ];
-      $newPost = createPost($conn, $post);
+      $_newPost = createPost($conn, $post);
+      $newPost = [
+        'post' => $_newPost
+      ];
+
+      sleep(2);
 
       return $app->response(200, $newPost)
               ->header('Access-Control-Allow-Origin', '*');
@@ -113,13 +118,13 @@ $app->path('threads', function($request) use($app, $conn) {
   });
 });
 
-$app->path('home', function($request) use($app) {
-  $json = file_get_contents(__DIR__ . '/../data/home.json');
-  $json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-  $home = json_decode($json,true);
-
-  $app->get(function($request, $id) use($app, $home) {
-    return $app->response(200, $home)->header('Access-Control-Allow-Origin', '*');
+$app->path('home', function($request) use($app, $conn) {
+  $app->get(function($request, $id) use($app, $conn, $home) {
+    $_posts = getHomePosts($conn);
+    $posts = [
+      'posts' => $_posts
+    ];
+    return $app->response(200, $posts)->header('Access-Control-Allow-Origin', '*');
   });
 });
 
@@ -168,7 +173,10 @@ $app->path('comments', function($request) use($app, $conn) {
         'thread_id' => $request->params()['thread_id'],
         'comment' => $request->params()['comment']
       ];
-      $newComment = createComment($conn, $comment);
+      $_newComment = createComment($conn, $comment);
+      $newComment = [
+        'comment' => $_newComment
+      ];
 
       // TODO: remove it!
       sleep(2);
