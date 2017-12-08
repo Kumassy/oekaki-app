@@ -26,6 +26,7 @@ import Post from './PostComponent';
 import Comment from './CommentComponent';
 import ThreadPage from './ThreadPageComponent';
 import HomePage from './HomePageComponent';
+import SettingsPage from './SettingsPageComponent';
 
 
 const _posts = [
@@ -331,7 +332,9 @@ class AppComponent extends React.Component {
                   <li><Link to="/">Home</Link></li>
                   <li><Link to="/about">About</Link></li>
                   <li><Link to="/topics">Topics</Link></li>
-                  <li><Link to="/posts">Posts</Link></li>
+                  <li><Link to="/thread/1">/thread/1</Link></li>
+                  <li><Link to="/thread/2">/thread/2</Link></li>
+                  <li><Link to="/settings">/settings</Link></li>
                 </ul>
 
                 <hr/>
@@ -341,7 +344,7 @@ class AppComponent extends React.Component {
                   <Route exact path="/" component={HomePage}/>
                   <Route path="/about" component={About}/>
                   <Route path="/topics" component={Topics}/>
-                  <Route path="/posts" component={PostsPage}/>
+                  <Route path="/settings" component={SettingsPage}/>
                   <Route path="/thread/:id" component={ThreadPage}/>
                 </Switch>
               </div>

@@ -4,7 +4,7 @@
 - x [server] insert into psql
 - x [server] create image table
 - x [server] `$_FILES['post-image']`
-- [client] redux を ThreadPage ではなくルートにバインディング
+- x [client] redux を ThreadPage ではなくルートにバインディング
 ```
 {
   'page_home': {
