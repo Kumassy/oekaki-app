@@ -148,3 +148,13 @@ export function fetchHomePosts(id) {
       .then(posts => dispatch(receiveHomePosts(posts)));
   }
 }
+
+// credentials
+//   - username
+//   - password
+export function tryLogin(credentials) {
+
+}
+export function trySignIn(credentials) {
+
+}

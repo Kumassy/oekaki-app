@@ -61,7 +61,8 @@
 - [server] SESSION 管理
 - x [client] NewPostComponent
 - [client / server] threadをつくる機能
-- [client / server] mypage
+- x [client / server] mypage
+- [client / server] パスワード変更
 - [server] `POST /users/my/avatar` で画像変更
 - [client / server] /users/:id で posts 一覧
 - ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新
