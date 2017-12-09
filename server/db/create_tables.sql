@@ -16,7 +16,7 @@ create table images(
 
 create table users(
   id serial,
-  username varchar,
+  username varchar UNIQUE,
   password varchar,
   image_id integer,
 

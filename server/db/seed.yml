@@ -1,17 +1,17 @@
 images:
   -
     id: 1
-    name: images/pandaman.jpg
+    name: pandaman.jpg
     created_at: '2012-09-28 01:00:00'
     updated_at: '2012-09-28 01:00:00'
   -
     id: 2
-    name: images/kumassy.jpg
+    name: kumassy.jpg
     created_at: '2012-09-28 01:00:00'
     updated_at: '2012-09-28 01:00:00'
   -
     id: 3
-    name: images/furikake.jpg
+    name: furikake.jpg
     created_at: '2013-09-28 01:00:00'
     updated_at: '2013-09-28 01:00:00'
 

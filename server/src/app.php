@@ -2,6 +2,8 @@
 // namespace MyApp;
 require __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/SQLHelper.php';
+use \Gurukami\Helpers\Arrays;
+use Respect\Validation\Validator as v;
 
 const CLIENT_HOST = 'http://localhost:8000';
 // Your App
@@ -226,23 +228,44 @@ $app->path('signin', function($request) use($app, $conn) {
              ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
   });
   $app->post(function($request) use($app, $conn) {
-    session_name('j150989k');
-    session_start();
     $credentials = [
-      'username' => $request->params()['username'],
-      'password' => $request->params()['password']
+      'username' => Arrays::get('username', $request->params()),
+      'password' => Arrays::get('password', $request->params())
     ];
 
-    $_user = tryLogin($conn, $credentials);
-    $user = [
-      'user' => $_user
-    ];
+    $response = array();
+    if (
+      v::keySet(
+        v::key('username', v::stringType()->notEmpty()),
+        v::key('password', v::stringType()->notEmpty()))->validate($credentials)
+    ) {
+      $user = tryLogin($conn, $credentials);
+      if (
+        v::keySet(
+          v::key('id', v::intType()->positive()),
+          v::key('username', v::stringType()->notEmpty()))->validate($user)
+      ) {
+        session_name('j150989k');
+        session_start();
 
-    // TODO: check whether success or not
-    $_SESSION['user_id'] = $_user['id'];
+        $response = [
+          'user' => $user
+        ];
 
-    session_write_close();
-    return $app->response(200, $user)
+        $_SESSION['user_id'] = $_user['id'];
+        session_write_close();
+      } else {
+        $response = [
+          'error' => 'ユーザー名かパスワードが間違っています'
+        ];
+      }
+    } else {
+      $response = [
+        'error' => 'ユーザー名かパスワードが入力されていません'
+      ];
+    }
+
+    return $app->response(200, $response)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
@@ -258,16 +281,42 @@ $app->path('signup', function($request) use($app, $conn) {
   });
   $app->post(function($request) use($app, $conn, $request) {
     $credentials = [
-      'username' => $request->params()['username'],
-      'password' => $request->params()['password']
+      'username' => Arrays::get('username', $request->params()),
+      'password' => Arrays::get('password', $request->params())
     ];
 
-    $_user = createUser($conn, $credentials);
-    $user = [
-      'user' => $_user
-    ];
+    $response = array();
+    if (
+      v::keySet(
+        v::key('username', v::stringType()->notEmpty()),
+        v::key('password', v::stringType()->notEmpty()))->validate($credentials)
+    ) {
+      $user = createUser($conn, $credentials);
+      if (
+        v::keySet(
+          v::key('id', v::intType()->positive()),
+          v::key('username', v::stringType()->notEmpty()))->validate($user)
+      ) {
+        session_name('j150989k');
+        session_start();
 
-    return $app->response(200, $user)
+        $response = [
+          'user' => $user
+        ];
+
+        $_SESSION['user_id'] = $user['id'];
+        session_write_close();
+      } else {
+        $response = [
+          'error' => 'そのユーザー名は既に使用されています'
+        ];
+      }
+    } else {
+      $response = [
+        'error' => 'ユーザー名かパスワードが入力されていません'
+      ];
+    }
+    return $app->response(200, $response)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });

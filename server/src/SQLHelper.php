@@ -3,6 +3,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../src/utils.php';
 
 use Ramsey\Uuid\Uuid;
+use Respect\Validation\Validator as v;
 
 function getConnection() {
   return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
@@ -13,19 +14,21 @@ function getImage($conn, $id) {
   $stmt->execute();
 
   $image = $stmt->fetch(PDO::FETCH_ASSOC);
-  if (strpos($image['name'], 'images/') === false) {
-    $image['name'] = 'images/' . $image['name'];
-  }
+  $image['name'] = 'images/' . $image['name'];
 
   return $image;
 }
+
+// image_id 未設定 → avatar key を作らない
 function getUser($conn, $id) {
   $stmt = $conn->prepare('SELECT id, username, image_id FROM users WHERE id = :id');
   $stmt->bindValue("id", $id);
   $stmt->execute();
 
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
-  $user['avatar'] = getImage($conn, $user['image_id'])['name'];
+  if (v::key('image_id', v::intType()->positive())->validate($user)) {
+    $user['avatar'] = getImage($conn, $user['image_id'])['name'];
+  }
   unset($user['image_id']);
 
   return $user;
