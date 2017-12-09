@@ -72,7 +72,7 @@ export function doSignUp(credentials) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/signup', credentials, config).then(json => json.data.user);
+  return client.post('/signup', credentials, config).then(json => json.data);
 }
 
 export function doSignIn(credentials) {
@@ -81,5 +81,5 @@ export function doSignIn(credentials) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/signin', credentials, config).then(json => json.data.user);
+  return client.post('/signin', credentials, config).then(json => json.data);
 }

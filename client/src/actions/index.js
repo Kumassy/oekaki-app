@@ -24,8 +24,13 @@ import {
 
   REQUEST_SIGN_IN,
   RECEIVE_SIGN_IN,
+  FAILED_SIGN_IN,
+
   REQUEST_SIGN_UP,
-  RECEIVE_SIGN_UP
+  RECEIVE_SIGN_UP,
+  FAILED_SIGN_UP,
+
+  SWITCH_SIGNIN_MODE
 } from './actionTypes'
 
 function requestThread(id) {
@@ -167,6 +172,13 @@ function requestSignIn() {
   }
 }
 
+function failedSignIn(error) {
+  return {
+    type: FAILED_SIGN_IN,
+    error: error
+  }
+}
+
 function receiveSignIn(user) {
   return {
     type: RECEIVE_SIGN_IN,
@@ -182,13 +194,26 @@ export function trySignIn(credentials) {
   return dispatch => {
     dispatch(requestSignIn());
     return doSignIn(credentials)
-      .then(user => dispatch(receiveSignIn(user)));
+      .then(response => {
+        if (response.user) {
+          dispatch(receiveSignIn(response.user))
+        } else {
+          dispatch(failedSignIn(response.error))
+        }
+      });
   }
 }
 
 function requestSignUp() {
   return {
     type: REQUEST_SIGN_UP
+  }
+}
+
+function failedSignUp(error) {
+  return {
+    type: FAILED_SIGN_UP,
+    error: error
   }
 }
 
@@ -204,6 +229,19 @@ export function trySignUp(credentials) {
   return dispatch => {
     dispatch(requestSignUp());
     return doSignUp(credentials)
-      .then(user => dispatch(receiveSignUp(user)));
+      .then(response => {
+        if (response.user) {
+          dispatch(receiveSignUp(response.user))
+        } else {
+          dispatch(failedSignUp(response.error))
+        }
+      });
+  }
+}
+
+export function switchSignInMode(mode) {
+  return {
+    type: SWITCH_SIGNIN_MODE,
+    mode: mode
   }
 }
