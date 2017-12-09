@@ -256,12 +256,18 @@ $app->path('signin', function($request) use($app, $conn) {
         session_write_close();
       } else {
         $response = [
-          'error' => 'ユーザー名かパスワードが間違っています'
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => 'ユーザー名かパスワードが間違っています'
+          ]
         ];
       }
     } else {
       $response = [
-        'error' => 'ユーザー名かパスワードが入力されていません'
+        'error' => [
+          'type' => 'EMPTY_INPUT',
+          'message' => 'ユーザー名かパスワードが入力されていません'
+        ]
       ];
     }
 
@@ -308,12 +314,18 @@ $app->path('signup', function($request) use($app, $conn) {
         session_write_close();
       } else {
         $response = [
-          'error' => 'そのユーザー名は既に使用されています'
+          'error' => [
+            'type' => 'USER_ALREADY_EXIST',
+            'message' => 'そのユーザー名は既に使用されています'
+          ]
         ];
       }
     } else {
       $response = [
-        'error' => 'ユーザー名かパスワードが入力されていません'
+        'error' => [
+          'type' => 'EMPTY_INPUT',
+          'message' => 'ユーザー名かパスワードが入力されていません'
+        ]
       ];
     }
     return $app->response(200, $response)

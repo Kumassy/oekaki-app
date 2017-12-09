@@ -101,7 +101,7 @@ class LoginComponent extends React.Component {
           Sign In as: {user.username}
         </div>
         <div>
-          {status.error}
+          {status.error.message}
         </div>
       </div>
     );

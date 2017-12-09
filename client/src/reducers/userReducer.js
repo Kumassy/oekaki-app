@@ -12,7 +12,8 @@ import {
 
 export const initialState = {
   status: {
-    mode: 'signin'
+    mode: 'signin',
+    error: {}
   },
   user: {
   }
@@ -38,6 +39,7 @@ export function userReducer(state = initialState, action) {
           ...state,
           status: {
             ...state.status,
+            error: {},
             isFetching: false,
             lastUpdated: receivedAt
           },
@@ -53,7 +55,8 @@ export function userReducer(state = initialState, action) {
           status: {
             ...state.status,
             error
-          }
+          },
+          user: {}
         };
       }
     case REQUEST_SIGN_UP:
@@ -74,6 +77,7 @@ export function userReducer(state = initialState, action) {
           ...state,
           status: {
             ...state.status,
+            error: {},
             isFetching: false,
             lastUpdated: receivedAt
           },
@@ -89,7 +93,8 @@ export function userReducer(state = initialState, action) {
           status: {
             ...state.status,
             error
-          }
+          },
+          user: {}
         };
       }
     case SWITCH_SIGNIN_MODE:
