@@ -1,10 +1,14 @@
 import {
   REQUEST_THREAD,
   RECEIVE_THREAD,
+
   SEND_NEW_COMMENT,
   RECEIVE_NEW_COMMENT,
+  FAILED_NEW_COMMENT,
+
   SEND_NEW_POST,
-  RECEIVE_NEW_POST
+  RECEIVE_NEW_POST,
+  FAILED_NEW_POST
 } from '../actions/actionTypes';
 
 export const initialState = {
@@ -20,7 +24,7 @@ export function threadsReducer(state = initialState, action) {
           return threadContainer.thread.id === threadId
         }) ? state.threads : state.threads.concat({
           status: {
-
+            error: {}
           },
           thread: {
             id: threadId,
@@ -116,6 +120,27 @@ export function threadsReducer(state = initialState, action) {
           threads
         }
       }
+    case FAILED_NEW_COMMENT:
+      {
+        const { error, threadId } = action;
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== threadId) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              status: {
+                error
+              }
+            }
+          }
+        });
+
+        return {
+          ...state,
+          threads
+        }
+      }
     case SEND_NEW_POST:
       {
         const { post } = action;
@@ -152,6 +177,27 @@ export function threadsReducer(state = initialState, action) {
               thread: {
                 ...threadContainer.thread,
                 posts: threadContainer.thread.posts.filter(p => p.isSending == null).concat(post)
+              }
+            }
+          }
+        });
+
+        return {
+          ...state,
+          threads
+        }
+      }
+    case FAILED_NEW_POST:
+      {
+        const { error, threadId } = action;
+        const threads = state.threads.map(threadContainer => {
+          if (threadContainer.thread.id !== threadId) {
+            return threadContainer;
+          } else {
+            return {
+              ...threadContainer,
+              status: {
+                error
               }
             }
           }

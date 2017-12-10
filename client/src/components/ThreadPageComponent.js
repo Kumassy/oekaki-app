@@ -46,14 +46,19 @@ class ThreadPageComponent extends React.Component {
       thread: {
         posts: [],
         comments: []
+      },
+      status: {
+        error: {}
       }
     };
     const myThread = myThreadContainer.thread;
+    const error = myThreadContainer.status.error;
     console.log(myThread);
     const { posts, comments } = myThread;
 
     return (
       <div className="threadpage-component">
+        {error.message}
         <ul className="posts">
           {posts.map(post =>
             <li key={post.isSending ? 'sending-post' : post.id}>

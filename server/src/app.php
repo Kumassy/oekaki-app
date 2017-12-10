@@ -76,20 +76,52 @@ $app->path('posts', function($request) use($app, $conn) {
         ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
     $app->post(function($request) use($app, $conn, $request) {
+      session_name('j150989k');
+      session_start();
+
       $post = [
-        'user_id' => $request->params()['user_id'],
-        'thread_id' => $request->params()['thread_id'],
-        'answer' => $request->params()['answer'],
-        'image' => $_FILES['image']
-      ];
-      $_newPost = createPost($conn, $post);
-      $newPost = [
-        'post' => $_newPost
+        'user_id' => Arrays::get('user_id', $_SESSION),
+        'thread_id' =>  Arrays::get('thread_id', $request->params()),
+        'answer' =>  Arrays::get('answer', $request->params()),
+        'image' => Arrays::get('image', $_FILES)
       ];
 
+      $response = array();
+      if (!v::key('user_id', v::intType()->positive())->validate($post)) {
+        $response = [
+          'error' => [
+            'type' => 'SIGNIN_REQUIRED',
+            'message' => '画像を投稿するにはログインが必要です'
+          ]
+        ];
+      }
+      else if (
+        v::keySet(
+          v::key('user_id', v::intType()->positive()),
+          v::key('thread_id', v::intType()->positive()),
+          v::key('answer', v::stringType()->notEmpty()->regex('/^[ぁ-ん]+$/u')),
+          v::key('image', v::image()))->validate($post)
+      ) {
+
+        $newPost = createPost($conn, $post);
+        $response = [
+          'post' => $newPost
+        ];
+
+
+      } else {
+        $response = [
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => '必要事項が入力されていないか、形式が間違っています'
+          ]
+        ];
+      }
+
+      session_write_close();
       sleep(2);
 
-      return $app->response(200, $newPost)
+      return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
     });
@@ -180,38 +212,51 @@ $app->path('comments', function($request) use($app, $conn) {
         ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
     $app->post(function($request) use($app, $conn, $request) {
-      // file_put_contents('php://stderr', print_r($request->params(), TRUE));
-      // file_put_contents('php://stderr', print_r($request->params()['comment'], TRUE));
-      //
-      // $data = array(
-      //   'id' => rand(10, 200),
-      //   'thread_id' => intval($request->params()['thread_id']),
-      //   'comment' => $request->params()['comment'],
-      //   'timestamp' => '2017/12/05 22:08',
-      //   'user' => array(
-      //     'id'=> intval($request->params()['user_id']),
-      //     'username'=> 'bot',                  // get from DB
-      //     'avatar'=> 'images/kumassy.jpg'
-      //   )
-      // );
       session_name('j150989k');
       session_start();
+
       $comment = [
-        'user_id' => $_SESSION['user_id'],
-        'thread_id' => $request->params()['thread_id'],
-        'comment' => $request->params()['comment']
+        'user_id' => Arrays::get('user_id', $_SESSION),
+        'thread_id' => Arrays::get('thread_id', $request->params()),
+        'comment' => Arrays::get('comment', $request->params())
       ];
-      print_stderr($comment);
-      $_newComment = createComment($conn, $comment);
-      $newComment = [
-        'comment' => $_newComment
-      ];
-      print_stderr($newComment);
+
+      $response = array();
+
+      if (!v::key('user_id', v::intType()->positive())->validate($comment)) {
+        $response = [
+          'error' => [
+            'type' => 'SIGNIN_REQUIRED',
+            'message' => 'コメントを投稿するにはログインが必要です'
+          ]
+        ];
+      }
+      else if (
+        v::keySet(
+          v::key('user_id', v::intType()->positive()),
+          v::key('thread_id', v::intType()->positive()),
+          v::key('comment', v::stringType()->notEmpty()))->validate($comment)
+      ) {
+        // print_stderr($comment);
+        $newComment = createComment($conn, $comment);
+        $response = [
+          'comment' => $newComment
+        ];
+        // print_stderr($newComment);
+      } else {
+        $response = [
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => '必要事項が入力されていないか、形式が間違っています'
+          ]
+        ];
+      }
 
       // TODO: remove it!
       sleep(2);
       session_write_close();
-      return $app->response(200, $newComment)
+
+      return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
     });
@@ -356,6 +401,38 @@ $app->path('test', function($request) use($app, $conn) {
 
       session_write_close();
       return $app->response(200, $message)
+        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+        ->header('Access-Control-Allow-Credentials', 'true');
+    });
+  });
+  $app->path('regex', function($request) use($app, $conn) {
+    $app->get(function($request) use($app, $conn) {
+      $post = [
+        'user_id' => 1,
+        'thread_id' =>  1,
+        'answer' =>  'あ'
+      ];
+
+      $response = array();
+
+      if (v::keySet(
+        v::key('user_id', v::intType()->positive()),
+        v::key('thread_id', v::intType()->positive()),
+        v::key('answer', v::stringType()->notEmpty()->regex('/^[ぁ-ん]+$/u'))
+      )->validate($post)) {
+        $response = [
+          'validation' => 'ok',
+          'post' => $post
+        ];
+      } else {
+        $response = [
+          'validation' => 'ng',
+          'post' => $post
+        ];
+      }
+
+
+      return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
     });

@@ -15,12 +15,17 @@ import { getBase64 } from '../utils';
 import {
   REQUEST_HOME_POSTS,
   RECEIVE_HOME_POSTS,
+
   REQUEST_THREAD,
   RECEIVE_THREAD,
+
   SEND_NEW_COMMENT,
   RECEIVE_NEW_COMMENT,
+  FAILED_NEW_COMMENT,
+
   SEND_NEW_POST,
   RECEIVE_NEW_POST,
+  FAILED_NEW_POST,
 
   REQUEST_SIGN_IN,
   RECEIVE_SIGN_IN,
@@ -101,11 +106,25 @@ function receiveNewComment(newComment) {
   }
 }
 
+function failedNewComment(error, threadId) {
+  return {
+    type: FAILED_NEW_COMMENT,
+    error,
+    threadId
+  }
+}
+
 export function createComment(comment) {
   return dispatch => {
     dispatch(sendNewComment(comment));
     return newComment(comment)
-      .then(newComment => dispatch(receiveNewComment(newComment)))
+      .then(response => {
+        if (response.comment) {
+          dispatch(receiveNewComment(response.comment))
+        } else {
+          dispatch(failedNewComment(response.error, comment.thread_id))
+        }
+      })
   }
 }
 
@@ -124,6 +143,14 @@ function receiveNewPost(newPost) {
   }
 }
 
+function failedNewPost(error, threadId) {
+  return {
+    type: FAILED_NEW_POST,
+    error,
+    threadId
+  }
+}
+
 // comment:
 //   - user
 //   - thread_id
@@ -138,7 +165,13 @@ export function createPost(post) {
       };
       dispatch(sendNewPost(postbase64));
       return newPost(post)
-        .then(newPost => dispatch(receiveNewPost(newPost)));
+        .then(response => {
+          if (response.post) {
+            dispatch(receiveNewPost(response.post))
+          } else {
+            dispatch(failedNewPost(response.error, post.thread_id))
+          }
+        });
     })
   }
 }

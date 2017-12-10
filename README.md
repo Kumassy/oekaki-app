@@ -58,11 +58,13 @@
   }
 }
 ```
-- [server] SESSION 管理
+- x [server] SESSION 管理
 - x [client] NewPostComponent
+- ログインしてなかったらログインページにリダイレクト 
 - [client / server] threadをつくる機能
 - x [client / server] mypage
 - [client / server] パスワード変更
+- へんな入力でコメントなどをリバーとできる機能
 - [server] `POST /users/my/avatar` で画像変更
 - [client / server] /users/:id で posts 一覧
 - ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新

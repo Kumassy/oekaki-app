@@ -3,9 +3,14 @@
 
 export function getBase64(file) {
    const reader = new FileReader();
-   reader.readAsDataURL(file);
 
    return new Promise((resolve, reject) => {
+     if (file) {
+       reader.readAsDataURL(file);
+     } else {
+       reject('FILE_IS_NOT_DEFINED');
+     }
+     
      reader.onload = function () {
        resolve(reader.result);
      };

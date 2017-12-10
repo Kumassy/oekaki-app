@@ -32,7 +32,8 @@ describe('todos reducer', () => {
       threads: [
         {
           status: {
-            isFetching: true
+            isFetching: true,
+            error: {}
           },
           thread: {
             id: 1,

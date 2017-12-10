@@ -21,7 +21,7 @@ export function newComment(comment) {
   params.append('thread_id', comment.thread_id);
   params.append('comment', comment.comment);
 
-  return client.post('/comments/new', params, config).then(json => json.data.comment);
+  return client.post('/comments/new', params, config).then(json => json.data);
 }
 
 export function newPost(post) {
@@ -36,7 +36,7 @@ export function newPost(post) {
   params.append('thread_id', post.thread_id);
   params.append('answer', post.answer);
 
-  return client.post('/posts/new', params, config).then(json => json.data.post);
+  return client.post('/posts/new', params, config).then(json => json.data);
 }
 
 export function newThread(post) {
