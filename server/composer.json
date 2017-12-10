@@ -11,7 +11,8 @@
         "vlucas/bulletphp": "^1.7",
         "ramsey/uuid": "^3.7",
         "gurukami/php-array": "^1.0",
-        "respect/validation": "^1.1"
+        "respect/validation": "^1.1",
+        "monolog/monolog": "^1.23"
     },
     "require-dev": {
         "phpunit/phpunit": "5.7.*",

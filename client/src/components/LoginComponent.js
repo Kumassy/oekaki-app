@@ -8,6 +8,8 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import {
   trySignIn,
   trySignUp,
+  trySignOut,
+  fetchLoggedInUser,
   switchSignInMode
 } from '../actions/index';
 
@@ -19,6 +21,7 @@ class LoginComponent extends React.Component {
 
     this.doSignIn = this.doSignIn.bind(this);
     this.doSignUp = this.doSignUp.bind(this);
+    this.doSignOut = this.doSignOut.bind(this);
     this.handleModeChange = this.handleModeChange.bind(this);
   }
 
@@ -33,6 +36,11 @@ class LoginComponent extends React.Component {
   //   // }
   //   this.doSignIn();
   // }
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchLoggedInUser());
+  }
 
   doSignIn(e) {
     e.preventDefault();
@@ -57,6 +65,10 @@ class LoginComponent extends React.Component {
     dispatch(trySignUp(credentials));
     this.refs.usernameSignUp.value = '';
     this.refs.passwordSignUp.value = '';
+  }
+  doSignOut(e) {
+    e.preventDefault();
+    dispatch(trySignOut());
   }
 
   handleModeChange(mode) {
@@ -97,6 +109,7 @@ class LoginComponent extends React.Component {
             </div>
           </Tab>
         </Tabs>
+        <button onClick={this.doSignOut}>Sign Out</button>
         <div>
           Sign In as: {user.username}
         </div>

@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { push, replace } from 'react-router-redux';
 
 import {
@@ -29,15 +30,11 @@ class NewCommentComponent extends React.Component {
     const { dispatch, user, threadId } = this.props;
     const comment = {
       'user': user,
-      'thread_id': threadId,
+      'thread_id': parseInt(threadId),
       'comment': this.refs.input.value
     }
     dispatch(createComment(comment));
     this.refs.input.value = '';
-
-    setTimeout(() => {
-      dispatch(push('/login'))
-    }, 5000);
   }
   render() {
     return (
@@ -57,4 +54,15 @@ NewCommentComponent.displayName = 'NewCommentComponent';
 // NewCommentComponent.propTypes = {};
 // NewCommentComponent.defaultProps = {};
 
-export default NewCommentComponent;
+
+
+function mapStateToProps(state) {
+  const { userInfo } = state;
+  const { user } = userInfo;
+
+  return {
+    user
+  }
+}
+const NewComponentContainer = connect(mapStateToProps)(NewCommentComponent);
+export default NewComponentContainer;

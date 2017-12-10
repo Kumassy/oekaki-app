@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
 import {
@@ -21,7 +22,7 @@ class NewPostComponent extends React.Component {
     const { dispatch, user, threadId } = this.props;
     const post = {
       'user': user,
-      'thread_id': threadId,
+      'thread_id': parseInt(threadId),
       'answer': this.refs.input.value,
       'image': this.refs.image.files[0]
     }
@@ -55,4 +56,14 @@ NewPostComponent.displayName = 'NewPostComponent';
 // NewPostComponent.propTypes = {};
 // NewPostComponent.defaultProps = {};
 
-export default NewPostComponent;
+
+function mapStateToProps(state) {
+  const { userInfo } = state;
+  const { user } = userInfo;
+
+  return {
+    user
+  }
+}
+const NewPostContainer = connect(mapStateToProps)(NewPostComponent);
+export default NewPostContainer;

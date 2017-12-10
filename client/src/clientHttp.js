@@ -72,7 +72,7 @@ export function doSignUp(credentials) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/signup', credentials, config).then(json => json.data);
+  return client.post('/user/signup', credentials, config).then(json => json.data);
 }
 
 export function doSignIn(credentials) {
@@ -81,5 +81,23 @@ export function doSignIn(credentials) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/signin', credentials, config).then(json => json.data);
+  return client.post('/user/signin', credentials, config).then(json => json.data);
+}
+
+export function doSignOut(credentials) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.post('/user/signout', {}, config).then(json => json.data);
+}
+
+export function getLoggedInUser() {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get('/user', {}, config).then(json => json.data);
 }

@@ -130,6 +130,7 @@ export function threadsReducer(state = initialState, action) {
             return {
               ...threadContainer,
               status: {
+                ...threadContainer.status,
                 error
               }
             }
@@ -197,6 +198,7 @@ export function threadsReducer(state = initialState, action) {
             return {
               ...threadContainer,
               status: {
+                ...threadContainer.status,
                 error
               }
             }

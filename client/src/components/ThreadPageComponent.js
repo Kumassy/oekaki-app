@@ -70,7 +70,7 @@ class ThreadPageComponent extends React.Component {
                     style={{ opacity: post.isSending? 0.5 : 1 }} />
             </li>)}
             <li key="new-post">
-              <NewPost dispatch={this.props.dispatch} user={myuser} threadId={myThreadId}></NewPost>
+              <NewPost dispatch={this.props.dispatch} threadId={myThreadId}></NewPost>
             </li>
         </ul>
         <ul className="comments">
@@ -83,7 +83,7 @@ class ThreadPageComponent extends React.Component {
                         style={{ opacity: comment.isSending? 0.5 : 1 }} />
             </li>)}
             <li key="new-comment">
-              <NewComment dispatch={this.props.dispatch} user={myuser} threadId={myThreadId}></NewComment>
+              <NewComment dispatch={this.props.dispatch} threadId={myThreadId}></NewComment>
             </li>
         </ul>
       </div>

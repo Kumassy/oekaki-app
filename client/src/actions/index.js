@@ -6,7 +6,9 @@ import {
   newPost,
   getHomePosts,
   doSignIn,
-  doSignUp
+  doSignUp,
+  doSignOut,
+  getLoggedInUser
 } from '../clientHttp';
 import { getBase64 } from '../utils';
 
@@ -34,6 +36,13 @@ import {
   REQUEST_SIGN_UP,
   RECEIVE_SIGN_UP,
   FAILED_SIGN_UP,
+
+  REQUEST_SIGN_OUT,
+  RECEIVE_SIGN_OUT,
+  FAILED_SIGN_OUT,
+
+  REQUEST_LOGGED_IN_USER,
+  RECEIVE_LOGGED_IN_USER,
 
   SWITCH_SIGNIN_MODE
 } from './actionTypes'
@@ -268,6 +277,66 @@ export function trySignUp(credentials) {
         } else {
           dispatch(failedSignUp(response.error))
         }
+      });
+  }
+}
+
+function requestSignOut() {
+  return {
+    type: REQUEST_SIGN_OUT
+  }
+}
+
+function failedSignOut(error) {
+  return {
+    type: FAILED_SIGN_OUT,
+    error
+  }
+}
+
+function receiveSignOut(message) {
+  return {
+    type: RECEIVE_SIGN_OUT,
+    message,
+    receivedAt: Date.now()
+  }
+}
+
+export function trySignOut() {
+  return dispatch => {
+    dispatch(requestSignOut());
+    return doSignOut()
+      .then(response => {
+        if (response.message) {
+          dispatch(receiveSignOut(response.message))
+        } else {
+          dispatch(failedSignOut(response.error))
+        }
+      });
+  }
+}
+
+
+function requestLoggedInUser() {
+  return {
+    type: REQUEST_LOGGED_IN_USER
+  }
+}
+
+function receiveLoggedInUser(user) {
+  return {
+    type: RECEIVE_LOGGED_IN_USER,
+    user,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchLoggedInUser() {
+  return dispatch => {
+    dispatch(requestLoggedInUser());
+    return getLoggedInUser()
+      .then(response => {
+        dispatch(receiveLoggedInUser(response.user))
       });
   }
 }
