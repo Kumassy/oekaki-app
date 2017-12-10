@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import { push, replace } from 'react-router-redux';
 
 import {
   createComment
@@ -33,6 +34,10 @@ class NewCommentComponent extends React.Component {
     }
     dispatch(createComment(comment));
     this.refs.input.value = '';
+
+    setTimeout(() => {
+      dispatch(push('/login'))
+    }, 5000);
   }
   render() {
     return (

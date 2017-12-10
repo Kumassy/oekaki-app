@@ -3,7 +3,8 @@ require('styles/App.css');
 
 import React from 'react';
 import { Provider } from 'react-redux';
-import configureStore from '../stores/configureStore';
+import configureStore, { history } from '../stores/configureStore';
+import { ConnectedRouter } from 'react-router-redux'
 import {
   BrowserRouter as Router,
   Route,
@@ -325,7 +326,7 @@ class AppComponent extends React.Component {
       //   <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
       // </div>
       <Provider store={store}>
-        <Router>
+        <ConnectedRouter history={history}>
           <MuiThemeProvider>
             <div>
               <div>
@@ -346,13 +347,14 @@ class AppComponent extends React.Component {
                   <Route exact path="/" component={HomePage}/>
                   <Route path="/about" component={About}/>
                   <Route path="/topics" component={Topics}/>
+                  <Route path="/login" component={Topics}/>
                   <Route path="/settings" component={SettingsPage}/>
                   <Route path="/thread/:id" component={ThreadPage}/>
                 </Switch>
               </div>
             </div>
           </MuiThemeProvider>
-        </Router>
+        </ConnectedRouter>
       </Provider>
     );
   }
