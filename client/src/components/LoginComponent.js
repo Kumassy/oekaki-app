@@ -68,6 +68,8 @@ class LoginComponent extends React.Component {
   }
   doSignOut(e) {
     e.preventDefault();
+
+    const { dispatch } = this.props;
     dispatch(trySignOut());
   }
 
