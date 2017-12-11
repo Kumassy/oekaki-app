@@ -59,6 +59,10 @@ function getAllUsers($conn)
   $_users = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_all_users");
 
+  if ($_users === FALSE) {
+    $_users = array();
+  }
+
   // print_stderr($_users);
 
   // $users = array_map(function($user) {
@@ -109,6 +113,10 @@ function getAllPosts($conn)
   $_posts = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_all_posts");
 
+  if ($_posts === FALSE) {
+    $_posts = array();
+  }
+
   $posts = array_map(function($post) use($conn) {
     $post['image'] = getImage($conn, intval($post['image_id']))['name'];
     unset($post['image_id']);
@@ -152,6 +160,10 @@ function getAllComments($conn)
   $_comments = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_all_comments");
 
+  if ($_comments === FALSE) {
+    $_comments = array();
+  }
+
   $comments = array_map(function($comment) use($conn) {
     $comment['user'] = getUser($conn, intval($comment['user_id']));
     unset($comment['user_id']);
@@ -173,6 +185,10 @@ function getPostsForThread($conn, $thread_id)
   $stmt = pg_execute($conn, "get_posts_for_thread", array($thread_id));
   $_posts = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_posts_for_thread");
+
+  if ($_posts === FALSE) {
+    $_posts = array();
+  }
 
   $posts = array_map(function($post) use($conn) {
     $post['image'] = getImage($conn, intval($post['image_id']))['name'];
@@ -198,6 +214,10 @@ function getCommentsForThread($conn, $thread_id)
   $stmt = pg_execute($conn, "get_comments_for_thread", array($thread_id));
   $_comments = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_comments_for_thread");
+
+  if ($_comments === FALSE) {
+    $_comments = array();
+  }
 
   $comments = array_map(function($comment) use($conn) {
     $comment['user'] = getUser($conn, intval($comment['user_id']));
@@ -238,6 +258,10 @@ function getAllThreads($conn)
   $_threads = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_all_threads");
 
+  if ($_threads === FALSE) {
+    $_threads = array();
+  }
+
   $threads = array_map(function($thread) use($conn) {
     $thread['posts'] = getPostsForThread($conn, intval($thread['id']));
     $thread['comments'] = getCommentsForThread($conn, intval($thread['id']));
@@ -254,10 +278,14 @@ function getHomePosts($conn)
   // $stmt->bindValue("id", 1);
   // $stmt->execute();
   // $_posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  $stmt = pg_prepare($conn, "get_home_posts", 'SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts WHERE thread_id = $1');
-  $stmt = pg_execute($conn, "get_home_posts", array(1));
+  $stmt = pg_prepare($conn, "get_home_posts", 'SELECT * FROM (SELECT DISTINCT ON (p.thread_id) p.id, p.user_id, p.thread_id, p.image_id, p.answer, p.updated_at FROM posts p, threads t WHERE p.thread_id=t.id AND t.is_open = true order by p.thread_id, p.updated_at desc ) as dt order by updated_at desc');
+  $stmt = pg_execute($conn, "get_home_posts", array());
   $_posts = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_home_posts");
+
+  if ($_posts === FALSE) {
+    $_posts = array();
+  }
 
   $posts = array_map(function($post) use($conn) {
     $post['image'] = getImage($conn, intval($post['image_id']))['name'];
@@ -412,7 +440,7 @@ function createThread($conn, $post)
 {
   // pg_query($conn, "BEGIN");
 
-  $stmt = pg_prepare($conn, "create_thread", 'INSERT INTO threads (is_open, created_at, updated_at) VALUES (false, NOW(), NOW()) RETURNING id');
+  $stmt = pg_prepare($conn, "create_thread", 'INSERT INTO threads (is_open, created_at, updated_at) VALUES (true, NOW(), NOW()) RETURNING id');
   $stmt = pg_execute($conn, "create_thread", array());
   $thread = pg_fetch_assoc($stmt);
   pg_query($conn, "DEALLOCATE create_thread");

@@ -61,7 +61,7 @@
 - x [server] SESSION 管理
 - x [client] NewPostComponent
 - x ログインしてなかったらログインページにリダイレクト ←確認ダイアログを出す
-- [client / server] threadをつくる機能
+- x [client / server] threadをつくる機能
 - x [client / server] mypage
 - [client / server] パスワード変更
 - [server] `POST /users/my/avatar` で画像変更
