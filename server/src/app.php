@@ -333,7 +333,7 @@ $app->path('user', function($request) use($app, $conn) {
             'user' => $user
           ];
 
-          $_SESSION['user_id'] = $_user['id'];
+          $_SESSION['user_id'] = $user['id'];
           session_write_close();
         } else {
           $response = [
