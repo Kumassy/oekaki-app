@@ -6,8 +6,10 @@ import { connect } from 'react-redux';
 import {
   fetchHomePosts
 } from '../actions/index';
-import Post from './PostComponent';
 import { _host } from '../clientHttp';
+
+import Post from './PostComponent';
+import NewThread from './NewThreadComponent';
 
 require('styles//HomePage.css');
 
@@ -25,9 +27,12 @@ class HomePageComponent extends React.Component {
     return (
       <div className="homepage-component">
         <ul className="posts">
+          <li key="new-thread">
+            <NewThread></NewThread>
+          </li>
           {posts.map(post =>
-            <li key={post.id}>
-              <Post image={`${_host}/${post.image}`}
+            <li key={post.isSending ? 'sending-post' : post.id}>
+              <Post image={post.image.startsWith('images/') ? `${_host}/${post.image}` : post.image}
                     timestamp={post.updated_at}
                     text={post.answer}
                     userName={post.user.username}

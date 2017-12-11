@@ -4,6 +4,7 @@ import {
   getThread,
   newComment,
   newPost,
+  newThread,
   getHomePosts,
   doSignIn,
   doSignUp,
@@ -29,6 +30,10 @@ import {
   RECEIVE_NEW_POST,
   FAILED_NEW_POST,
 
+  SEND_NEW_THREAD,
+  RECEIVE_NEW_THREAD,
+  FAILED_NEW_THREAD,
+
   REQUEST_SIGN_IN,
   RECEIVE_SIGN_IN,
   FAILED_SIGN_IN,
@@ -50,6 +55,11 @@ import {
   NEW_POST_INPUT_CHANGE_ANSWER,
   NEW_POST_INPUT_CLEAR,
   NEW_POST_CLOSE_DIALOG,
+
+  NEW_THREAD_INPUT_CHANGE_FILE,
+  NEW_THREAD_INPUT_CHANGE_ANSWER,
+  NEW_THREAD_INPUT_CLEAR,
+  NEW_THREAD_CLOSE_DIALOG,
 
   NEW_COMMENT_INPUT_CHANGE_COMMENT,
   NEW_COMMENT_INPUT_CLEAR,
@@ -176,7 +186,7 @@ function failedNewPost(error, threadId) {
 //   - thread_id
 //   - image: file
 //   - answer
-export function createPost(post) {
+export function createPost(post, form) {
   return dispatch => {
     return getBase64(post.image).then((base64) => {
       const postbase64 = {
@@ -192,6 +202,50 @@ export function createPost(post) {
             form.reset();
           } else {
             dispatch(failedNewPost(response.error, post.thread_id))
+          }
+        });
+    })
+  }
+}
+
+function sendNewThread(post) {
+  return {
+    type: SEND_NEW_THREAD,
+    post
+  }
+}
+
+function receiveNewThread(newPost) {
+  return {
+    type: RECEIVE_NEW_THREAD,
+    post: newPost,
+    receivedAt: Date.now()
+  }
+}
+
+function failedNewThread(error) {
+  return {
+    type: FAILED_NEW_THREAD,
+    error
+  }
+}
+
+export function createThread(post, form) {
+  return dispatch => {
+    return getBase64(post.image).then((base64) => {
+      const postbase64 = {
+        ...post,
+        image: base64
+      };
+      dispatch(sendNewThread(postbase64));
+      return newThread(post)
+        .then(response => {
+          if (response.post) {
+            dispatch(receiveNewThread(response.post));
+            dispatch(newThreadInputClear());
+            form.reset();
+          } else {
+            dispatch(failedNewThread(response.error))
           }
         });
     })
@@ -403,5 +457,31 @@ export function newCommentInputClear() {
 export function newCommentCloseDialog() {
   return {
     type: NEW_COMMENT_CLOSE_DIALOG
+  }
+}
+
+export function newThreadInputFileChanged(file) {
+  return {
+    type: NEW_THREAD_INPUT_CHANGE_FILE,
+    file
+  }
+}
+
+export function newThreadInputAnswerChanged(answer) {
+  return {
+    type: NEW_THREAD_INPUT_CHANGE_ANSWER,
+    answer
+  }
+}
+
+export function newThreadInputClear() {
+  return {
+    type: NEW_THREAD_INPUT_CLEAR
+  }
+}
+
+export function newThreadCloseDialog() {
+  return {
+    type: NEW_THREAD_CLOSE_DIALOG
   }
 }

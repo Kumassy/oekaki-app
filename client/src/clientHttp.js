@@ -32,7 +32,7 @@ export function newPost(post) {
   }
   const params = new FormData();
   params.append('image', post.image);
-  params.append('user_id', post.user.id);
+  // params.append('user_id', post.user.id);
   params.append('thread_id', post.thread_id);
   params.append('answer', post.answer);
 
@@ -45,7 +45,12 @@ export function newThread(post) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  return client.post('/threads/new', post, config);
+  const params = new FormData();
+  params.append('image', post.image);
+  params.append('user_id', post.user.id);
+  params.append('answer', post.answer);
+
+  return client.post('/threads/new', params, config).then(json => json.data);
 }
 
 export function getThread(id) {
