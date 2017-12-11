@@ -44,7 +44,15 @@ import {
   REQUEST_LOGGED_IN_USER,
   RECEIVE_LOGGED_IN_USER,
 
-  SWITCH_SIGNIN_MODE
+  SWITCH_SIGNIN_MODE,
+
+  NEW_POST_INPUT_CHANGE_FILE,
+  NEW_POST_INPUT_CHANGE_ANSWER,
+  NEW_POST_INPUT_CLEAR,
+
+  NEW_COMMENT_INPUT_CHANGE_COMMENT,
+  NEW_COMMENT_INPUT_CLEAR,
+  NEW_COMMENT_CLOSE_DIALOG
 } from './actionTypes'
 
 function requestThread(id) {
@@ -345,5 +353,44 @@ export function switchSignInMode(mode) {
   return {
     type: SWITCH_SIGNIN_MODE,
     mode: mode
+  }
+}
+
+export function newPostInputFileChanged(file) {
+  return {
+    type: NEW_POST_INPUT_CHANGE_FILE,
+    file
+  }
+}
+
+export function newPostInputAnswerChanged(answer) {
+  return {
+    type: NEW_POST_INPUT_CHANGE_ANSWER,
+    answer
+  }
+}
+
+export function newPostInputClear() {
+  return {
+    type: NEW_POST_INPUT_CLEAR
+  }
+}
+
+export function newCommentInputCommentChanged(comment) {
+  return {
+    type: NEW_COMMENT_INPUT_CHANGE_COMMENT,
+    comment
+  }
+}
+
+export function newCommentInputClear() {
+  return {
+    type: NEW_COMMENT_INPUT_CLEAR
+  }
+}
+
+export function newCommentCloseDialog() {
+  return {
+    type: NEW_COMMENT_CLOSE_DIALOG
   }
 }

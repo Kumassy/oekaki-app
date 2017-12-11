@@ -132,6 +132,10 @@ export function threadsReducer(state = initialState, action) {
               status: {
                 ...threadContainer.status,
                 error
+              },
+              thread: {
+                ...threadContainer.thread,
+                comments: threadContainer.thread.comments.filter(c => c.isSending == null)
               }
             }
           }

@@ -271,6 +271,10 @@ function getHomePosts($conn)
     return $post;
   }, $_posts);
   return $posts;
+
+  // get threads
+  // for each
+  // select * from comments where thread_id = 2 order by created_at asc limit 1;
 }
 
 
