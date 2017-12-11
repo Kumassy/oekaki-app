@@ -64,5 +64,14 @@ create table comments(
 );
 
 
+\copy images from fixture_images.csv csv
+\copy users from fixture_users.csv csv
+\copy threads from fixture_threads.csv csv
+\copy posts from fixture_posts.csv csv
+\copy comments from fixture_comments.csv csv
 
--- \copy todofu from data/todofu.csv csv
+SELECT SETVAL('comments_id_seq', 1000);
+SELECT SETVAL('images_id_seq', 1000);
+SELECT SETVAL('posts_id_seq', 1000);
+SELECT SETVAL('threads_id_seq', 1000);
+SELECT SETVAL('users_id_seq', 1000);

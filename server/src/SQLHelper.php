@@ -408,6 +408,28 @@ function createPost($conn, $post)
   return $post;
 
 }
+function createThread($conn, $post)
+{
+  // pg_query($conn, "BEGIN");
+
+  $stmt = pg_prepare($conn, "create_thread", 'INSERT INTO threads (is_open, created_at, updated_at) VALUES (false, NOW(), NOW()) RETURNING id');
+  $stmt = pg_execute($conn, "create_thread", array());
+  $thread = pg_fetch_assoc($stmt);
+  pg_query($conn, "DEALLOCATE create_thread");
+  $thread['id'] = intval($thread['id']);
+
+  if (v::key('id', v::intType()->positive())->validate($thread)) {
+    $post['thread_id'] = $thread['id'];
+
+    $newPost = createPost($conn, $post);
+    if (v::key('id', v::intType()->positive())->validate($newPost)) {
+      // pg_query($conn, "END");
+      return $newPost;
+    }
+  }
+
+  // pg_query($conn, "ABORT");
+}
 
 
 function createUser($conn, $credentials)

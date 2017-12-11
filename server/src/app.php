@@ -139,7 +139,7 @@ $app->path('posts', function($request) use($app, $conn, $log) {
   });
 });
 
-$app->path('threads', function($request) use($app, $conn) {
+$app->path('threads', function($request) use($app, $conn, $log) {
   $app->get(function($request) use($app, $conn) {
     $_threads = getAllThreads($conn);
     $threads = [
@@ -149,7 +149,7 @@ $app->path('threads', function($request) use($app, $conn) {
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
-  $app->param('int', function($request, $id) use($app, $conn) {
+  $app->param('int', function($request, $id) use($app, $conn, $log) {
     $app->get(function($request) use($app, $conn, $id) {
       $_thread = getThread($conn, $id);
       $thread = [
@@ -160,7 +160,7 @@ $app->path('threads', function($request) use($app, $conn) {
         ->header('Access-Control-Allow-Credentials', 'true');
     });
   });
-  $app->path('new', function($request) use($app) {
+  $app->path('new', function($request) use($app, $conn, $log) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
@@ -168,10 +168,55 @@ $app->path('threads', function($request) use($app, $conn) {
         ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
         ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $request) {
-      file_put_contents('php://stderr', print_r($request->params(), TRUE));
-      file_put_contents('php://stderr', print_r($_FILES['image'], TRUE));
-      return $app->response(200, "new")
+    $app->post(function($request) use($app, $conn, $log, $request) {
+      $log->addInfo('/threads/new');
+      session_name('j150989k');
+      session_start();
+
+      $post = [
+        'user_id' => intval(Arrays::get('user_id', $_SESSION)),
+        'answer' =>  Arrays::get('answer', $request->params()),
+        'image' => Arrays::get('image', $_FILES)
+      ];
+      $log->info('request:', $post);
+
+      $response = array();
+      if (!v::key('user_id', v::intType()->positive())->validate($post)) {
+        $response = [
+          'error' => [
+            'type' => 'SIGNIN_REQUIRED',
+            'message' => '画像を投稿するにはログインが必要です'
+          ]
+        ];
+      }
+      //
+      else if (
+        v::keySet(
+          v::key('user_id', v::intType()->positive()),
+          v::key('answer', v::stringType()->regex('/^[ぁ-んー]+$/u')),
+          v::key('image', v::notEmpty()))->validate($post)
+      ) {
+
+        $newPost = createThread($conn, $post);
+        $response = [
+          'post' => $newPost
+        ];
+
+
+      } else {
+        $response = [
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => '必要事項が入力されていないか、形式が間違っています'
+          ]
+        ];
+      }
+
+      session_write_close();
+      sleep(2);
+
+      $log->info('response:', $response);
+      return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
     });
