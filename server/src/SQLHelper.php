@@ -6,14 +6,20 @@ use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 
 function getConnection() {
-  return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
+  // return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
+  return pg_connect("host=localhost dbname=j150989k user=j150989k");
 }
 function getImage($conn, $id) {
-  $stmt = $conn->prepare('SELECT id, name FROM images WHERE id = :id');
-  $stmt->bindValue("id", $id);
-  $stmt->execute();
+  // $stmt = $conn->prepare('SELECT id, name FROM images WHERE id = :id');
+  // $stmt->bindValue("id", $id);
+  // $stmt->execute();
+  //
+  // $image = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt = pg_prepare($conn, "my_query", 'SELECT id, name FROM images WHERE id = $1');
+  $stmt = pg_execute($conn, "my_query", array($id));
+  $image = pg_fetch_assoc($stmt);
 
-  $image = $stmt->fetch(PDO::FETCH_ASSOC);
+
   $image['name'] = 'images/' . $image['name'];
 
   return $image;
@@ -21,11 +27,16 @@ function getImage($conn, $id) {
 
 // image_id 未設定 → avatar key を作らない
 function getUser($conn, $id) {
-  $stmt = $conn->prepare('SELECT id, username, image_id FROM users WHERE id = :id');
-  $stmt->bindValue("id", $id);
-  $stmt->execute();
+  // $stmt = $conn->prepare('SELECT id, username, image_id FROM users WHERE id = :id');
+  // $stmt->bindValue("id", $id);
+  // $stmt->execute();
+  //
+  // $user = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt = pg_prepare($conn, "my_query", 'SELECT id, username, image_id FROM users WHERE id = $1');
+  $stmt = pg_execute($conn, "my_query", array($id));
+  $user = pg_fetch_assoc($stmt);
+  
 
-  $user = $stmt->fetch(PDO::FETCH_ASSOC);
   if (v::key('image_id', v::intType()->positive())->validate($user)) {
     $user['avatar'] = getImage($conn, $user['image_id'])['name'];
   }

@@ -6,7 +6,9 @@ import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux'
 
 const loggerMiddleware = createLogger()
-export const history = createHistory()
+export const history = createHistory({
+  basename: '/~j150989k'
+})
 
 export default function configureStore(preloadedState) {
   return createStore(
