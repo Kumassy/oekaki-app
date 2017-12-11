@@ -8,12 +8,14 @@ import {
   createPost,
   newPostInputFileChanged,
   newPostInputAnswerChanged,
-  newPostInputClear
+  newPostInputClear,
+  newPostCloseDialog
 } from '../actions';
 
 
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
 require('styles//NewPost.css');
 
 const styles = {
@@ -39,6 +41,8 @@ class NewPostComponent extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleAnswerChange = this.handleAnswerChange.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    this.closeDialogAndRedirect = this.closeDialogAndRedirect.bind(this);
   }
 
   handleFileChange(e) {
@@ -48,6 +52,16 @@ class NewPostComponent extends React.Component {
   handleAnswerChange(e, newValue) {
     const { dispatch } = this.props;
     dispatch(newPostInputAnswerChanged(newValue));
+  }
+
+  closeDialog() {
+    const { dispatch } = this.props;
+    dispatch(newPostCloseDialog());
+  }
+  closeDialogAndRedirect() {
+    const { dispatch } = this.props;
+    dispatch(newPostCloseDialog());
+    dispatch(push('/login'));
   }
 
   onSubmit(e) {
@@ -68,35 +82,77 @@ class NewPostComponent extends React.Component {
     // params.append('answer', 'ついったー');
     //
     // newPost(params);
-    dispatch(createPost(post));
-    dispatch(newPostInputClear());
-    this.refs.form.reset();
-    // this.refs.input.value = '';
+    dispatch(createPost(post, this.refs.form));
   }
   render() {
     const { input } = this.props;
-    const { isValid } = input;
+    const { isValid, file, answer, shouldOpenDialog, error } = input;
+
+    let actions = [];
+    switch(error.type) {
+      case 'INVALID_INPUT':
+        actions = [
+          <FlatButton
+            label="OK"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialog}
+          />
+        ];
+        break;
+      case 'SIGNIN_REQUIRED':
+        actions = [
+          <FlatButton
+            label="Cancel"
+            primary={false}
+            onClick={this.closeDialog}
+          />,
+          <FlatButton
+            label="ログインページへ移動"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogAndRedirect}
+          />
+        ];
+        break;
+    }
     return (
       <div className="newpost-component">
         <form ref="form">
           <FlatButton
-            label="Choose an Image"
+            label={file && file.name ? file.name : 'Choose an Image'}
             labelPosition="before"
             style={styles.uploadButton}
             containerElement="label"
           >
-            <input type="file" name="image" ref="image" style={styles.uploadInput} onChange={this.handleFileChange}/>
+            <input
+              type="file"
+              name="image"
+              ref="image"
+              style={styles.uploadInput}
+              onChange={this.handleFileChange}
+            />
           </FlatButton>
           <TextField
             hintText="ひらがなのみ"
             floatingLabelText="answer"
-            onChange={this.handleAnswerChange} />
+            onChange={this.handleAnswerChange}
+            value={answer} />
 
           <FlatButton
             label="Submit"
             disabled={!isValid}
             onClick={this.onSubmit} />
         </form>
+        <Dialog
+          title="投稿に失敗しました"
+          actions={actions}
+          modal={true}
+          open={shouldOpenDialog}
+          onRequestClose={this.closeDialog}
+        >
+          {error && error.message}
+        </Dialog>
       </div>
     );
   }

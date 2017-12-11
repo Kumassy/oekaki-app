@@ -55,9 +55,8 @@ class NewCommentComponent extends React.Component {
       'thread_id': parseInt(threadId),
       'comment': input.comment
     }
-    dispatch(createComment(comment));
-    dispatch(newCommentInputClear());
-    this.refs.form.reset();
+    dispatch(createComment(comment, this.refs.form));
+
     // this.refs.input.value = '';
   }
   render() {
@@ -90,6 +89,7 @@ class NewCommentComponent extends React.Component {
             onClick={this.closeDialogAndRedirect}
           />
         ];
+        break;
     }
 
     return (
@@ -110,7 +110,7 @@ class NewCommentComponent extends React.Component {
           actions={actions}
           modal={true}
           open={shouldOpenDialog}
-          onRequestClose={this.handleClose}
+          onRequestClose={this.closeDialog}
         >
           {error && error.message}
         </Dialog>

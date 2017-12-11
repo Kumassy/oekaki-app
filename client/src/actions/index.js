@@ -49,6 +49,7 @@ import {
   NEW_POST_INPUT_CHANGE_FILE,
   NEW_POST_INPUT_CHANGE_ANSWER,
   NEW_POST_INPUT_CLEAR,
+  NEW_POST_CLOSE_DIALOG,
 
   NEW_COMMENT_INPUT_CHANGE_COMMENT,
   NEW_COMMENT_INPUT_CLEAR,
@@ -131,13 +132,15 @@ function failedNewComment(error, threadId) {
   }
 }
 
-export function createComment(comment) {
+export function createComment(comment, form) {
   return dispatch => {
     dispatch(sendNewComment(comment));
     return newComment(comment)
       .then(response => {
         if (response.comment) {
           dispatch(receiveNewComment(response.comment))
+          dispatch(newCommentInputClear());
+          form.reset();
         } else {
           dispatch(failedNewComment(response.error, comment.thread_id))
         }
@@ -184,7 +187,9 @@ export function createPost(post) {
       return newPost(post)
         .then(response => {
           if (response.post) {
-            dispatch(receiveNewPost(response.post))
+            dispatch(receiveNewPost(response.post));
+            dispatch(newPostInputClear());
+            form.reset();
           } else {
             dispatch(failedNewPost(response.error, post.thread_id))
           }
@@ -373,6 +378,12 @@ export function newPostInputAnswerChanged(answer) {
 export function newPostInputClear() {
   return {
     type: NEW_POST_INPUT_CLEAR
+  }
+}
+
+export function newPostCloseDialog() {
+  return {
+    type: NEW_POST_CLOSE_DIALOG
   }
 }
 
