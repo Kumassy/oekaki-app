@@ -65,4 +65,8 @@ create table comments(
 
 
 
--- \copy todofu from data/todofu.csv csv
+\copy images from fixture_images.csv csv
+\copy users from fixture_users.csv csv
+\copy threads from fixture_threads.csv csv
+\copy posts from fixture_posts.csv csv
+\copy comments from fixture_comments.csv csv

@@ -19,12 +19,6 @@ $app = new Bullet\App();
 //   return "Hello World!";
 // });
 
-// $app->path('api', function($request) use($app, $conn, $log) {
-//   $app->path('v0', function($request) use($app, $conn, $log) {
-    // $app->get(function($request) use($app, $conn) {
-    //   return "Hello World!";
-    // });
-
 $app->path('users', function($request) use($app, $conn) {
   $app->get(function($request) use($app, $conn) {
     $_users = getAllUsers($conn);
@@ -306,7 +300,7 @@ $app->path('user', function($request) use($app, $conn, $log) {
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
-  $app->path('signin', function($request) use($app, $conn) {
+  $app->path('signin', function($request) use($app, $conn, $log) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
                ->header('Access-Control-Allow-Origin', CLIENT_HOST)
@@ -314,11 +308,14 @@ $app->path('user', function($request) use($app, $conn, $log) {
                ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
                ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $conn) {
+    $app->post(function($request) use($app, $conn, $log) {
+      $log->addInfo('/user/signin');
       $credentials = [
         'username' => Arrays::get('username', $request->params()),
         'password' => Arrays::get('password', $request->params())
       ];
+
+      $log->info('request:', $credentials);
 
       $response = array();
       if (
@@ -358,6 +355,7 @@ $app->path('user', function($request) use($app, $conn, $log) {
         ];
       }
 
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -524,8 +522,5 @@ $app->path('test', function($request) use($app, $conn) {
     });
   });
 });
-//   });
-// });
-
 // Run the app! (takes $method, $url or Bullet\Request object)
 // echo $app->run(new Bullet\Request());
