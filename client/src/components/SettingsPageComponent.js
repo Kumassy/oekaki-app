@@ -5,6 +5,20 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { _host } from '../clientHttp';
 
+import {
+  settingsInputCurrentPasswordChanged,
+  settingsInputNewPasswordChanged,
+  settingsInputNewPasswordConfirmChanged,
+  settingsInputClearPassword,
+  settingsCloseDialogPassword,
+  settingsInputFileChanged,
+  settingsInputClearFile,
+  settingsCloseDialogFile,
+
+  updatePassword,
+  updateAvatar
+} from '../actions';
+
 import UserListItem from './UserListItemComponent';
 
 import Divider from 'material-ui/Divider';
@@ -34,6 +48,19 @@ const styles = {
 }
 
 class SettingsPageComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onSubmitPassword = this.onSubmitPassword.bind(this);
+    this.onSubmitAvatar = this.onSubmitAvatar.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
+    this.handleCurrentPasswordChange = this.handleCurrentPasswordChange.bind(this);
+    this.handleNewPasswordChange = this.handleNewPasswordChange.bind(this);
+    this.handleNewPasswordConfirmChange = this.handleNewPasswordConfirmChange.bind(this);
+    // this.closeDialog = this.closeDialog.bind(this);
+    // this.closeDialogAndRedirect = this.closeDialogAndRedirect.bind(this);
+  }
+
   componentDidMount() {
     const { dispatch, user } = this.props;
 
@@ -50,8 +77,53 @@ class SettingsPageComponent extends React.Component {
     }
   }
 
+  handleFileChange(e) {
+    const { dispatch } = this.props;
+    dispatch(settingsInputFileChanged(this.refs.image.files[0]));
+  }
+  handleCurrentPasswordChange(e, newValue) {
+    const { dispatch } = this.props;
+    dispatch(settingsInputCurrentPasswordChanged(newValue));
+  }
+  handleNewPasswordChange(e, newValue) {
+    const { dispatch } = this.props;
+    dispatch(settingsInputNewPasswordChanged(newValue));
+  }
+  handleNewPasswordConfirmChange(e, newValue) {
+    const { dispatch } = this.props;
+    dispatch(settingsInputNewPasswordConfirmChanged(newValue));
+  }
+
+  onSubmitPassword(e) {
+    e.preventDefault();
+
+    const { dispatch, settings } = this.props;
+    const { currentPassword, newPassword } = settings.password;
+
+    const credentials = {
+      currentPassword,
+      newPassword
+    }
+
+    dispatch(updatePassword(credentials));
+  }
+  onSubmitAvatar(e) {
+    e.preventDefault();
+
+    const { dispatch, settings } = this.props;
+    const { file } = settings.avatar;
+
+    const user = {
+      avatar: file
+    }
+
+    dispatch(updateAvatar(user));
+  }
+
   render() {
-    const { user } = this.props;
+    const { user, settings } = this.props;
+    const { password, avatar } = settings;
+
     return (
       <div className="settingspage-component">
         <Paper zDepth={2} style={styles.paper}>
@@ -69,22 +141,34 @@ class SettingsPageComponent extends React.Component {
             hintText=""
             floatingLabelText="現在のパスワード"
             type="password"
+            onChange={this.handleCurrentPasswordChange}
+            value={password.currentPassword}
           /><br />
           <TextField
             hintText=""
             floatingLabelText="新しいパスワード"
             type="password"
+            errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
+            onChange={this.handleNewPasswordChange}
+            value={password.newPassword}
           /><br />
           <TextField
             hintText=""
             floatingLabelText="新しいパスワード（確認用）"
             type="password"
+            errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
+            onChange={this.handleNewPasswordConfirmChange}
+            value={password.newPasswordConfirm}
           /><br />
+          <FlatButton
+            label="Submit"
+            disabled={!password.isValid}
+            onClick={this.onSubmitPassword} />
 
           <Divider />
           <h3>画像の変更</h3>
           <FlatButton
-            label={'Choose an Image'}
+            label={avatar.file && avatar.file.name ? avatar.file.name : 'Choose an Image'}
             labelPosition="before"
             style={styles.uploadButton}
             containerElement="label"
@@ -96,7 +180,11 @@ class SettingsPageComponent extends React.Component {
               style={styles.uploadInput}
               onChange={this.handleFileChange}
             />
-          </FlatButton>
+          </FlatButton><br />
+          <FlatButton
+            label="Submit"
+            disabled={!avatar.isValid}
+            onClick={this.onSubmitAvatar} />
         </Paper>
       </div>
     );
@@ -110,11 +198,12 @@ SettingsPageComponent.displayName = 'SettingsPageComponent';
 // SettingsPageComponent.defaultProps = {};
 
 function mapStateToProps(state) {
-  const { userInfo } = state;
+  const { userInfo, pageSettings } = state;
   const { user } = userInfo;
 
   return {
-    user
+    user,
+    settings: pageSettings
   }
 }
 const SettingsPageContainer = connect(mapStateToProps)(SettingsPageComponent);

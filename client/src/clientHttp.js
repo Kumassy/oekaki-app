@@ -106,3 +106,28 @@ export function getLoggedInUser() {
   }
   return client.get('/user', {}, config).then(json => json.data);
 }
+
+export function patchUserPassword(credentials) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  const params = new FormData();
+  params.append('currentPassword', credentials.currentPassword);
+  params.append('newPassword', credentials.newPassword);
+
+  return client.post('/user/password', params, config).then(json => json.data);
+}
+
+export function patchUserAvatar(user) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  const params = new FormData();
+  params.append('avatar', user.avatar)
+
+  return client.post('/user/avatar', params, config).then(json => json.data);
+}

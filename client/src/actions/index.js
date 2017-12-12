@@ -9,7 +9,9 @@ import {
   doSignIn,
   doSignUp,
   doSignOut,
-  getLoggedInUser
+  getLoggedInUser,
+  patchUserPassword,
+  patchUserAvatar
 } from '../clientHttp';
 import { getBase64 } from '../utils';
 
@@ -63,7 +65,24 @@ import {
 
   NEW_COMMENT_INPUT_CHANGE_COMMENT,
   NEW_COMMENT_INPUT_CLEAR,
-  NEW_COMMENT_CLOSE_DIALOG
+  NEW_COMMENT_CLOSE_DIALOG,
+
+  SETTINGS_INPUT_CHANGE_CURRENT_PASSWORD,
+  SETTINGS_INPUT_CHANGE_NEW_PASSWORD,
+  SETTINGS_INPUT_CHANGE_NEW_PASSWORD_CONFIRM,
+  SETTINGS_INPUT_CLEAR_PASSWORD,
+  SETTINGS_CLOSE_DIALOG_PASSWORD,
+  SETTINGS_INPUT_CHANGE_FILE,
+  SETTINGS_INPUT_CLEAR_FILE,
+  SETTINGS_CLOSE_DIALOG_FILE,
+
+  REQUEST_UPDATE_PASSWORD,
+  RECEIVE_UPDATE_PASSWORD,
+  FAILED_UPDATE_PASSWORD,
+
+  REQUEST_UPDATE_AVATAR,
+  RECEIVE_UPDATE_AVATAR,
+  FAILED_UPDATE_AVATAR
 } from './actionTypes'
 
 function requestThread(id) {
@@ -483,5 +502,131 @@ export function newThreadInputClear() {
 export function newThreadCloseDialog() {
   return {
     type: NEW_THREAD_CLOSE_DIALOG
+  }
+}
+
+
+export function settingsInputCurrentPasswordChanged(currentPassword) {
+  return {
+    type: SETTINGS_INPUT_CHANGE_CURRENT_PASSWORD,
+    currentPassword
+  }
+}
+
+export function settingsInputNewPasswordChanged(newPassword) {
+  return {
+    type: SETTINGS_INPUT_CHANGE_NEW_PASSWORD,
+    newPassword
+  }
+}
+
+export function settingsInputNewPasswordConfirmChanged(newPasswordConfirm) {
+  return {
+    type: SETTINGS_INPUT_CHANGE_NEW_PASSWORD_CONFIRM,
+    newPasswordConfirm
+  }
+}
+
+export function settingsInputClearPassword() {
+  return {
+    type: SETTINGS_INPUT_CLEAR_PASSWORD
+  }
+}
+
+export function settingsCloseDialogPassword() {
+  return {
+    type: SETTINGS_CLOSE_DIALOG_PASSWORD
+  }
+}
+
+export function settingsInputFileChanged(file) {
+  return {
+    type: SETTINGS_INPUT_CHANGE_FILE,
+    file
+  }
+}
+
+export function settingsInputClearFile() {
+  return {
+    type: SETTINGS_INPUT_CLEAR_FILE
+  }
+}
+
+export function settingsCloseDialogFile() {
+  return {
+    type: SETTINGS_CLOSE_DIALOG_FILE
+  }
+}
+
+
+function requestUpdatePassword() {
+  return {
+    type: REQUEST_UPDATE_PASSWORD
+  }
+}
+
+function failedUpdatePassword(error) {
+  return {
+    type: FAILED_UPDATE_PASSWORD,
+    error
+  }
+}
+
+function receiveUpdatePassword(user) {
+  return {
+    type: RECEIVE_UPDATE_PASSWORD,
+    user,
+    receivedAt: Date.now()
+  }
+}
+
+export function updatePassword(credentials) {
+  return dispatch => {
+    dispatch(requestUpdatePassword());
+    return patchUserPassword(credentials)
+      .then(response => {
+        if (response.user) {
+          dispatch(receiveUpdatePassword(response.user))
+          dispatch(settingsInputClearPassword())
+        } else {
+          dispatch(failedUpdatePassword(response.error))
+        }
+      });
+  }
+}
+
+function requestUpdateAvatar() {
+  return {
+    type: REQUEST_UPDATE_AVATAR
+  }
+}
+
+function failedUpdateAvatar(error) {
+  return {
+    type: FAILED_UPDATE_AVATAR,
+    error
+  }
+}
+
+function receiveUpdateAvatar(user) {
+  return {
+    type: RECEIVE_UPDATE_AVATAR,
+    user,
+    receivedAt: Date.now()
+  }
+}
+
+export function updateAvatar(user) {
+  return dispatch => {
+    dispatch(requestUpdateAvatar());
+    return patchUserAvatar(user)
+      .then(response => {
+        if (response.user) {
+          dispatch(receiveUpdateAvatar(response.user))
+          dispatch(settingsInputClearFile())
+        } else {
+          dispatch(failedUpdateAvatar(response.error))
+        }
+      });
   }
 }

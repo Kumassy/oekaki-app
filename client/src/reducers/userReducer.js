@@ -14,7 +14,15 @@ import {
   REQUEST_LOGGED_IN_USER,
   RECEIVE_LOGGED_IN_USER,
 
-  SWITCH_SIGNIN_MODE
+  SWITCH_SIGNIN_MODE,
+
+  REQUEST_UPDATE_PASSWORD,
+  RECEIVE_UPDATE_PASSWORD,
+  FAILED_UPDATE_PASSWORD,
+
+  REQUEST_UPDATE_AVATAR,
+  RECEIVE_UPDATE_AVATAR,
+  FAILED_UPDATE_AVATAR
 } from '../actions/actionTypes';
 
 export const initialState = {
@@ -142,8 +150,7 @@ export function userReducer(state = initialState, action) {
             ...state.status,
             isFetching: false,
             error
-          },
-          user: {}
+          }
         };
       }
     case REQUEST_LOGGED_IN_USER:
@@ -181,6 +188,74 @@ export function userReducer(state = initialState, action) {
             mode
           }
         }
+      }
+    case REQUEST_UPDATE_PASSWORD:
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          isFetching: true
+        }
+      };
+    case RECEIVE_UPDATE_PASSWORD:
+      {
+        const { user } = action;
+
+        return {
+          ...state,
+          status: {
+            ...state.status,
+            isFetching: false
+          },
+          user
+        };
+      }
+    case FAILED_UPDATE_PASSWORD:
+      {
+        const { error } = action;
+
+        return {
+          ...state,
+          status: {
+            ...state.status,
+            isFetching: false,
+            error
+          }
+        };
+      }
+    case REQUEST_UPDATE_AVATAR:
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          isFetching: true
+        }
+      };
+    case RECEIVE_UPDATE_AVATAR:
+      {
+        const { user } = action;
+
+        return {
+          ...state,
+          status: {
+            ...state.status,
+            isFetching: false
+          },
+          user
+        };
+      }
+    case FAILED_UPDATE_AVATAR:
+      {
+        const { error } = action;
+
+        return {
+          ...state,
+          status: {
+            ...state.status,
+            isFetching: false,
+            error
+          }
+        };
       }
     default:
       return state

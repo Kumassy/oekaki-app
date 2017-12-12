@@ -511,3 +511,40 @@ function tryLogin($conn, $credentials)
     return getUser($conn, intval($users[0]['id']));
   }
 }
+
+// credentials
+// - id
+// - currentPassword
+// - newPassword
+function updatePassword($conn, $credentials) {
+  $stmt = pg_prepare($conn, "get_user", 'SELECT * FROM users WHERE id = $1');
+  $stmt = pg_execute($conn, "get_user", array($credentials['id']));
+  $user = pg_fetch_assoc($stmt);
+  pg_query($conn, "DEALLOCATE get_user");
+
+  if (password_verify($credentials['currentPassword'], $user['password'])) {
+    $hash = password_hash($credentials['newPassword'], PASSWORD_DEFAULT);
+
+    $stmt = pg_prepare($conn, "update_password", 'UPDATE users SET password = $1 WHERE id = $2');
+    $stmt = pg_execute($conn, "update_password", array($hash, $credentials['id']));
+    pg_query($conn, "DEALLOCATE update_password");
+
+    return getUser($conn, intval($credentials['id']));
+  }
+}
+
+// user
+// - id
+// - avatar
+
+function updateAvatar($conn, $user) {
+  $image = createImage($conn, $user['avatar']);
+
+  if (v::key('id', v::intType()->positive())->validate($image)) {
+    $stmt = pg_prepare($conn, "update_avatar", 'UPDATE users SET image_id = $1 WHERE id = $2');
+    $stmt = pg_execute($conn, "update_avatar", array(intval($image['id']), intval($user['id'])));
+    pg_query($conn, "DEALLOCATE update_avatar");
+
+    return getUser($conn, intval($user['id']));
+  }
+}

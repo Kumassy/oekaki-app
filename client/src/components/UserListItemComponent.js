@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { _host } from '../clientHttp';
 import pluralize from 'pluralize';
 
 import Avatar from 'material-ui/Avatar';
@@ -18,7 +19,7 @@ class UserListItemComponent extends React.Component {
         disabled={disabled}
         leftAvatar={
           <Avatar
-            src={avatar}
+            src={avatar ? `${_host}/${avatar}` : ''}
           />
         }
         primaryText={username}

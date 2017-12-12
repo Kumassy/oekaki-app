@@ -322,7 +322,7 @@ $app->path('comments', function($request) use($app, $conn, $log) {
 });
 
 
-$app->path('user', function($request) use($app, $conn) {
+$app->path('user', function($request) use($app, $conn, $log) {
   $app->get(function($request) use($app, $conn) {
     session_name('j150989k');
     session_start();
@@ -369,7 +369,10 @@ $app->path('user', function($request) use($app, $conn) {
         if (
           v::keySet(
             v::key('id', v::intType()->positive()),
-            v::key('username', v::stringType()->notEmpty()))->validate($user)
+            v::key('username', v::stringType()->notEmpty()),
+            v::key('avatar', v::stringType()->notEmpty(), false),
+            v::key('posts_count', v::intType()),
+            v::key('comments_count', v::intType()))->validate($user)
         ) {
           session_name('j150989k');
           session_start();
@@ -496,6 +499,148 @@ $app->path('user', function($request) use($app, $conn) {
       }
 
       session_write_close();
+      return $app->response(200, $response)
+        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+        ->header('Access-Control-Allow-Credentials', 'true');
+    });
+  });
+
+  $app->path('password', function($request) use($app, $conn, $log) {
+    $app->options(function($request) use($app, $request) {
+      return $app->response(200, "new")
+        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+        ->header('Access-Control-Allow-Credentials', 'true')
+        ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+        ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+    });
+    $app->post(function($request) use($app, $conn, $log, $request) {
+      $log->addInfo('/user/password');
+      session_name('j150989k');
+      session_start();
+
+      $credentials = [
+        'id' => intval(Arrays::get('user_id', $_SESSION)),
+        'currentPassword' =>  Arrays::get('currentPassword', $request->params()),
+        'newPassword' =>  Arrays::get('newPassword', $request->params())
+      ];
+      $log->info('request:', $credentials);
+
+      $response = array();
+      if (!v::key('id', v::intType()->positive())->validate($credentials)) {
+        $response = [
+          'error' => [
+            'type' => 'SIGNIN_REQUIRED',
+            'message' => 'パスワードを変更するにはログインが必要です'
+          ]
+        ];
+      } else if (
+        !v::keySet(
+          v::key('id', v::intType()->positive()),
+          v::key('currentPassword', v::stringType()->notEmpty()),
+          v::key('newPassword', v::stringType()->notEmpty()))->validate($credentials)
+      ) {
+        $response = [
+          'error' => [
+            'type' => 'EMPTY_INPUT',
+            'message' => 'パスワードが入力されていません'
+          ]
+        ];
+      } else {
+        $user = updatePassword($conn, $credentials);
+
+        if (v::keySet(
+          v::key('id', v::intType()->positive()),
+          v::key('username', v::stringType()->notEmpty()),
+          v::key('avatar', v::stringType()->notEmpty(), false),
+          v::key('posts_count', v::intType()),
+          v::key('comments_count', v::intType()))->validate($user)
+        ) {
+          $response = [
+            'user' => $user
+          ];
+        } else {
+          $response = [
+            'error' => [
+              'type' => 'INVALID_INPUT',
+              'message' => 'パスワードが間違っています'
+            ]
+          ];
+        }
+      }
+
+      session_write_close();
+      $log->info('response:', $response);
+      return $app->response(200, $response)
+        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+        ->header('Access-Control-Allow-Credentials', 'true');
+    });
+  });
+
+  $app->path('avatar', function($request) use($app, $conn, $log) {
+    $app->options(function($request) use($app, $request) {
+      return $app->response(200, "new")
+        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+        ->header('Access-Control-Allow-Credentials', 'true')
+        ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
+        ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
+    });
+    $app->post(function($request) use($app, $conn, $log, $request) {
+      $log->addInfo('/user/avatar');
+      session_name('j150989k');
+      session_start();
+
+      $user = [
+        'id' => intval(Arrays::get('user_id', $_SESSION)),
+        'avatar' => Arrays::get('avatar', $_FILES)
+      ];
+      $log->info('request:', $user);
+
+
+      $response = array();
+      if (!v::key('id', v::intType()->positive())->validate($user)) {
+        $response = [
+          'error' => [
+            'type' => 'SIGNIN_REQUIRED',
+            'message' => '画像を変更するにはログインが必要です'
+          ]
+        ];
+      }
+      else if (
+        !v::keySet(
+          v::key('id', v::intType()->positive()),
+          v::key('avatar', v::notEmpty()))->validate($user)
+      ) {
+        $response = [
+          'error' => [
+            'type' => 'EMPTY_INPUT',
+            'message' => '画像が入力されていません'
+          ]
+        ];
+      } else {
+        $newUser = updateAvatar($conn, $user);
+
+        if (v::keySet(
+          v::key('id', v::intType()->positive()),
+          v::key('username', v::stringType()->notEmpty()),
+          v::key('avatar', v::stringType()->notEmpty(), false),
+          v::key('posts_count', v::intType()),
+          v::key('comments_count', v::intType()))->validate($newUser)
+        ) {
+          $response = [
+            'user' => $newUser
+          ];
+        } else {
+          $response = [
+            'error' => [
+              'type' => 'FAILED_UPDATE',
+              'message' => '画像のアップデートに失敗しました'
+            ]
+          ];
+        }
+      }
+
+      session_write_close();
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
