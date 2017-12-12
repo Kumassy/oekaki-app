@@ -93,6 +93,15 @@ export function searchUsers(keyword) {
   }).then(json => json.data.users);
 }
 
+export function getUserPosts(id) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/users/${id}`).then(json => json.data);
+}
+
 export function getPosts() {
   const config = {
     headers: {

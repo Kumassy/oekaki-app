@@ -29,6 +29,7 @@ import Login from './LoginComponent';
 import ThreadPage from './ThreadPageComponent';
 import HomePage from './HomePageComponent';
 import UsersPage from './UsersPageComponent';
+import UserPage from './UserPageComponent';
 import UsersSearchPage from './UsersSearchPageComponent';
 import PostsPage from './PostsPageComponent';
 import SettingsPage from './SettingsPageComponent';
@@ -126,7 +127,8 @@ class AppComponent extends React.Component {
                   <Route exact path="/" component={HomePage}/>
                   <Route path="/about" component={About}/>
                   <Route exact path="/users/search" component={UsersSearchPage}/>
-                  <Route path="/users" component={UsersPage}/>                  
+                  <Route path="/users/:id" component={UserPage}/>
+                  <Route path="/users" component={UsersPage}/>
                   <Route path="/posts" component={PostsPage}/>
                   <Route path="/topics" component={Topics}/>
                   <Route path="/login" component={Topics}/>

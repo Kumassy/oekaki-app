@@ -32,11 +32,13 @@ $app->path('users', function($request) use($app, $conn, $log) {
   });
   $app->param('int', function($request, $id) use($app, $conn) {
     $app->get(function($request) use($app, $conn, $id) {
-      $_user = getUser($conn, $id);
-      $user = [
-        'user' => $_user
+      $user = getUser($conn, $id);
+      $posts = getPostsForUser($conn, $id);
+      $response = [
+        'user' => $user,
+        'posts' => $posts
       ];
-      return $app->response(200, $user)
+      return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
     });

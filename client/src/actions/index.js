@@ -8,6 +8,7 @@ import {
   getHomePosts,
   getUsers,
   searchUsers,
+  getUserPosts,
   getPosts,
   doSignIn,
   doSignUp,
@@ -30,6 +31,9 @@ import {
   REQUEST_SEARCH_USERS,
   RECEIVE_SEARCH_USERS,
   SEARCH_USERS_INPUT_CHANGE,
+
+  REQUEST_USER_POSTS,
+  RECEIVE_USER_POSTS,
 
   REQUEST_POSTS,
   RECEIVE_POSTS,
@@ -355,6 +359,29 @@ export function searchUsersInputChanged(keyword) {
   return {
     type: SEARCH_USERS_INPUT_CHANGE,
     keyword
+  }
+}
+
+function requestUserPosts() {
+  return {
+    type: REQUEST_USER_POSTS
+  }
+}
+
+function receiveUserPosts(user, posts) {
+  return {
+    type: RECEIVE_USER_POSTS,
+    user,
+    posts,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchUserPosts(id) {
+  return dispatch => {
+    dispatch(requestUserPosts());
+    return getUserPosts(id)
+      .then(response => dispatch(receiveUserPosts(response.user, response.posts)));
   }
 }
 

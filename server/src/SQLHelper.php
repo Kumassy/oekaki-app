@@ -239,6 +239,31 @@ function getPostsForThread($conn, $thread_id)
   return $posts;
 }
 
+function getPostsForUser($conn, $user_id)
+{
+  $stmt = pg_prepare($conn, "get_posts_for_user", 'SELECT id, user_id, thread_id, image_id, answer, updated_at FROM posts WHERE user_id = $1');
+  $stmt = pg_execute($conn, "get_posts_for_user", array($user_id));
+  $_posts = pg_fetch_all($stmt);
+  pg_query($conn, "DEALLOCATE get_posts_for_user");
+
+  if ($_posts === FALSE) {
+    $_posts = array();
+  }
+
+  $posts = array_map(function($post) use($conn) {
+    $post['image'] = getImage($conn, intval($post['image_id']))['name'];
+    unset($post['image_id']);
+
+    $post['user'] = getUser($conn, intval($post['user_id']));
+    unset($post['user_id']);
+
+    $post['id'] = intval($post['id']);
+    $post['thread_id'] = intval($post['thread_id']);
+    return $post;
+  }, $_posts);
+  return $posts;
+}
+
 function getCommentsForThread($conn, $thread_id)
 {
   // $stmt = $conn->prepare('SELECT id, user_id, thread_id, comment,  updated_at FROM comments WHERE thread_id = :id');

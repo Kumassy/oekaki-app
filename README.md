@@ -67,11 +67,13 @@
 - x [server] `POST /users/my/avatar` で画像変更
 - x ユーザー一覧表示
 - x 画像一覧表示
-- [client / server] /users/:id で posts 一覧
+- x[client / server] /users/:id で posts 一覧
 - x post に thread へのリンクをはる
 - x タグは answer に相当するので、タグ編集は無しとする
 - x ユーザーの検索、画像の検索 
 - x へんな入力でコメントなどをリバーとできる機能
+- セキュリティチェック
+- ユーザー名のalnum制限や文字数制限 
 - threads/100 とかの修正
 - 404ページ
 
