@@ -29,6 +29,7 @@ import Login from './LoginComponent';
 import ThreadPage from './ThreadPageComponent';
 import HomePage from './HomePageComponent';
 import UsersPage from './UsersPageComponent';
+import PostsPage from './PostsPageComponent';
 import SettingsPage from './SettingsPageComponent';
 
 
@@ -49,112 +50,6 @@ const _posts = [
     'image': 'fsdfsdds.jpg'
   }
 ];
-
-// class Home extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//         threads: []
-//     };
-//   }
-//
-//   componentDidMount() {
-//     this.fetchData();
-//   }
-//
-//   fetchData() {
-//     axios.get(`${_host}/home`).then((json) => {
-//       this.setState({
-//         threads: json.data.threads
-//       });
-//     });
-//   }
-//
-//   render() {
-//     const threads = this.state.threads;
-//
-//     const list = threads.map(thread =>
-//       <li key={thread.post.id}>
-//         <Link to={`thread/${thread.id}`}>
-//           <Post image={`${_host}/${thread.post.image}`}
-//                 timestamp={thread.post.timestamp}
-//                 text={thread.post.answer}
-//                 userName={thread.post.user.username}
-//                 userAvatar={`${_host}/${thread.post.user.avatar}`} />
-//         </Link>
-//       </li>);
-//
-//     return (
-//       <div>
-//         {list}
-//       </div>
-//     );
-//   }
-// }
-
-
-// class ThreadPage extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//         thread: {}
-//     };
-//   }
-//
-//   componentDidMount() {
-//     this.fetchData(this.props.match.params.id);
-//   }
-//   componentWillReceiveProps(nextProps) {
-//     if (this.props.match.params.id !== nextProps.match.params.id) {
-//       this.fetchData(nextProps.match.params.id);
-//     }
-//   }
-//
-//   fetchData(id) {
-//     // return _posts[id];
-//     axios.get(`${_host}/threads/${id}`).then((json) => {
-//       this.setState({
-//         thread: json.data
-//       });
-//     });
-//   }
-//
-//   render() {
-//     const thread = this.state.thread;
-//     const posts = thread.posts || [];
-//     const comments = thread.comments || [];
-//
-//     return (
-//       <div className="thread">
-//         <ul className="posts">
-//           {posts.map(post =>
-//             <li key={post.id}>
-//               <Post image={`${_host}/${post.image}`}
-//                     timestamp={post.timestamp}
-//                     text={post.answer}
-//                     userName={post.user.username}
-//                     userAvatar={`${_host}/${post.user.avatar}`} />
-//             </li>)}
-//             <li key="new-post">
-//               <NewPost></NewPost>
-//             </li>
-//         </ul>
-//         <ul className="comments">
-//           {comments.map(comment =>
-//             <li key={comment.id}>
-//               <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
-//                         userName={comment.user.username}
-//                         comment={comment.comment}
-//                         timestamp={comment.timestamp} />
-//             </li>)}
-//             <li key="new-comment">
-//               <NewComment></NewComment>
-//             </li>
-//         </ul>
-//       </div>
-//     );
-//   }
-// }
 
 const About = () => (
   <div>
@@ -196,127 +91,6 @@ const Topics = ({ match }) => (
   </div>
 )
 
-class PostComponent extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-        post: {}
-    };
-  }
-
-  componentDidMount() {
-    this.fetchData(this.props.match.params.id);
-  }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.match.params.id !== nextProps.match.params.id) {
-      this.fetchData(nextProps.match.params.id);
-    }
-  }
-
-  fetchData(id) {
-    // return _posts[id];
-    axios.get(`${_host}/posts/${id}`).then((json) => {
-      // return json.data.posts;
-      console.log(this.state);
-      this.setState({
-        post: json.data
-      });
-      console.log(this.state);
-    });
-  }
-
-  render() {
-    // const post = this.fetchData(this.props.match.params.id);
-    const post = this.state.post;
-
-    return (
-      <Post image={`${_host}/${post.image}`}
-            text={post.text} />
-    );
-  }
-  // render() {
-  //   // const post = this.fetchData(this.props.match.params.id);
-  //   const post = this.state.post;
-  //
-  //   return (
-  //     <div>
-  //       <ul>
-  //         <li>{post.id}</li>
-  //         <li>{post.text}</li>
-  //         <img src={`${_host}/${post.image}`} />
-  //       </ul>
-  //     </div>
-  //   );
-  // }
-}
-
-const PostsIndex = ({posts, comments, match}) => (
-  <div>
-    <ul className="post-index">
-      {posts.map(post =>
-        <li key={post.id}>
-          <Link to={`${match.url}/${post.id}`}>
-            <Post image={`${_host}/${post.image}`}
-                  text={post.text} />
-          </Link>
-        </li>)}
-    </ul>
-    <ul className="comment-index">
-      {comments.map(comment =>
-        <li key={comment.id}>
-          <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
-                    userName={comment.user.username}
-                    comment={comment.comment}
-                    timestamp="2017-01-01 12:22" />
-        </li>)}
-    </ul>
-  </div>
-)
-class PostsPage extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-        posts: [],
-        comments: []
-    };
-  }
-
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  fetchData() {
-    axios.get(`${_host}/posts`).then((json) => {
-      // return json.data.posts;
-      console.log(this.state);
-      this.setState({
-        posts: json.data.posts
-      });
-      console.log(this.state);
-    });
-    axios.get(`${_host}/comments`).then((json) => {
-      this.setState({
-        comments: json.data.comments
-      });
-    });
-  }
-
-  render() {
-    const match = this.props.match;
-    return (
-      <div>
-        <h2>Posts</h2>
-
-        <Switch>
-          <Route exact path={`${match.url}`} render={() => <PostsIndex posts={this.state.posts} comments={this.state.comments} match={match} />}/>
-
-          <Route path={`${match.url}/:id`} component={PostComponent}/>
-        </Switch>
-      </div>
-    )
-  }
-}
-
 const store = configureStore();
 
 class AppComponent extends React.Component {
@@ -336,8 +110,9 @@ class AppComponent extends React.Component {
                   <li><Link to="/about">About</Link></li>
                   <li><Link to="/topics">Topics</Link></li>
                   <li><Link to="/users">Users</Link></li>
-                  <li><Link to="/thread/1">/thread/1</Link></li>
-                  <li><Link to="/thread/2">/thread/2</Link></li>
+                  <li><Link to="/posts">Posts</Link></li>
+                  <li><Link to="/threads/1">/thread/1</Link></li>
+                  <li><Link to="/threads/2">/thread/2</Link></li>
                   <li><Link to="/settings">/settings</Link></li>
                 </ul>
                 <Login></Login>
@@ -349,10 +124,11 @@ class AppComponent extends React.Component {
                   <Route exact path="/" component={HomePage}/>
                   <Route path="/about" component={About}/>
                   <Route path="/users" component={UsersPage}/>
+                  <Route path="/posts" component={PostsPage}/>
                   <Route path="/topics" component={Topics}/>
                   <Route path="/login" component={Topics}/>
                   <Route path="/settings" component={SettingsPage}/>
-                  <Route path="/thread/:id" component={ThreadPage}/>
+                  <Route path="/threads/:id" component={ThreadPage}/>
                 </Switch>
               </div>
             </div>

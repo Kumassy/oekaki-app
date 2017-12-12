@@ -80,6 +80,15 @@ export function getUsers() {
   return client.get(`/users`).then(json => json.data.users);
 }
 
+export function getPosts() {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/posts`).then(json => json.data.posts);
+}
+
 export function doSignUp(credentials) {
   const config = {
     headers: {

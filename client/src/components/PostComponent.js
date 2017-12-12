@@ -3,23 +3,30 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 
+import MyAvatar from './MyAvatar';
+
+import { _host } from '../clientHttp';
 require('styles//Post.scss');
 
 class PostComponent extends React.Component {
   render() {
+    const { image, userAvatar, userName, timestamp, text } = this.props;
     return (
       <div className="post-component">
         <div className="post-image">
-          <img src={this.props.image} />
+          <img src={image.startsWith('images/') ? `${_host}/${image}` : image} />
+
         </div>
         <div className="post-meta">
           <div className="post-account">
-            <img src={this.props.userAvatar}/>
-            <span className="screen-name">{this.props.userName}</span>
-            <span className="timestamp">{this.props.timestamp}</span>
+            <MyAvatar
+              src={userAvatar}
+            />
+            <span className="screen-name">{userName}</span>
+            <span className="timestamp">{timestamp}</span>
           </div>
           <div className="post-text">
-            {this.props.text}
+            {text}
           </div>
           <div className="post-action">
             ******Action******

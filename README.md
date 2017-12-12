@@ -66,7 +66,7 @@
 - x [client / server] パスワード変更
 - x [server] `POST /users/my/avatar` で画像変更
 - x ユーザー一覧表示
-- 画像一覧表示
+- x 画像一覧表示
 - [client / server] /users/:id で posts 一覧
 - post に thread へのリンクをはる
 - タグは answer に相当するので、タグ編集は無しとする

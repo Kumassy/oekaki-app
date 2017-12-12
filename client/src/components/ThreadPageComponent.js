@@ -62,11 +62,11 @@ class ThreadPageComponent extends React.Component {
         <ul className="posts">
           {posts.map(post =>
             <li key={post.isSending ? 'sending-post' : post.id}>
-              <Post image={post.image.startsWith('images/') ? `${_host}/${post.image}` : post.image}
+              <Post image={post.image}
                     timestamp={post.updated_at}
                     text={post.answer}
                     userName={post.user.username}
-                    userAvatar={`${_host}/${post.user.avatar}`}
+                    userAvatar={post.user.avatar}
                     style={{ opacity: post.isSending? 0.5 : 1 }} />
             </li>)}
             <li key="new-post">

@@ -7,6 +7,7 @@ import {
   newThread,
   getHomePosts,
   getUsers,
+  getPosts,
   doSignIn,
   doSignUp,
   doSignOut,
@@ -24,6 +25,9 @@ import {
 
   REQUEST_USERS,
   RECEIVE_USERS,
+
+  REQUEST_POSTS,
+  RECEIVE_POSTS,
 
   REQUEST_THREAD,
   RECEIVE_THREAD,
@@ -317,6 +321,28 @@ export function fetchUsers() {
     dispatch(requestUsers());
     return getUsers()
       .then(users => dispatch(receiveUsers(users)));
+  }
+}
+
+function requestPosts() {
+  return {
+    type: REQUEST_POSTS
+  }
+}
+
+function receivePosts(posts) {
+  return {
+    type: RECEIVE_POSTS,
+    posts,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchPosts() {
+  return dispatch => {
+    dispatch(requestPosts());
+    return getPosts()
+      .then(posts => dispatch(receivePosts(posts)));
   }
 }
 
