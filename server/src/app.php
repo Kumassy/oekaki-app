@@ -427,7 +427,10 @@ $app->path('user', function($request) use($app, $conn) {
         if (
           v::keySet(
             v::key('id', v::intType()->positive()),
-            v::key('username', v::stringType()->notEmpty()))->validate($user)
+            v::key('username', v::stringType()->notEmpty()),
+            v::key('avatar', v::stringType()->notEmpty(), false),
+            v::key('posts_count', v::intType()),
+            v::key('comments_count', v::intType()))->validate($user)
         ) {
           session_name('j150989k');
           session_start();

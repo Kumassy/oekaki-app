@@ -34,7 +34,9 @@ function getUser($conn, $id) {
   // $stmt->execute();
   //
   // $user = $stmt->fetch(PDO::FETCH_ASSOC);
-  $stmt = pg_prepare($conn, "get_user", 'SELECT id, username, image_id FROM users WHERE id = $1');
+  // $stmt = pg_prepare($conn, "get_user", 'SELECT id, username, image_id FROM users WHERE id = $1');
+  $stmt = pg_prepare($conn, "get_user", 'SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id WHERE u.id = $1 group by u.id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count
+  ');
   $stmt = pg_execute($conn, "get_user", array($id));
   $user = pg_fetch_assoc($stmt);
   pg_query($conn, "DEALLOCATE get_user");
@@ -46,6 +48,8 @@ function getUser($conn, $id) {
   unset($user['image_id']);
 
   $user['id'] = intval($user['id']);
+  $user['posts_count'] = intval($user['posts_count']);
+  $user['comments_count'] = intval($user['comments_count']);
 
   return $user;
 }
@@ -54,7 +58,9 @@ function getAllUsers($conn)
   // $stmt = $conn->prepare('SELECT id, username, image_id FROM users');
   // $stmt->execute();
   // $_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  $stmt = pg_prepare($conn, "get_all_users", 'SELECT id, username, image_id FROM users');
+  // $stmt = pg_prepare($conn, "get_all_users", 'SELECT id, username, image_id FROM users');
+  $stmt = pg_prepare($conn, "get_all_users", 'SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id group by u.id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count
+  ');
   $stmt = pg_execute($conn, "get_all_users", array());
   $_users = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE get_all_users");
@@ -76,6 +82,8 @@ function getAllUsers($conn)
     }
     unset($user['image_id']);
     $user['id'] = intval($user['id']);
+    $user['posts_count'] = intval($user['posts_count']);
+    $user['comments_count'] = intval($user['comments_count']);
     return $user;
   }, $_users);
   return $users;
@@ -478,19 +486,13 @@ function createUser($conn, $credentials)
   //   $conn->rollBack();
   //   throw $e;
   // }
-  $stmt = pg_prepare($conn, "create_user", 'INSERT INTO users (username, password, image_id, created_at, updated_at) VALUES ($1, $2, NULL, NOW(), NOW()) RETURNING id, username, image_id');
+  $stmt = pg_prepare($conn, "create_user", 'INSERT INTO users (username, password, image_id, created_at, updated_at) VALUES ($1, $2, NULL, NOW(), NOW()) RETURNING id');
   $stmt = pg_execute($conn, "create_user", array($credentials['username'], $hash));
   $user = pg_fetch_assoc($stmt);
   pg_query($conn, "DEALLOCATE create_user");
 
-  $user['image_id'] = intval($user['image_id']);
-  if (v::key('image_id', v::intType()->positive())->validate($user)) {
-    $user['avatar'] = getImage($conn, $user['image_id'])['name'];
-  }
-  unset($user['image_id']);
-
-  $user['id'] = intval($user['id']);
-  return $user;
+  $newUser = getUser($conn, intval($user['id']));
+  return $newUser;
 }
 
 function tryLogin($conn, $credentials)

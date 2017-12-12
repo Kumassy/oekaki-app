@@ -67,9 +67,10 @@
 - [server] `POST /users/my/avatar` で画像変更
 - ユーザー一覧表示
 - 画像一覧表示
+- [client / server] /users/:id で posts 一覧
+- post に thread へのリンクをはる
 - タグは answer に相当するので、タグ編集は無しとする
 - ユーザーの検索、画像の検索 
-- へんな入力でコメントなどをリバーとできる機能
+- x へんな入力でコメントなどをリバーとできる機能
 
-- [client / server] /users/:id で posts 一覧
 - ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新
