@@ -80,6 +80,19 @@ export function getUsers() {
   return client.get(`/users`).then(json => json.data.users);
 }
 
+export function searchUsers(keyword) {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/users/search`, {
+    params: {
+      keyword
+    }
+  }).then(json => json.data.users);
+}
+
 export function getPosts() {
   const config = {
     headers: {

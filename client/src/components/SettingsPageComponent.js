@@ -27,12 +27,9 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import { red600 } from 'material-ui/styles/colors';
-require('styles//SettingsPage.css');
+require('styles//SettingsPage.scss');
 
 const styles = {
-  paper: {
-    padding: '8px 24px'
-  },
   uploadButton: {
     verticalAlign: 'middle',
   },
@@ -229,7 +226,9 @@ class SettingsPageComponent extends React.Component {
 
     return (
       <div className="settingspage-component">
-        <Paper zDepth={2} style={styles.paper}>
+        <Paper
+          zDepth={2}
+          className="paper">
           <h3>You</h3>
           <UserListItem
             disabled={true}

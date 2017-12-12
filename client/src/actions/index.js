@@ -7,6 +7,7 @@ import {
   newThread,
   getHomePosts,
   getUsers,
+  searchUsers,
   getPosts,
   doSignIn,
   doSignUp,
@@ -25,6 +26,10 @@ import {
 
   REQUEST_USERS,
   RECEIVE_USERS,
+
+  REQUEST_SEARCH_USERS,
+  RECEIVE_SEARCH_USERS,
+  SEARCH_USERS_INPUT_CHANGE,
 
   REQUEST_POSTS,
   RECEIVE_POSTS,
@@ -321,6 +326,35 @@ export function fetchUsers() {
     dispatch(requestUsers());
     return getUsers()
       .then(users => dispatch(receiveUsers(users)));
+  }
+}
+
+function requestSearchUsers() {
+  return {
+    type: REQUEST_SEARCH_USERS
+  }
+}
+
+function receiveSearchUsers(users) {
+  return {
+    type: RECEIVE_SEARCH_USERS,
+    users,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchSearchUsers(keyword) {
+  return dispatch => {
+    dispatch(requestSearchUsers());
+    return searchUsers(keyword)
+      .then(users => dispatch(receiveSearchUsers(users)));
+  }
+}
+
+export function searchUsersInputChanged(keyword) {
+  return {
+    type: SEARCH_USERS_INPUT_CHANGE,
+    keyword
   }
 }
 

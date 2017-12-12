@@ -29,6 +29,7 @@ import Login from './LoginComponent';
 import ThreadPage from './ThreadPageComponent';
 import HomePage from './HomePageComponent';
 import UsersPage from './UsersPageComponent';
+import UsersSearchPage from './UsersSearchPageComponent';
 import PostsPage from './PostsPageComponent';
 import SettingsPage from './SettingsPageComponent';
 
@@ -110,6 +111,7 @@ class AppComponent extends React.Component {
                   <li><Link to="/about">About</Link></li>
                   <li><Link to="/topics">Topics</Link></li>
                   <li><Link to="/users">Users</Link></li>
+                  <li><Link to="/users/search">Search  Users</Link></li>
                   <li><Link to="/posts">Posts</Link></li>
                   <li><Link to="/threads/1">/thread/1</Link></li>
                   <li><Link to="/threads/2">/thread/2</Link></li>
@@ -123,7 +125,8 @@ class AppComponent extends React.Component {
                 <Switch>
                   <Route exact path="/" component={HomePage}/>
                   <Route path="/about" component={About}/>
-                  <Route path="/users" component={UsersPage}/>
+                  <Route exact path="/users/search" component={UsersSearchPage}/>
+                  <Route path="/users" component={UsersPage}/>                  
                   <Route path="/posts" component={PostsPage}/>
                   <Route path="/topics" component={Topics}/>
                   <Route path="/login" component={Topics}/>

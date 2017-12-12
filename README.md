@@ -68,9 +68,11 @@
 - x ユーザー一覧表示
 - x 画像一覧表示
 - [client / server] /users/:id で posts 一覧
-- post に thread へのリンクをはる
-- タグは answer に相当するので、タグ編集は無しとする
-- ユーザーの検索、画像の検索 
+- x post に thread へのリンクをはる
+- x タグは answer に相当するので、タグ編集は無しとする
+- x ユーザーの検索、画像の検索 
 - x へんな入力でコメントなどをリバーとできる機能
+- threads/100 とかの修正
+- 404ページ
 
-- ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新
+- skip ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新

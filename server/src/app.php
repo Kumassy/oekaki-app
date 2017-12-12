@@ -19,7 +19,7 @@ $app->path('/', function($request) {
   return "Hello World!";
 });
 
-$app->path('users', function($request) use($app, $conn) {
+$app->path('users', function($request) use($app, $conn, $log) {
   $app->get(function($request) use($app, $conn) {
     $_users = getAllUsers($conn);
     $users = [
@@ -41,14 +41,34 @@ $app->path('users', function($request) use($app, $conn) {
         ->header('Access-Control-Allow-Credentials', 'true');
     });
   });
-  // $app->path('admin', function($request) use($app) {
-  //   $app->get(function($request) {
-  //     // file_put_contents('php://stderr', print_r($request, TRUE));
-  //     file_put_contents('php://stderr', print_r($request->header, TRUE));
-  //     return "Admin page";
-  //   });
-  //
-  // });
+  $app->path('search', function($request) use($app, $conn, $log) {
+    $app->get(function($request) use($app, $conn, $log) {
+      $log->addInfo('/users/search');
+
+      $keyword = Arrays::get('keyword', $request->params());
+      $log->addInfo('request:'.$keyword);
+
+      $response = array();
+      if (v::stringType()->validate($keyword)) {
+        $users = searchUsers($conn, $keyword);
+        $response = [
+          'users' => $users
+        ];
+      } else {
+        $response = [
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => '必要事項が入力されていないか、形式が間違っています'
+          ]
+        ];
+      }
+
+      $log->addInfo('response:'.$response);
+      return $app->response(200, $response)
+        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+        ->header('Access-Control-Allow-Credentials', 'true');
+    });
+  });
 });
 
 $app->path('posts', function($request) use($app, $conn, $log) {
@@ -651,6 +671,12 @@ $app->path('user', function($request) use($app, $conn, $log) {
 
 
 $app->path('test', function($request) use($app, $conn) {
+  $app->get(function($request) use($app, $conn) {
+    print_stderr($request->params());
+    return $app->response(200, $request->params())
+      ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+      ->header('Access-Control-Allow-Credentials', 'true');
+  });
   $app->path('set-session', function($request) use($app, $conn) {
     $app->get(function($request) use($app, $conn) {
       session_name('j150989k');

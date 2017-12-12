@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { threadsReducer } from './threadsReducer';
 import { homeReducer } from './homeReducer';
 import { usersReducer } from './usersReducer';
+import { searchUsersReducer } from './searchUsersReducer';
 import { postsReducer } from './postsReducer';
 import { userReducer } from './userReducer';
 import { settingsReducer } from './settingsReducer';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   pageHome: homeReducer,
   pageSettings: settingsReducer,
   pageUsers: usersReducer,
+  pageSearchUsers: searchUsersReducer,
   pagePosts: postsReducer,
   userInfo: userReducer,
   newPost: newPostReducer,
