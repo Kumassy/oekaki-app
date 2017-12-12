@@ -97,6 +97,8 @@ ThreadPageComponent.displayName = 'ThreadPageComponent';
 // ThreadPageComponent.propTypes = {};
 // ThreadPageComponent.defaultProps = {};
 
+// ownProps
+// See: https://github.com/reactjs/redux/issues/693
 function mapStateToProps(state) {
   // TODO:
   // ```

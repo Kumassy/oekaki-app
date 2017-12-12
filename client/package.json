@@ -70,6 +70,7 @@
     "history": "^4.7.2",
     "material-ui": "^0.19.4",
     "normalize.css": "^4.0.0",
+    "pluralize": "^7.0.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "react-redux": "^5.0.6",
