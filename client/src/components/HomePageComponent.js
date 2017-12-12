@@ -2,16 +2,20 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  Link
+} from 'react-router-dom';
 
 import {
   fetchHomePosts
 } from '../actions/index';
 import { _host } from '../clientHttp';
 
+import {List} from 'material-ui/List';
 import Post from './PostComponent';
 import NewThread from './NewThreadComponent';
 
-require('styles//HomePage.css');
+require('styles//HomePage.scss');
 
 class HomePageComponent extends React.Component {
   constructor(props) {
@@ -26,19 +30,20 @@ class HomePageComponent extends React.Component {
     const { posts } = this.props;
     return (
       <div className="homepage-component">
-        <ul className="posts">
-          <li key="new-thread">
-            <NewThread></NewThread>
-          </li>
+        <List>
+          <NewThread></NewThread>
           {posts.map(post =>
-            <li key={post.isSending ? 'sending-post' : post.id}>
+            <Link
+              className="link"
+              key={post.isSending ? 'sending-post' : post.id}
+              to={`threads/${post.thread_id}`}>
               <Post image={post.image}
                     timestamp={post.updated_at}
                     text={post.answer}
                     userName={post.user.username}
                     userAvatar={post.user.avatar} />
-            </li>)}
-        </ul>
+            </Link>)}
+        </List>
       </div>
     );
   }

@@ -76,7 +76,7 @@ class ThreadPageComponent extends React.Component {
         <ul className="comments">
           {comments.map(comment =>
             <li key={comment.isSending ? 'sending-comment' : comment.id}>
-              <Comment  userAvatar={`${_host}/${comment.user.avatar}`}
+              <Comment  userAvatar={comment.user.avatar}
                         userName={comment.user.username}
                         comment={comment.comment}
                         timestamp={comment.updated_at}
