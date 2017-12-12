@@ -5,21 +5,21 @@ import React from 'react';
 import { _host } from '../clientHttp';
 import pluralize from 'pluralize';
 
-import Avatar from 'material-ui/Avatar';
+import MyAvatar from './MyAvatar';
 import ListItem from 'material-ui/List/ListItem';
 
 require('styles//UserListItem.css');
 
 class UserListItemComponent extends React.Component {
   render() {
-    const { disabled, user} = this.props;
+    const { disabled, user } = this.props;
     const { avatar, username, posts_count, comments_count } = user;
     return (
       <ListItem
         disabled={disabled}
         leftAvatar={
-          <Avatar
-            src={avatar ? `${_host}/${avatar}` : ''}
+          <MyAvatar
+            src={avatar}
           />
         }
         primaryText={username}

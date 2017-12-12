@@ -6,6 +6,7 @@ import {
   newPost,
   newThread,
   getHomePosts,
+  getUsers,
   doSignIn,
   doSignUp,
   doSignOut,
@@ -20,6 +21,9 @@ import { getBase64 } from '../utils';
 import {
   REQUEST_HOME_POSTS,
   RECEIVE_HOME_POSTS,
+
+  REQUEST_USERS,
+  RECEIVE_USERS,
 
   REQUEST_THREAD,
   RECEIVE_THREAD,
@@ -291,6 +295,28 @@ export function fetchHomePosts(id) {
     dispatch(requestHomePosts());
     return getHomePosts()
       .then(posts => dispatch(receiveHomePosts(posts)));
+  }
+}
+
+function requestUsers() {
+  return {
+    type: REQUEST_USERS
+  }
+}
+
+function receiveUsers(users) {
+  return {
+    type: RECEIVE_USERS,
+    users,
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchUsers() {
+  return dispatch => {
+    dispatch(requestUsers());
+    return getUsers()
+      .then(users => dispatch(receiveUsers(users)));
   }
 }
 

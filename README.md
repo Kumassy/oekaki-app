@@ -63,9 +63,9 @@
 - x ログインしてなかったらログインページにリダイレクト ←確認ダイアログを出す
 - x [client / server] threadをつくる機能
 - x [client / server] mypage
-- [client / server] パスワード変更
-- [server] `POST /users/my/avatar` で画像変更
-- ユーザー一覧表示
+- x [client / server] パスワード変更
+- x [server] `POST /users/my/avatar` で画像変更
+- x ユーザー一覧表示
 - 画像一覧表示
 - [client / server] /users/:id で posts 一覧
 - post に thread へのリンクをはる

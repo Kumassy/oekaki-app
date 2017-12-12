@@ -71,6 +71,15 @@ export function getHomePosts() {
   return client.get(`/home`).then(json => json.data.posts);
 }
 
+export function getUsers() {
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  }
+  return client.get(`/users`).then(json => json.data.users);
+}
+
 export function doSignUp(credentials) {
   const config = {
     headers: {

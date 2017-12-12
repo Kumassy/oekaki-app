@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { threadsReducer } from './threadsReducer';
 import { homeReducer } from './homeReducer';
+import { usersReducer } from './usersReducer';
 import { userReducer } from './userReducer';
 import { settingsReducer } from './settingsReducer';
 import { newPostReducer } from './newPostReducer';
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   pageThreads: threadsReducer,
   pageHome: homeReducer,
   pageSettings: settingsReducer,
+  pageUsers: usersReducer,
   userInfo: userReducer,
   newPost: newPostReducer,
   newComment: newCommentReducer,
