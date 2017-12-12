@@ -26,6 +26,8 @@ export const initialState = {
     isPasswordMatch: true,
     isSending: false,
     error: {},
+    title: '',     /// title of the dialog
+    message: '',   /// message for dialog
     shouldOpenDialog: false
   },
   avatar: {
@@ -33,6 +35,8 @@ export const initialState = {
     isValid: false,
     isSending: false,
     error: {},
+    title: '',     /// title of the dialog
+    message: '',   /// message for dialog
     shouldOpenDialog: false
   }
 };
@@ -191,7 +195,9 @@ export function settingsReducer(state = initialState, action) {
           ...state.password,
           isSending: false,
           error: {},
-          shouldOpenDialog: false
+          title: 'パスワードの更新',
+          message: 'パスワードの変更に成功しました',
+          shouldOpenDialog: true
         }
       }
     case FAILED_UPDATE_PASSWORD:
@@ -215,6 +221,8 @@ export function settingsReducer(state = initialState, action) {
             isPasswordMatch,
             isSending: false,
             error,
+            title: 'パスワードの変更に失敗しました',
+            message: error.message,
             shouldOpenDialog: true
           }
         }
@@ -237,7 +245,9 @@ export function settingsReducer(state = initialState, action) {
           ...state.avatar,
           isSending: false,
           error: {},
-          shouldOpenDialog: false
+          title: '画像の変更',
+          message: '画像の変更に成功しました',
+          shouldOpenDialog: true
         }
       }
     case FAILED_UPDATE_AVATAR:
@@ -254,6 +264,8 @@ export function settingsReducer(state = initialState, action) {
             isValid,
             isSending: false,
             error,
+            title: '画像の変更に失敗しました',
+            message: error.message,
             shouldOpenDialog: true
           }
         }

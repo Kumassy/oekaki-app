@@ -25,6 +25,7 @@ import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
 import { red600 } from 'material-ui/styles/colors';
 require('styles//SettingsPage.css');
 
@@ -57,8 +58,10 @@ class SettingsPageComponent extends React.Component {
     this.handleCurrentPasswordChange = this.handleCurrentPasswordChange.bind(this);
     this.handleNewPasswordChange = this.handleNewPasswordChange.bind(this);
     this.handleNewPasswordConfirmChange = this.handleNewPasswordConfirmChange.bind(this);
-    // this.closeDialog = this.closeDialog.bind(this);
-    // this.closeDialogAndRedirect = this.closeDialogAndRedirect.bind(this);
+    this.closeDialogPassword = this.closeDialogPassword.bind(this);
+    this.closeDialogPasswordAndRedirect = this.closeDialogPasswordAndRedirect.bind(this);
+    this.closeDialogAvatar = this.closeDialogAvatar.bind(this);
+    this.closeDialogAvatarAndRedirect = this.closeDialogAvatarAndRedirect.bind(this);
   }
 
   componentDidMount() {
@@ -94,6 +97,27 @@ class SettingsPageComponent extends React.Component {
     dispatch(settingsInputNewPasswordConfirmChanged(newValue));
   }
 
+  closeDialogPassword() {
+    const { dispatch } = this.props;
+    dispatch(settingsCloseDialogPassword());
+  }
+  closeDialogPasswordAndRedirect() {
+    const { dispatch } = this.props;
+    dispatch(settingsCloseDialogPassword());
+    dispatch(push('/login'));
+  }
+
+  closeDialogAvatar() {
+    const { dispatch } = this.props;
+    dispatch(settingsCloseDialogFile());
+  }
+  closeDialogAvatarAndRedirect() {
+    const { dispatch } = this.props;
+    dispatch(settingsCloseDialogFile());
+    dispatch(push('/login'));
+  }
+
+
   onSubmitPassword(e) {
     e.preventDefault();
 
@@ -124,6 +148,85 @@ class SettingsPageComponent extends React.Component {
     const { user, settings } = this.props;
     const { password, avatar } = settings;
 
+
+    let actions = {
+      password: [],
+      avatar: []
+    };
+    switch(password.error.type) {
+      case 'INVALID_INPUT':
+      case 'EMPTY_INPUT':
+        actions.password = [
+          <FlatButton
+            label="OK"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogPassword}
+          />
+        ];
+        break;
+      case 'SIGNIN_REQUIRED':
+        actions.password = [
+          <FlatButton
+            label="Cancel"
+            primary={false}
+            onClick={this.closeDialogPassword}
+          />,
+          <FlatButton
+            label="ログインページへ移動"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogPasswordAndRedirect}
+          />
+        ];
+        break;
+      default:
+        actions.password = [
+          <FlatButton
+            label="OK"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogPassword}
+          />
+        ];
+    }
+    switch(avatar.error.type) {
+      case 'EMPTY_INPUT':
+        actions.avatar = [
+          <FlatButton
+            label="OK"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogAvatar}
+          />
+        ];
+        break;
+      case 'SIGNIN_REQUIRED':
+        actions.avatar = [
+          <FlatButton
+            label="Cancel"
+            primary={false}
+            onClick={this.closeDialogAvatar}
+          />,
+          <FlatButton
+            label="ログインページへ移動"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogAvatarAndRedirect}
+          />
+        ];
+        break;
+      default:
+        actions.avatar = [
+          <FlatButton
+            label="OK"
+            primary={true}
+            keyboardFocused={true}
+            onClick={this.closeDialogAvatar}
+          />
+        ];
+    }
+
     return (
       <div className="settingspage-component">
         <Paper zDepth={2} style={styles.paper}>
@@ -136,55 +239,77 @@ class SettingsPageComponent extends React.Component {
           <FlatButton label="ログアウト" secondary={true} />
           <Divider />
           <h3>パスワードの変更</h3>
-
-          <TextField
-            hintText=""
-            floatingLabelText="現在のパスワード"
-            type="password"
-            onChange={this.handleCurrentPasswordChange}
-            value={password.currentPassword}
-          /><br />
-          <TextField
-            hintText=""
-            floatingLabelText="新しいパスワード"
-            type="password"
-            errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
-            onChange={this.handleNewPasswordChange}
-            value={password.newPassword}
-          /><br />
-          <TextField
-            hintText=""
-            floatingLabelText="新しいパスワード（確認用）"
-            type="password"
-            errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
-            onChange={this.handleNewPasswordConfirmChange}
-            value={password.newPasswordConfirm}
-          /><br />
-          <FlatButton
-            label="Submit"
-            disabled={!password.isValid}
-            onClick={this.onSubmitPassword} />
+          <form>
+            <TextField
+              hintText=""
+              floatingLabelText="現在のパスワード"
+              type="password"
+              onChange={this.handleCurrentPasswordChange}
+              value={password.currentPassword}
+            /><br />
+            <TextField
+              hintText=""
+              floatingLabelText="新しいパスワード"
+              type="password"
+              errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
+              onChange={this.handleNewPasswordChange}
+              value={password.newPassword}
+            /><br />
+            <TextField
+              hintText=""
+              floatingLabelText="新しいパスワード（確認用）"
+              type="password"
+              errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
+              onChange={this.handleNewPasswordConfirmChange}
+              value={password.newPasswordConfirm}
+            /><br />
+            <FlatButton
+              label="Submit"
+              disabled={!password.isValid}
+              onClick={this.onSubmitPassword} />
+          </form>
+          <Dialog
+            title={password.title}
+            actions={actions.password}
+            modal={true}
+            open={password.shouldOpenDialog}
+            onRequestClose={this.closeDialogPassword}
+          >
+            {password.message}
+          </Dialog>
 
           <Divider />
           <h3>画像の変更</h3>
-          <FlatButton
-            label={avatar.file && avatar.file.name ? avatar.file.name : 'Choose an Image'}
-            labelPosition="before"
-            style={styles.uploadButton}
-            containerElement="label"
+          <form>
+            <FlatButton
+              label={avatar.file && avatar.file.name ? avatar.file.name : 'Choose an Image'}
+              labelPosition="before"
+              style={styles.uploadButton}
+              containerElement="label"
+            >
+              <input
+                type="file"
+                name="image"
+                ref="image"
+                style={styles.uploadInput}
+                onChange={this.handleFileChange}
+              />
+            </FlatButton><br />
+            <FlatButton
+              label="Submit"
+              disabled={!avatar.isValid}
+              onClick={this.onSubmitAvatar} />
+          </form>
+          <Dialog
+            title={avatar.title}
+            actions={actions.avatar}
+            modal={true}
+            open={avatar.shouldOpenDialog}
+            onRequestClose={this.closeDialogAvatar}
           >
-            <input
-              type="file"
-              name="image"
-              ref="image"
-              style={styles.uploadInput}
-              onChange={this.handleFileChange}
-            />
-          </FlatButton><br />
-          <FlatButton
-            label="Submit"
-            disabled={!avatar.isValid}
-            onClick={this.onSubmitAvatar} />
+            {avatar.message}
+          </Dialog>
+
         </Paper>
       </div>
     );
