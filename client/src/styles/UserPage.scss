@@ -1,0 +1,9 @@
+@import 'base.scss';
+.userpage-component {
+  .paper {
+    @include paper();
+  }
+  .link {
+    @include link();
+  }
+}

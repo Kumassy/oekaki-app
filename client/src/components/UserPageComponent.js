@@ -16,7 +16,7 @@ import Subheader from 'material-ui/Subheader'
 import Paper from 'material-ui/Paper';
 import Post from './PostComponent';
 
-require('styles//UserPage.css');
+require('styles//UserPage.scss');
 
 
 class UserPageComponent extends React.Component {
@@ -49,17 +49,17 @@ class UserPageComponent extends React.Component {
           <List>
             <Subheader>画像一覧</Subheader>
             {posts.map(post =>
-              <Link
-                className="link"
-                to={`/posts/${post.id}`}
-                key={post.id}>
-                <Post image={post.image}
-                      timestamp={post.updated_at}
-                      text={post.answer}
-                      userName={post.user.username}
-                      userAvatar={post.user.avatar}
-                      style={{ opacity: post.isSending? 0.5 : 1 }} />
-              </Link>)}
+              <Post
+                  key={post.id}
+                  threadId={post.thread_id}
+                  image={post.image}
+                  timestamp={post.updated_at}
+                  text={post.answer}
+                  userId={post.user.id}
+                  userName={post.user.username}
+                  userAvatar={post.user.avatar}
+                  style={{ opacity: post.isSending? 0.5 : 1 }} />
+              )}
           </List>
         </Paper>
       </div>

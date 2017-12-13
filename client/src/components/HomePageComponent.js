@@ -37,16 +37,16 @@ class HomePageComponent extends React.Component {
           <List>
             <NewThread></NewThread>
             {posts.map(post =>
-              <Link
-                className="link"
+              <Post
                 key={post.isSending ? 'sending-post' : post.id}
-                to={`threads/${post.thread_id}`}>
-                <Post image={post.image}
-                      timestamp={post.updated_at}
-                      text={post.answer}
-                      userName={post.user.username}
-                      userAvatar={post.user.avatar} />
-              </Link>)}
+                threadId={post.thread_id}
+                image={post.image}
+                timestamp={post.updated_at}
+                text={post.answer}
+                userId={post.user.id}
+                userName={post.user.username}
+                userAvatar={post.user.avatar} />
+              )}
           </List>
         </Paper>
       </div>

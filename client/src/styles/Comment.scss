@@ -1,15 +1,22 @@
 .comment-component {
+  width: 800px;
 
-  .comment-avatar {
-    // img {
-    //   width: 36px;
-    //   height: 36px;
-    //   vertical-align: middle;
-    //   background-color: #fff;
-    //   padding: 1px;
-    //   border: 1px solid #ddd;
-    //   margin-right: 4px;
-    //   border-radius: 50%;
-    // }
+  .comment-meta {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+
+    .username {
+      margin-left: 0px;
+      font-size: 1em;
+    }
+    .timestamp {
+      margin-left: 20px;
+      font-size: .8em;
+      color: gray;
+    }
+  }
+  .comment-body {
+    font-size: 1.1em;
   }
 }

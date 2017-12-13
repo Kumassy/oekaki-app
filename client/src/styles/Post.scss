@@ -1,17 +1,28 @@
+@import 'base.scss';
+
 .post-component {
   background: #FFFFFF;
-  border: 1px solid #979797;
-  box-shadow: 0 0 0 1px #EDEEEE;
-  border-radius: 2px;
+  // border: 1px solid #979797;
+  // box-shadow: 0 0 0 1px #EDEEEE;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  border-radius: 4px;
+  box-sizing: border-box;
 
   width: 800px;
+  margin-bottom: 16px;
 
-  .post-image img {
-    max-height: 530px;
+  .post-image {
+    img {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+    }
+
+    overflow: hidden;
   }
 
   .post-meta {
-    padding: 24px 20px;
+    padding: 24px 20px 8px 20px;
 
     .post-account {
       display: flex;
