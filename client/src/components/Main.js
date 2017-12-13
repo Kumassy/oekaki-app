@@ -43,6 +43,7 @@ import UserPage from './UserPageComponent';
 import UsersSearchPage from './UsersSearchPageComponent';
 import PostsPage from './PostsPageComponent';
 import SettingsPage from './SettingsPageComponent';
+import LoginPage from './LoginPageComponent';
 
 
 const _posts = [
@@ -141,7 +142,6 @@ class AppComponent extends React.Component {
                     <li><Link to="/threads/2">/thread/2</Link></li>
                     <li><Link to="/settings">/settings</Link></li>
                   </ul>
-                  <Login></Login>
                 </div>
                 <br/>
 
@@ -157,7 +157,7 @@ class AppComponent extends React.Component {
                     <Route path="/users" component={UsersPage}/>
                     <Route path="/posts" component={PostsPage}/>
                     <Route path="/topics" component={Topics}/>
-                    <Route path="/login" component={Topics}/>
+                    <Route path="/login" component={LoginPage}/>
                     <Route path="/settings" component={SettingsPage}/>
                     <Route path="/threads/:id" component={ThreadPage}/>
                   </Switch>

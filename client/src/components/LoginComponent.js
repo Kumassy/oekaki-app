@@ -4,16 +4,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {Tabs, Tab} from 'material-ui/Tabs';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 
 import {
   trySignIn,
   trySignUp,
   trySignOut,
   fetchLoggedInUser,
-  switchSignInMode
+  switchSignInMode,
+  loginInputChanged,
+  loginInputClear
 } from '../actions/index';
 
-require('styles//Login.css');
+require('styles//Login.scss');
 
 class LoginComponent extends React.Component {
   constructor(props) {
@@ -23,6 +27,8 @@ class LoginComponent extends React.Component {
     this.doSignUp = this.doSignUp.bind(this);
     this.doSignOut = this.doSignOut.bind(this);
     this.handleModeChange = this.handleModeChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
   // onSubmit(e) {
@@ -45,26 +51,22 @@ class LoginComponent extends React.Component {
   doSignIn(e) {
     e.preventDefault();
 
-    const { dispatch } = this.props;
+    const { dispatch, loginInput } = this.props;
     const credentials = {
-      'username': this.refs.usernameSignIn.value,
-      'password': this.refs.passwordSignIn.value
+      'username': loginInput.username,
+      'password': loginInput.password
     }
     dispatch(trySignIn(credentials));
-    this.refs.usernameSignIn.value = '';
-    this.refs.passwordSignIn.value = '';
   }
   doSignUp(e) {
     e.preventDefault();
 
-    const { dispatch } = this.props;
+    const { dispatch, loginInput } = this.props;
     const credentials = {
-      'username': this.refs.usernameSignUp.value,
-      'password': this.refs.passwordSignUp.value
+      'username': loginInput.username,
+      'password': loginInput.password
     }
     dispatch(trySignUp(credentials));
-    this.refs.usernameSignUp.value = '';
-    this.refs.passwordSignUp.value = '';
   }
   doSignOut(e) {
     e.preventDefault();
@@ -73,13 +75,26 @@ class LoginComponent extends React.Component {
     dispatch(trySignOut());
   }
 
+  handleUsernameChange(e, username) {
+    const { dispatch } = this.props;
+    dispatch(loginInputChanged({
+      username
+    }));
+  }
+  handlePasswordChange(e, password) {
+    const { dispatch } = this.props;
+    dispatch(loginInputChanged({
+      password
+    }));
+  }
+
   handleModeChange(mode) {
     const { dispatch } = this.props;
     dispatch(switchSignInMode(mode));
   }
 
   render() {
-    const { status, user } = this.props;
+    const { status, user, loginInput } = this.props;
     return (
       <div className="login-component">
         <Tabs
@@ -88,34 +103,54 @@ class LoginComponent extends React.Component {
         >
           <Tab label="Sign In" value="signin">
             <div>
-              <form method="POST" onSubmit={this.doSignIn}>
-                <label>username</label>
-                <input type="text" name="username" ref="usernameSignIn"/>
-                <br/>
-                <label>password</label>
-                <input type="text" name="password" ref="passwordSignIn"/>
-                <button type="submit">Submit</button>
+              <form>
+                <TextField
+                  hintText=""
+                  floatingLabelText="ユーザー名"
+                  type="text"
+                  onChange={this.handleUsernameChange}
+                  value={loginInput.username}
+                /><br />
+                <TextField
+                  hintText=""
+                  floatingLabelText="パスワード"
+                  type="password"
+                  onChange={this.handlePasswordChange}
+                  value={loginInput.password}
+                /><br />
+                <FlatButton
+                  label="Submit"
+                  disabled={!loginInput.isValid}
+                  onClick={this.doSignIn} />
               </form>
             </div>
           </Tab>
           <Tab label="Sign Up" value="signup">
             <div>
-              <form method="POST" onSubmit={this.doSignUp}>
-                <label>username</label>
-                <input type="text" name="username" ref="usernameSignUp"/>
-                <br/>
-                <label>password</label>
-                <input type="text" name="password" ref="passwordSignUp"/>
-                <button type="submit">Submit</button>
+              <form>
+                <TextField
+                  hintText=""
+                  floatingLabelText="ユーザー名"
+                  type="text"
+                  onChange={this.handleUsernameChange}
+                  value={loginInput.username}
+                /><br />
+                <TextField
+                  hintText=""
+                  floatingLabelText="パスワード"
+                  type="password"
+                  onChange={this.handlePasswordChange}
+                  value={loginInput.password}
+                /><br />
+                <FlatButton
+                  label="Submit"
+                  disabled={!loginInput.isValid}
+                  onClick={this.doSignUp} />
               </form>
             </div>
           </Tab>
         </Tabs>
-        <button onClick={this.doSignOut}>Sign Out</button>
-        <div>
-          Sign In as: {user.username}
-        </div>
-        <div>
+        <div className="error-message">
           {status.error.message}
         </div>
       </div>
@@ -132,10 +167,12 @@ LoginComponent.displayName = 'LoginComponent';
 
 function mapStateToProps(state) {
   const { userInfo } = state;
+  const { user, status, loginInput } = userInfo;
 
   return {
-    user: userInfo.user,
-    status: userInfo.status
+    user,
+    status,
+    loginInput
   }
 }
 const LoginContainer = connect(mapStateToProps)(LoginComponent);

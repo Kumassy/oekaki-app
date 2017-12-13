@@ -93,6 +93,9 @@ import {
   SETTINGS_INPUT_CLEAR_FILE,
   SETTINGS_CLOSE_DIALOG_FILE,
 
+  LOGIN_INPUT_CHANGE,
+  LOGIN_INPUT_CLEAR,
+
   REQUEST_UPDATE_PASSWORD,
   RECEIVE_UPDATE_PASSWORD,
   FAILED_UPDATE_PASSWORD,
@@ -100,7 +103,9 @@ import {
   REQUEST_UPDATE_AVATAR,
   RECEIVE_UPDATE_AVATAR,
   FAILED_UPDATE_AVATAR
-} from './actionTypes'
+} from './actionTypes';
+
+import { push } from 'react-router-redux';
 
 function requestThread(id) {
   return {
@@ -437,7 +442,9 @@ export function trySignIn(credentials) {
     return doSignIn(credentials)
       .then(response => {
         if (response.user) {
-          dispatch(receiveSignIn(response.user))
+          dispatch(receiveSignIn(response.user));
+          dispatch(loginInputClear());
+          dispatch(push('/'));
         } else {
           dispatch(failedSignIn(response.error))
         }
@@ -472,7 +479,9 @@ export function trySignUp(credentials) {
     return doSignUp(credentials)
       .then(response => {
         if (response.user) {
-          dispatch(receiveSignUp(response.user))
+          dispatch(receiveSignUp(response.user));
+          dispatch(loginInputClear());
+          dispatch(push('/'));
         } else {
           dispatch(failedSignUp(response.error))
         }
@@ -668,6 +677,19 @@ export function settingsInputClearFile() {
 export function settingsCloseDialogFile() {
   return {
     type: SETTINGS_CLOSE_DIALOG_FILE
+  }
+}
+
+export function loginInputChanged(newInput) {
+  return {
+    type: LOGIN_INPUT_CHANGE,
+    newInput
+  }
+}
+
+export function loginInputClear() {
+  return {
+    type: LOGIN_INPUT_CLEAR
   }
 }
 

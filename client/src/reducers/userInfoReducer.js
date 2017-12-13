@@ -14,6 +14,9 @@ import {
   REQUEST_LOGGED_IN_USER,
   RECEIVE_LOGGED_IN_USER,
 
+  LOGIN_INPUT_CHANGE,
+  LOGIN_INPUT_CLEAR,
+
   SWITCH_SIGNIN_MODE,
 
   REQUEST_UPDATE_PASSWORD,
@@ -31,6 +34,11 @@ export const initialState = {
     error: {}
   },
   user: {
+  },
+  loginInput: {
+    username: '',
+    password: '',
+    isValid: false
   }
 };
 
@@ -176,6 +184,35 @@ export function userInfoReducer(state = initialState, action) {
           },
           user
         };
+      }
+    case LOGIN_INPUT_CHANGE:
+      {
+        const { newInput } = action;
+
+        const credentials = {
+          ...state.loginInput,
+          ...newInput
+        };
+        const isValid = (credentials.username !== '' && credentials.password !== '') ? true : false;
+
+        return {
+          ...state,
+          loginInput: {
+            ...credentials,
+            isValid
+          }
+        }
+      }
+    case LOGIN_INPUT_CLEAR:
+      {
+        return {
+          ...state,
+          loginInput: {
+            username: '',
+            password: '',
+            isValid: false
+          }
+        }
       }
     case SWITCH_SIGNIN_MODE:
       {

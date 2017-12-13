@@ -29,6 +29,7 @@ body {
 
   .left-panel {
     flex-basis: 300px;
+    flex-shrink: 0;
 
     .link {
       @include link();
