@@ -6,12 +6,15 @@ import {
   NEW_POST_INPUT_CHANGE_FILE,
   NEW_POST_INPUT_CHANGE_ANSWER,
   NEW_POST_INPUT_CLEAR,
-  NEW_POST_CLOSE_DIALOG
+  NEW_POST_CLOSE_DIALOG,
+
+  SWITCH_NEW_POST_MODE,
 } from '../actions/actionTypes';
 
 export const initialState = {
   file: '',
   answer: '',
+  mode: 'file',
   isValid: false,
   sendingPost: {},
   isSending: false,
@@ -24,7 +27,10 @@ export function newPostReducer(state = initialState, action) {
     case NEW_POST_INPUT_CHANGE_FILE:
       {
         const { file } = action;
-        const isValid = (file && file['name'] && state.answer !== '' && state.answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const { answer, mode } = state;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
 
         return {
           ...state,
@@ -35,7 +41,10 @@ export function newPostReducer(state = initialState, action) {
     case NEW_POST_INPUT_CHANGE_ANSWER:
       {
         const { answer } = action;
-        const isValid = (state.file && state.file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const { file, mode } = state;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
 
         return {
           ...state,
@@ -57,6 +66,15 @@ export function newPostReducer(state = initialState, action) {
         return {
           ...state,
           shouldOpenDialog: false
+        }
+      }
+    case SWITCH_NEW_POST_MODE:
+      {
+        const { mode } = action;
+
+        return {
+          ...state,
+          mode
         }
       }
     case SEND_NEW_POST:

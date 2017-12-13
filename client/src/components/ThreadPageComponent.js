@@ -67,7 +67,6 @@ class ThreadPageComponent extends React.Component {
             {posts.map(post =>
               <Post
                 key={post.isSending ? 'sending-post' : post.id}
-                threadId={post.thread_id}
                 image={post.image}
                 timestamp={post.updated_at}
                 text={post.answer}

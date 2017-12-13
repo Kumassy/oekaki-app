@@ -35,9 +35,15 @@ class PostComponent extends React.Component {
             {text}
           </div>
           <div className="post-action">
-            <Link to={`/threads/${threadId}`} className="link">
-              <FlatButton label="このスレッドに移動" />
-            </Link>
+            {(() => {
+              if (threadId) {
+                return (
+                  <Link to={`/threads/${threadId}`} className="link">
+                    <FlatButton label="このスレッドに移動" />
+                  </Link>
+                )
+              }
+            })()}
           </div>
         </div>
       </div>

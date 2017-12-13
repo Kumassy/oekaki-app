@@ -2,6 +2,7 @@ require('normalize.css/normalize.css');
 require('styles/App.scss');
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { Provider } from 'react-redux';
 import configureStore, { history } from '../stores/configureStore';
 import { ConnectedRouter } from 'react-router-redux'
@@ -12,6 +13,10 @@ import {
   Link
 } from 'react-router-dom';
 import axios from 'axios';
+
+import {
+  fetchLoggedInUser,
+} from '../actions/index';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 // Needed for onTouchTap
@@ -104,8 +109,18 @@ const Topics = ({ match }) => (
   </div>
 )
 
-const store = configureStore();
+class AppInitializer extends React.Component {
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchLoggedInUser());
+  }
+  render () {
+    return (<div/>)
+  }
+}
+const AppInitializerContainer = connect()(AppInitializer);
 
+const store = configureStore();
 class AppComponent extends React.Component {
   render() {
     return (
@@ -117,6 +132,7 @@ class AppComponent extends React.Component {
         <ConnectedRouter history={history}>
           <MuiThemeProvider>
             <div>
+              <AppInitializerContainer/>
               <AppBar
                 title={<span>おえかきSNS</span>}
                 showMenuIconButton={false}

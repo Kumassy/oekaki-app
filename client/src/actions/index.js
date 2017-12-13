@@ -49,6 +49,8 @@ import {
   RECEIVE_NEW_POST,
   FAILED_NEW_POST,
 
+  SWITCH_NEW_POST_MODE,
+
   SEND_NEW_THREAD,
   RECEIVE_NEW_THREAD,
   FAILED_NEW_THREAD,
@@ -227,7 +229,7 @@ function failedNewPost(error, threadId) {
 //   - thread_id
 //   - image: file
 //   - answer
-export function createPost(post, form) {
+export function createPost(post, form, onSuccess) {
   return dispatch => {
     return getBase64(post.image).then((base64) => {
       const postbase64 = {
@@ -241,6 +243,9 @@ export function createPost(post, form) {
             dispatch(receiveNewPost(response.post));
             dispatch(newPostInputClear());
             form.reset();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             dispatch(failedNewPost(response.error, post.thread_id))
           }
@@ -579,6 +584,13 @@ export function newPostInputClear() {
 export function newPostCloseDialog() {
   return {
     type: NEW_POST_CLOSE_DIALOG
+  }
+}
+
+export function switchNewPostMode(mode) {
+  return {
+    type: SWITCH_NEW_POST_MODE,
+    mode: mode
   }
 }
 
