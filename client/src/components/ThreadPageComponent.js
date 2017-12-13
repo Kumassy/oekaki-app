@@ -11,11 +11,12 @@ import {
 
 import { _host, getThread } from '../clientHttp';
 import Post from './PostComponent';
+import Paper from 'material-ui/Paper';
 import Comment from './CommentComponent';
 import NewComment from './NewCommentComponent';
 import NewPost from './NewPostComponent';
 
-require('styles//ThreadPage.css');
+require('styles//ThreadPage.scss');
 
 const myuser = {
   id: 1,
@@ -58,34 +59,38 @@ class ThreadPageComponent extends React.Component {
 
     return (
       <div className="threadpage-component">
-        {error.message}
-        <ul className="posts">
-          {posts.map(post =>
-            <li key={post.isSending ? 'sending-post' : post.id}>
-              <Post image={post.image}
-                    timestamp={post.updated_at}
-                    text={post.answer}
-                    userName={post.user.username}
-                    userAvatar={post.user.avatar}
-                    style={{ opacity: post.isSending? 0.5 : 1 }} />
-            </li>)}
-            <li key="new-post">
-              <NewPost dispatch={this.props.dispatch} threadId={myThreadId}></NewPost>
-            </li>
-        </ul>
-        <ul className="comments">
-          {comments.map(comment =>
-            <li key={comment.isSending ? 'sending-comment' : comment.id}>
-              <Comment  userAvatar={comment.user.avatar}
-                        userName={comment.user.username}
-                        comment={comment.comment}
-                        timestamp={comment.updated_at}
-                        style={{ opacity: comment.isSending? 0.5 : 1 }} />
-            </li>)}
-            <li key="new-comment">
-              <NewComment dispatch={this.props.dispatch} threadId={myThreadId}></NewComment>
-            </li>
-        </ul>
+        <Paper
+          zDepth={2}
+          className="paper">
+          {error.message}
+          <ul className="posts">
+            {posts.map(post =>
+              <li key={post.isSending ? 'sending-post' : post.id}>
+                <Post image={post.image}
+                      timestamp={post.updated_at}
+                      text={post.answer}
+                      userName={post.user.username}
+                      userAvatar={post.user.avatar}
+                      style={{ opacity: post.isSending? 0.5 : 1 }} />
+              </li>)}
+              <li key="new-post">
+                <NewPost dispatch={this.props.dispatch} threadId={myThreadId}></NewPost>
+              </li>
+          </ul>
+          <ul className="comments">
+            {comments.map(comment =>
+              <li key={comment.isSending ? 'sending-comment' : comment.id}>
+                <Comment  userAvatar={comment.user.avatar}
+                          userName={comment.user.username}
+                          comment={comment.comment}
+                          timestamp={comment.updated_at}
+                          style={{ opacity: comment.isSending? 0.5 : 1 }} />
+              </li>)}
+              <li key="new-comment">
+                <NewComment dispatch={this.props.dispatch} threadId={myThreadId}></NewComment>
+              </li>
+          </ul>
+        </Paper>
       </div>
     );
   }

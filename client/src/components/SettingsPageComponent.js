@@ -16,7 +16,9 @@ import {
   settingsCloseDialogFile,
 
   updatePassword,
-  updateAvatar
+  updateAvatar,
+
+  trySignOut
 } from '../actions';
 
 import UserListItem from './UserListItemComponent';
@@ -59,6 +61,7 @@ class SettingsPageComponent extends React.Component {
     this.closeDialogPasswordAndRedirect = this.closeDialogPasswordAndRedirect.bind(this);
     this.closeDialogAvatar = this.closeDialogAvatar.bind(this);
     this.closeDialogAvatarAndRedirect = this.closeDialogAvatarAndRedirect.bind(this);
+    this.doSignOut = this.doSignOut.bind(this);
   }
 
   componentDidMount() {
@@ -112,6 +115,13 @@ class SettingsPageComponent extends React.Component {
     const { dispatch } = this.props;
     dispatch(settingsCloseDialogFile());
     dispatch(push('/login'));
+  }
+
+  doSignOut(e) {
+    e.preventDefault();
+
+    const { dispatch } = this.props;
+    dispatch(trySignOut());
   }
 
 
@@ -235,7 +245,10 @@ class SettingsPageComponent extends React.Component {
             user={user}
           />
 
-          <FlatButton label="ログアウト" secondary={true} />
+          <FlatButton
+            label="ログアウト"
+            secondary={true}
+            onClick={this.doSignOut} />
           <Divider />
           <h3>パスワードの変更</h3>
           <form>

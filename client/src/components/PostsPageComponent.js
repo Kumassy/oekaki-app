@@ -10,7 +10,8 @@ import {
   fetchPosts
 } from '../actions/index'
 import {List} from 'material-ui/List';
-import Subheader from 'material-ui/Subheader'
+import Paper from 'material-ui/Paper';
+import Subheader from 'material-ui/Subheader';
 import Post from './PostComponent';
 
 require('styles//PostsPage.scss');
@@ -29,21 +30,25 @@ class PostsPageComponent extends React.Component {
 
     return (
       <div className="postspage-component">
-        <List>
-          <Subheader>画像一覧</Subheader>
-          {posts.map(post =>
-            <Link
-              className="link"
-              to={`/posts/${post.id}`}
-              key={post.id}>
-              <Post image={post.image}
-                    timestamp={post.updated_at}
-                    text={post.answer}
-                    userName={post.user.username}
-                    userAvatar={post.user.avatar}
-                    style={{ opacity: post.isSending? 0.5 : 1 }} />
-            </Link>)}
-        </List>
+        <Paper
+          zDepth={2}
+          className="paper">
+          <List>
+            <Subheader>画像一覧</Subheader>
+            {posts.map(post =>
+              <Link
+                className="link"
+                to={`/posts/${post.id}`}
+                key={post.id}>
+                <Post image={post.image}
+                      timestamp={post.updated_at}
+                      text={post.answer}
+                      userName={post.user.username}
+                      userAvatar={post.user.avatar}
+                      style={{ opacity: post.isSending? 0.5 : 1 }} />
+              </Link>)}
+          </List>
+        </Paper>
       </div>
     );
   }

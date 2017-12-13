@@ -1,0 +1,7 @@
+@mixin link() {
+  text-decoration: none;
+  color: inherit;
+}
+@mixin paper() {
+  padding: 8px 24px;
+}

@@ -1,6 +1,10 @@
+@import 'base.scss';
+
 .postspage-component {
   .link {
-    text-decoration: none;
-    color: inherit;
+    @include link();
+  }
+  .paper {
+    @include paper();
   }
 }

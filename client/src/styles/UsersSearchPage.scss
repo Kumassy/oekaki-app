@@ -1,9 +1,10 @@
+@import 'base.scss';
+
 .userssearchpage-component {
   .paper {
-    padding: 8px 24px;
+    @include paper();
   }
   .link {
-    text-decoration: none;
-    color: inherit;
+    @include link();
   }
 }

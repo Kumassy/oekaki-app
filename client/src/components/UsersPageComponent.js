@@ -11,6 +11,7 @@ import {
 } from '../actions/index';
 import UserListItem from './UserListItemComponent';
 import {List} from 'material-ui/List';
+import Paper from 'material-ui/Paper';
 import Subheader from 'material-ui/Subheader';
 
 require('styles//UsersPage.scss');
@@ -27,19 +28,23 @@ class UsersPageComponent extends React.Component {
     const { users } = this.props;
     return (
       <div className="userspage-component">
-        <List>
-          <Subheader>ユーザー一覧</Subheader>
-          {users.map(user =>
-            <Link
-              className="link"
-              to={`/users/${user.id}`}
-              key={user.id}>
-              <UserListItem
-                disabled={false}
-                user={user}
-              />
-            </Link>)}
-        </List>
+        <Paper
+          zDepth={2}
+          className="paper">
+          <List>
+            <Subheader>ユーザー一覧</Subheader>
+            {users.map(user =>
+              <Link
+                className="link"
+                to={`/users/${user.id}`}
+                key={user.id}>
+                <UserListItem
+                  disabled={false}
+                  user={user}
+                />
+              </Link>)}
+          </List>
+        </Paper>
       </div>
     );
   }

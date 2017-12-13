@@ -1,5 +1,5 @@
 require('normalize.css/normalize.css');
-require('styles/App.css');
+require('styles/App.scss');
 
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -19,13 +19,23 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import {List, ListItem} from 'material-ui/List';
+import HomeIcon from 'material-ui/svg-icons/action/home';
+import UsersListIcon from 'material-ui/svg-icons/social/people';
+import SearchUsersIcon from 'material-ui/svg-icons/action/search';
+import PostsListIcon from 'material-ui/svg-icons/image/collections';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import FontIcon from 'material-ui/FontIcon';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
 import { _host } from '../clientHttp';
 import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';
 import Login from './LoginComponent';
+import UserIconButton from './UserIconButtonComponent';
 import ThreadPage from './ThreadPageComponent';
 import HomePage from './HomePageComponent';
 import UsersPage from './UsersPageComponent';
@@ -106,35 +116,52 @@ class AppComponent extends React.Component {
         <ConnectedRouter history={history}>
           <MuiThemeProvider>
             <div>
-              <div>
-                <ul>
-                  <li><Link to="/">Home</Link></li>
-                  <li><Link to="/about">About</Link></li>
-                  <li><Link to="/topics">Topics</Link></li>
-                  <li><Link to="/users">Users</Link></li>
-                  <li><Link to="/users/search">Search  Users</Link></li>
-                  <li><Link to="/posts">Posts</Link></li>
-                  <li><Link to="/threads/1">/thread/1</Link></li>
-                  <li><Link to="/threads/2">/thread/2</Link></li>
-                  <li><Link to="/settings">/settings</Link></li>
-                </ul>
-                <Login></Login>
+              <AppBar
+                title={<span>おえかきSNS</span>}
+                showMenuIconButton={false}
+                iconElementRight={<UserIconButton/>}
+              />
+              <div className="container">
+                <div className="left-panel">
+                  <List>
+                    <Link to="/" className="link"><ListItem primaryText="ホーム" leftIcon={<HomeIcon />} /></Link>
+                    <Link to="/users" className="link"><ListItem primaryText="ユーザー一覧" leftIcon={<UsersListIcon />} /></Link>
+                    <Link to="/users/search" className="link"><ListItem primaryText="ユーザー検索" leftIcon={<SearchUsersIcon />} /></Link>
+                    <Link to="/posts" className="link"><ListItem primaryText="画像一覧" leftIcon={<PostsListIcon />} /></Link>
+                    <Link to="/settings" className="link"><ListItem primaryText="設定" leftIcon={<SettingsIcon />} /></Link>
+                  </List>
+                  <ul>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/about">About</Link></li>
+                    <li><Link to="/topics">Topics</Link></li>
+                    <li><Link to="/users">Users</Link></li>
+                    <li><Link to="/users/search">Search  Users</Link></li>
+                    <li><Link to="/posts">Posts</Link></li>
+                    <li><Link to="/threads/1">/thread/1</Link></li>
+                    <li><Link to="/threads/2">/thread/2</Link></li>
+                    <li><Link to="/settings">/settings</Link></li>
+                  </ul>
+                  <Login></Login>
+                </div>
+                <br/>
 
                 <hr/>
 
 
-                <Switch>
-                  <Route exact path="/" component={HomePage}/>
-                  <Route path="/about" component={About}/>
-                  <Route exact path="/users/search" component={UsersSearchPage}/>
-                  <Route path="/users/:id" component={UserPage}/>
-                  <Route path="/users" component={UsersPage}/>
-                  <Route path="/posts" component={PostsPage}/>
-                  <Route path="/topics" component={Topics}/>
-                  <Route path="/login" component={Topics}/>
-                  <Route path="/settings" component={SettingsPage}/>
-                  <Route path="/threads/:id" component={ThreadPage}/>
-                </Switch>
+                <div className="main">
+                  <Switch>
+                    <Route exact path="/" component={HomePage}/>
+                    <Route path="/about" component={About}/>
+                    <Route exact path="/users/search" component={UsersSearchPage}/>
+                    <Route path="/users/:id" component={UserPage}/>
+                    <Route path="/users" component={UsersPage}/>
+                    <Route path="/posts" component={PostsPage}/>
+                    <Route path="/topics" component={Topics}/>
+                    <Route path="/login" component={Topics}/>
+                    <Route path="/settings" component={SettingsPage}/>
+                    <Route path="/threads/:id" component={ThreadPage}/>
+                  </Switch>
+                </div>
               </div>
             </div>
           </MuiThemeProvider>

@@ -1,4 +1,6 @@
 /* Base Application Styles */
+@import 'base.scss';
+
 body {
   /*color: #fff;*/
   background: #eee;
@@ -18,4 +20,26 @@ body {
   border: 1px solid #000;
   border-width: 1px 0;
   background: #666;
+}
+
+
+.container {
+  display: flex;
+  // flex-direction: column;
+
+  .left-panel {
+    flex-basis: 300px;
+
+    .link {
+      @include link();
+    }
+  }
+
+  .main {
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding-top: 24px;
+    padding-left: 4px;
+    padding-right: 24px;
+  }
 }
