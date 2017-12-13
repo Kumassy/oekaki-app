@@ -1,0 +1,38 @@
+.newthread-component {
+  .file-tab-container {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+
+    .avatar {
+
+    }
+    .form-file {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      margin-left: 16px;
+    }
+
+  }
+
+  .canvas-tab-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .input-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .form-file {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 16px;
+      }
+    }
+  }
+}

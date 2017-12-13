@@ -6,12 +6,15 @@ import {
   NEW_THREAD_INPUT_CHANGE_FILE,
   NEW_THREAD_INPUT_CHANGE_ANSWER,
   NEW_THREAD_INPUT_CLEAR,
-  NEW_THREAD_CLOSE_DIALOG
+  NEW_THREAD_CLOSE_DIALOG,
+
+  SWITCH_NEW_THREAD_MODE,
 } from '../actions/actionTypes';
 
 export const initialState = {
   file: '',
   answer: '',
+  mode: 'file',
   isValid: false,
   isSending: false,
   error: {},
@@ -23,7 +26,10 @@ export function newThreadReducer(state = initialState, action) {
     case NEW_THREAD_INPUT_CHANGE_FILE:
       {
         const { file } = action;
-        const isValid = (file && file['name'] && state.answer !== '' && state.answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const { answer, mode } = state;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
 
         return {
           ...state,
@@ -34,8 +40,10 @@ export function newThreadReducer(state = initialState, action) {
     case NEW_THREAD_INPUT_CHANGE_ANSWER:
       {
         const { answer } = action;
-        const isValid = (state.file && state.file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-
+        const { file, mode } = state;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false
         return {
           ...state,
           answer,
@@ -56,6 +64,15 @@ export function newThreadReducer(state = initialState, action) {
         return {
           ...state,
           shouldOpenDialog: false
+        }
+      }
+    case SWITCH_NEW_THREAD_MODE:
+      {
+        const { mode } = action;
+
+        return {
+          ...state,
+          mode
         }
       }
     case SEND_NEW_THREAD:

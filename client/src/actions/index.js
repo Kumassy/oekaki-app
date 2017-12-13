@@ -55,6 +55,8 @@ import {
   RECEIVE_NEW_THREAD,
   FAILED_NEW_THREAD,
 
+  SWITCH_NEW_THREAD_MODE,
+
   REQUEST_SIGN_IN,
   RECEIVE_SIGN_IN,
   FAILED_SIGN_IN,
@@ -284,7 +286,7 @@ function failedNewThread(error) {
   }
 }
 
-export function createThread(post, form) {
+export function createThread(post, form, onSuccess) {
   return dispatch => {
     return getBase64(post.image).then((base64) => {
       const postbase64 = {
@@ -298,6 +300,9 @@ export function createThread(post, form) {
             dispatch(receiveNewThread(response.post));
             dispatch(newThreadInputClear());
             form.reset();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             dispatch(failedNewThread(response.error))
           }
@@ -598,6 +603,13 @@ export function newPostCloseDialog() {
 export function switchNewPostMode(mode) {
   return {
     type: SWITCH_NEW_POST_MODE,
+    mode: mode
+  }
+}
+
+export function switchNewThreadMode(mode) {
+  return {
+    type: SWITCH_NEW_THREAD_MODE,
     mode: mode
   }
 }

@@ -9,13 +9,18 @@ import {
   newThreadInputFileChanged,
   newThreadInputAnswerChanged,
   newThreadInputClear,
-  newThreadCloseDialog
+  newThreadCloseDialog,
+  switchNewThreadMode
 } from '../actions';
+
+import Canvas from './CanvasComponent';
+import MyAvatar from './MyAvatar';
 
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-require('styles//NewThread.css');
+import {Tabs, Tab} from 'material-ui/Tabs';
+require('styles//NewThread.scss');
 
 const styles = {
   uploadButton: {
@@ -38,10 +43,12 @@ class NewThreadComponent extends React.Component {
     super(props);
 
     this.onSubmit = this.onSubmit.bind(this);
+    this.onSubmitCanvas = this.onSubmitCanvas.bind(this);
     this.handleFileChange = this.handleFileChange.bind(this);
     this.handleAnswerChange = this.handleAnswerChange.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.closeDialogAndRedirect = this.closeDialogAndRedirect.bind(this);
+    this.handleModeChange = this.handleModeChange.bind(this);
   }
 
   handleFileChange(e) {
@@ -61,6 +68,11 @@ class NewThreadComponent extends React.Component {
     const { dispatch } = this.props;
     dispatch(newThreadCloseDialog());
     dispatch(push('/login'));
+  }
+
+  handleModeChange(mode) {
+    const { dispatch } = this.props;
+    dispatch(switchNewThreadMode(mode));
   }
 
   onSubmit(e) {
@@ -83,8 +95,26 @@ class NewThreadComponent extends React.Component {
     dispatch(createThread(post, this.refs.form));
   }
 
+  onSubmitCanvas(e) {
+    e.preventDefault();
+
+    const { dispatch, user, input } = this.props;
+    this.refs.canvas.getBlob((blob) => {
+      const post = {
+        'user': user,
+        'answer': input.answer,
+        'image': blob
+      }
+      dispatch(createThread(post, this.refs.form, () => {
+        if (this.refs.canvas) {
+          this.refs.canvas.clearCanvas();
+        }
+      }));
+    });
+  }
+
   render() {
-    const { input } = this.props;
+    const { input, user } = this.props;
     const { isValid, file, answer, shouldOpenDialog, error } = input;
 
     let actions = [];
@@ -118,32 +148,73 @@ class NewThreadComponent extends React.Component {
 
     return (
       <div className="newthread-component">
-        <form ref="form">
-          <FlatButton
-            label={file && file.name ? file.name : 'Choose an Image'}
-            labelPosition="before"
-            style={styles.uploadButton}
-            containerElement="label"
-          >
-            <input
-              type="file"
-              name="image"
-              ref="image"
-              style={styles.uploadInput}
-              onChange={this.handleFileChange}
-            />
-          </FlatButton>
-          <TextField
-            hintText="ひらがなのみ"
-            floatingLabelText="answer"
-            onChange={this.handleAnswerChange}
-            value={answer} />
+        <Tabs
+          value={input.mode}
+          onChange={this.handleModeChange}
+        >
+          <Tab label="ファイル送信モード" value="file">
+            <div className="file-tab-container">
+              <MyAvatar
+                className="avatar"
+                src={user.avatar}
+              />
+              <form ref="form" className="form-file">
+                <FlatButton
+                  className="button"
+                  label={file && file.name ? file.name : 'Choose an Image'}
+                  labelPosition="before"
+                  style={styles.uploadButton}
+                  containerElement="label"
+                >
+                  <input
+                    type="file"
+                    name="image"
+                    ref="image"
+                    style={styles.uploadInput}
+                    onChange={this.handleFileChange}
+                  />
+                </FlatButton>
+                <TextField
+                  className="textfield"
+                  hintText="ひらがなのみ"
+                  floatingLabelText="answer"
+                  onChange={this.handleAnswerChange}
+                  value={answer} />
 
-          <FlatButton
-            label="Submit"
-            disabled={!isValid}
-            onClick={this.onSubmit} />
-        </form>
+                <FlatButton
+                  className="submit"
+                  label="Submit"
+                  disabled={!isValid}
+                  onClick={this.onSubmit} />
+              </form>
+            </div>
+          </Tab>
+          <Tab label="お絵かきモード" value="canvas">
+            <div className="canvas-tab-container">
+              <Canvas
+                ref="canvas"
+              />
+              <div className="input-wrapper">
+                <MyAvatar
+                  className="avatar"
+                  src={user.avatar}
+                />
+                <div className="form-file">
+                  <TextField
+                    hintText="ひらがなのみ"
+                    floatingLabelText="answer"
+                    onChange={this.handleAnswerChange}
+                    value={answer} />
+                  <FlatButton
+                    label="Submit"
+                    disabled={!isValid}
+                    onClick={this.onSubmitCanvas} />
+                </div>
+              </div>
+            </div>
+          </Tab>
+        </Tabs>
+
         <Dialog
           title="投稿に失敗しました"
           actions={actions}
