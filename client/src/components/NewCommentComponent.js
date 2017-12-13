@@ -12,10 +12,12 @@ import {
 } from '../actions';
 import { newComment } from '../clientHttp';
 
+import MyAvatar from './MyAvatar';
+
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-require('styles//NewComment.css');
+require('styles//NewComment.scss');
 
 class NewCommentComponent extends React.Component {
   constructor(props) {
@@ -60,7 +62,7 @@ class NewCommentComponent extends React.Component {
     // this.refs.input.value = '';
   }
   render() {
-    const { input } = this.props;
+    const { input, user } = this.props;
     const { comment, isValid, error, shouldOpenDialog } = input;
 
     let actions = [];
@@ -94,17 +96,28 @@ class NewCommentComponent extends React.Component {
 
     return (
       <div className="newcomment-component">
-        <form method="POST" ref="form">
-          <TextField
-            hintText="コメントを入力"
-            floatingLabelText="コメント"
-            onChange={this.handleCommentChange}
-            value={comment} />
-          <FlatButton
-            label="Submit"
-            disabled={!isValid}
-            onClick={this.onSubmit} />
-        </form>
+        <div className="form-container">
+          <MyAvatar
+            className="avatar"
+            src={user.avatar}
+          />
+          <form
+            method="POST"
+            ref="form"
+            className="form">
+            <TextField
+              className="comment"
+              hintText="コメントを入力"
+              floatingLabelText="コメント"
+              onChange={this.handleCommentChange}
+              value={comment} />
+            <FlatButton
+              className="button"
+              label="Submit"
+              disabled={!isValid}
+              onClick={this.onSubmit} />
+          </form>
+        </div>
         <Dialog
           title="投稿に失敗しました"
           actions={actions}
