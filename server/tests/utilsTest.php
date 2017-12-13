@@ -20,4 +20,24 @@ class UtilsTest extends PHPUnit_Framework_TestCase
 
     $this->assertEquals($expected, $actual);
   }
+
+  public function testNormalizeHiraganaString()
+  {
+    $this->assertEquals('おはよう', normalizeHiraganaString('おはよう'));
+    $this->assertEquals('かつこう', normalizeHiraganaString('がっこう'));
+    $this->assertEquals('ようしよ', normalizeHiraganaString('ょぅじょ'));
+  }
+
+  public function testIsShiritoriSuccess()
+  {
+    $this->assertEquals(TRUE, isShiritoriSuccess('おはよう', 'うま'));
+    $this->assertEquals(TRUE, isShiritoriSuccess('あぅ', 'ううう'));
+    $this->assertEquals(TRUE, isShiritoriSuccess('ぜんぜんぜんぜ', 'せま'));
+    $this->assertEquals(TRUE, isShiritoriSuccess('かい', 'ぃぃう'));
+    $this->assertEquals(FALSE, isShiritoriSuccess('がんば', 'ああ'));
+    $this->assertEquals(FALSE, isShiritoriSuccess('がんば', 'ばん'));
+    $this->assertEquals(TRUE, isShiritoriSuccess('っ', 'づ'));
+    $this->assertEquals(FALSE, isShiritoriSuccess('っ', 'づん'));
+
+  }
 }

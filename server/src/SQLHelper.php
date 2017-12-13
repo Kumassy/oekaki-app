@@ -4,6 +4,7 @@ require_once __DIR__ . '/../src/utils.php';
 
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
+use \Gurukami\Helpers\Arrays;
 
 function getConnection() {
   // return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
@@ -305,6 +306,7 @@ function getThread($conn, $id)
   $thread['comments'] = getCommentsForThread($conn, intval($thread['id']));
 
   $thread['id'] = intval($thread['id']);
+  $thread['is_open'] = ($thread['is_open'] === 't');
   return $thread;
 }
 
@@ -327,6 +329,7 @@ function getAllThreads($conn)
     $thread['comments'] = getCommentsForThread($conn, intval($thread['id']));
 
     $thread['id'] = intval($thread['id']);
+    $thread['is_open'] = ($thread['is_open'] === 't');
     return $thread;
   }, $_threads);
   return $threads;
@@ -432,7 +435,14 @@ function createImage($conn, $image) {
   // }
 
   $path_info = pathinfo($image['name']);
-  $filename = Uuid::uuid4()->toString() . '.' . $path_info['extension'];
+  $extension = '';
+  if (Arrays::get('extension', $path_info) && Arrays::get('extension', $path_info) !== '') {
+    $extension = Arrays::get('extension', $path_info);
+  } else {
+    $extension = 'png';
+  }
+
+  $filename = Uuid::uuid4()->toString() . '.' . $extension;
 
   $uploaddir = __DIR__ . "/../images/";
   $uploadfile = $uploaddir.basename($filename);
@@ -496,6 +506,27 @@ function createPost($conn, $post)
   return $post;
 
 }
+
+function checkShiritoriSuccess($conn, $thread_id)
+{
+  $stmt = pg_prepare($conn, "check_shiritori_success", 'SELECT * from posts WHERE thread_id = $1 ORDER BY created_at desc LIMIT 2');
+  $stmt = pg_execute($conn, "check_shiritori_success", array($thread_id));
+  $posts = pg_fetch_all($stmt);
+  pg_query($conn, "DEALLOCATE check_shiritori_success");
+
+  if (count($posts) < 2) {
+    return TRUE;
+  } else {
+    return isShiritoriSuccess($posts[1]['answer'], $posts[0]['answer']);
+  }
+}
+
+function closeThread($conn, $thread_id) {
+  $stmt = pg_prepare($conn, "close_thread", 'UPDATE threads SET is_open = false WHERE id = $1');
+  $stmt = pg_execute($conn, "close_thread", array($thread_id));
+  pg_query($conn, "DEALLOCATE close_thread");
+}
+
 function createThread($conn, $post)
 {
   // pg_query($conn, "BEGIN");

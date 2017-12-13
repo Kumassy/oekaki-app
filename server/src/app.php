@@ -130,16 +130,33 @@ $app->path('posts', function($request) use($app, $conn, $log) {
         v::keySet(
           v::key('user_id', v::intType()->positive()),
           v::key('thread_id', v::intType()->positive()),
-          v::key('answer', v::stringType()->regex('/^[ぁ-んー]+$/u')),
+          v::key('answer', v::stringType()->regex('/^[ぁ-ん]+$/u')),
           v::key('image', v::notEmpty()))->validate($post)
       ) {
-
-        $newPost = createPost($conn, $post);
-        $response = [
-          'post' => $newPost
-        ];
-
-
+        $thread = getThread($conn, $post['thread_id']);
+        if (!$thread['is_open']) {
+          $response = [
+            'error' => [
+              'type' => 'THREAD_CLOESD',
+              'message' => 'このスレッドのしりとりは終了したため、画像を追加できません'
+            ]
+          ];
+        } else {
+          $newPost = createPost($conn, $post);
+          if (checkShiritoriSuccess($conn, $post['thread_id'])) {
+            $response = [
+              'status' => 'SUCCESS',
+              'post' => $newPost
+            ];
+          } else {
+            closeThread($conn, $post['thread_id']);
+            $thread = getThread($conn, $post['thread_id']);
+            $response = [
+              'status' => 'FAILURE',
+              'thread' => $thread
+            ];
+          }
+        }
       } else {
         $response = [
           'error' => [
@@ -215,7 +232,7 @@ $app->path('threads', function($request) use($app, $conn, $log) {
       else if (
         v::keySet(
           v::key('user_id', v::intType()->positive()),
-          v::key('answer', v::stringType()->regex('/^[ぁ-んー]+$/u')),
+          v::key('answer', v::stringType()->regex('/^[ぁ-ん]+$/u')),
           v::key('image', v::notEmpty()))->validate($post)
       ) {
 

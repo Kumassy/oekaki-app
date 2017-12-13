@@ -108,7 +108,9 @@ class NewPostComponent extends React.Component {
         'image': blob
       }
       dispatch(createPost(post, this.refs.form, () => {
-        this.refs.canvas.clearCanvas();
+        if (this.refs.canvas) {
+          this.refs.canvas.clearCanvas();
+        }
       }));
     });
   }
@@ -119,6 +121,7 @@ class NewPostComponent extends React.Component {
     let actions = [];
     switch(error.type) {
       case 'INVALID_INPUT':
+      case 'THREAD_CLOESD':
         actions = [
           <FlatButton
             label="OK"

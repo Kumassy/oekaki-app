@@ -13,6 +13,8 @@ import { _host, getThread } from '../clientHttp';
 import Post from './PostComponent';
 import {List} from 'material-ui/List';
 import Paper from 'material-ui/Paper';
+import ClosedIcon from 'material-ui/svg-icons/av/not-interested';
+
 import Comment from './CommentComponent';
 import NewComment from './NewCommentComponent';
 import NewPost from './NewPostComponent';
@@ -69,13 +71,14 @@ class ThreadPageComponent extends React.Component {
                 key={post.isSending ? 'sending-post' : post.id}
                 image={post.image}
                 timestamp={post.updated_at}
-                text={post.answer}
+                text={myThread.is_open ? '' : post.answer}
                 userId={post.user.id}
                 userName={post.user.username}
                 userAvatar={post.user.avatar}
                 style={{ opacity: post.isSending? 0.5 : 1 }} />
               )}
-            <NewPost threadId={myThreadId}></NewPost>
+            {myThread.is_open && (<NewPost threadId={myThreadId}></NewPost>)}
+            {!myThread.is_open && (<div className="thread-closed"><ClosedIcon/>このスレッドは終了しました</div>)}
           </List>
           <List>
           {comments.map(comment =>

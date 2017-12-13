@@ -23,7 +23,7 @@ export function newThreadReducer(state = initialState, action) {
     case NEW_THREAD_INPUT_CHANGE_FILE:
       {
         const { file } = action;
-        const isValid = (file && file['name'] && state.answer !== '' && state.answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValid = (file && file['name'] && state.answer !== '' && state.answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
 
         return {
           ...state,
@@ -34,7 +34,7 @@ export function newThreadReducer(state = initialState, action) {
     case NEW_THREAD_INPUT_CHANGE_ANSWER:
       {
         const { answer } = action;
-        const isValid = (state.file && state.file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValid = (state.file && state.file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
 
         return {
           ...state,
@@ -85,7 +85,7 @@ export function newThreadReducer(state = initialState, action) {
         const { error } = action;
 
         const { file, answer } = state;
-        const isValid = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValid = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
 
 
         return {

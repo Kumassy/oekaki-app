@@ -28,8 +28,8 @@ export function newPostReducer(state = initialState, action) {
       {
         const { file } = action;
         const { answer, mode } = state;
-        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
-        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
         const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
 
         return {
@@ -42,8 +42,8 @@ export function newPostReducer(state = initialState, action) {
       {
         const { answer } = action;
         const { file, mode } = state;
-        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
-        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
         const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
 
         return {
@@ -106,7 +106,7 @@ export function newPostReducer(state = initialState, action) {
         const { error } = action;
 
         const { file, answer } = state;
-        const isValid = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f\u30fc]+$/)) ? true : false;
+        const isValid = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
 
 
         return {

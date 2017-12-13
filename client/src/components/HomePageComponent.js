@@ -42,7 +42,7 @@ class HomePageComponent extends React.Component {
                 threadId={post.thread_id}
                 image={post.image}
                 timestamp={post.updated_at}
-                text={post.answer}
+                text={''}
                 userId={post.user.id}
                 userName={post.user.username}
                 userAvatar={post.user.avatar} />

@@ -239,15 +239,23 @@ export function createPost(post, form, onSuccess) {
       dispatch(sendNewPost(postbase64));
       return newPost(post)
         .then(response => {
-          if (response.post) {
+          if (response.error) {
+            dispatch(failedNewPost(response.error, post.thread_id))
+
+          } else if(response.status === 'SUCCESS') {
             dispatch(receiveNewPost(response.post));
             dispatch(newPostInputClear());
             form.reset();
             if (onSuccess) {
               onSuccess();
             }
-          } else {
-            dispatch(failedNewPost(response.error, post.thread_id))
+          } else if(response.status === 'FAILURE') {
+            dispatch(receiveThread(response.thread));
+            dispatch(newPostInputClear());
+            form.reset();
+            if (onSuccess) {
+              onSuccess();
+            }
           }
         });
     })

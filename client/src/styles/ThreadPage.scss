@@ -4,4 +4,11 @@
   .paper {
     @include paper();
   }
+
+  .thread-closed {
+    display: flex;
+    align-items: center;
+
+    padding-top: 16px;
+  }
 }
