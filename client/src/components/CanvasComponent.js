@@ -3,7 +3,15 @@
 import React from 'react';
 import $ from 'jquery'
 
-require('styles//Canvas.css');
+import FlatButton from 'material-ui/FlatButton';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+require('styles//Canvas.scss');
+
+const styles = {
+  radioButton: {
+    marginBottom: 16,
+  },
+};
 
 class CanvasComponent extends React.Component {
   constructor(props) {
@@ -11,6 +19,10 @@ class CanvasComponent extends React.Component {
     this.state = {
       context: null
     };
+
+    this.handleHandChange = this.handleHandChange.bind(this);
+    this.handleThicknessChange = this.handleThicknessChange.bind(this);
+    this.handleClearCanvas = this.handleClearCanvas.bind(this);
   }
   componentDidMount() {
     const canvas = this.refs.canvas;
@@ -18,6 +30,8 @@ class CanvasComponent extends React.Component {
     this.setState({
       context
     });
+    context.strokeStyle = 'black';
+    context.lineWidth = 3;
 
     let startX,
         startY,
@@ -47,6 +61,24 @@ class CanvasComponent extends React.Component {
     });
   }
 
+  handleHandChange(e, value) {
+    const { context } = this.state;
+    if (context) {
+      context.strokeStyle = value;
+    }
+  }
+
+  handleThicknessChange(e, value) {
+    const { context } = this.state;
+    if (context) {
+      context.lineWidth = value;
+    }
+  }
+
+  handleClearCanvas(e) {
+    this.clearCanvas();
+  }
+
   getBlob(callback) {
     return this.refs.canvas.toBlob(callback);
   }
@@ -61,8 +93,51 @@ class CanvasComponent extends React.Component {
     const { width, height } = this.props;
     return (
       <div className="canvas-component">
+        <div className="control">
+          <RadioButtonGroup
+            className="hand"
+            name="hand"
+            defaultSelected="black"
+            onChange={this.handleHandChange}>
+            <RadioButton
+              value="black"
+              label="えんぴつ"
+              style={styles.radioButton}
+            />
+            <RadioButton
+              value="white"
+              label="けしごむ"
+              style={styles.radioButton}
+            />
+          </RadioButtonGroup>
+          <RadioButtonGroup
+            className="thickness"
+            name="thickness"
+            defaultSelected="3"
+            onChange={this.handleThicknessChange}>
+            <RadioButton
+              value="1"
+              label="細い"
+              style={styles.radioButton}
+            />
+            <RadioButton
+              value="3"
+              label="ふつう"
+              style={styles.radioButton}
+            />
+            <RadioButton
+              value="8"
+              label="太い"
+              style={styles.radioButton}
+            />
+          </RadioButtonGroup>
+          <FlatButton
+            label="全部消す"
+            secondary={true}
+            onClick={this.handleClearCanvas} />
+        </div>
         <canvas width={width} height={height} ref="canvas">
-            Canvas is not supported
+          Canvas is not supported
         </canvas>
       </div>
     );
@@ -74,8 +149,8 @@ CanvasComponent.displayName = 'CanvasComponent';
 // Uncomment properties you need
 // CanvasComponent.propTypes = {};
 CanvasComponent.defaultProps = {
-  width: 400,
-  height: 300
+  width: 800,
+  height: 500
 };
 
 export default CanvasComponent;
