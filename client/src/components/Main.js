@@ -134,7 +134,7 @@ class AppComponent extends React.Component {
             <div>
               <AppInitializerContainer/>
               <AppBar
-                title={<span>おえかきSNS</span>}
+                title={<span>おえかきしりとり</span>}
                 showMenuIconButton={false}
                 iconElementRight={<UserIconButton/>}
               />

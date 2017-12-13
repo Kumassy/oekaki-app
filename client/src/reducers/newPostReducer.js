@@ -72,9 +72,15 @@ export function newPostReducer(state = initialState, action) {
       {
         const { mode } = action;
 
+        const { answer, file } = state;
+        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
+
         return {
           ...state,
-          mode
+          mode,
+          isValid
         }
       }
     case SEND_NEW_POST:
