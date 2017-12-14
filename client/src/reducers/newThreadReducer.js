@@ -123,7 +123,7 @@ export function newThreadReducer(state = initialState, action) {
     case FAILED_NEW_THREAD:
       {
         const { error } = action;
-        const { file, answer } = state;
+        const { file, answer, mode } = state;
         const { isValid, invalidReason } = validate(file, answer, mode);
 
 

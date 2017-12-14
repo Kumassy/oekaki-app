@@ -127,7 +127,7 @@ export function newPostReducer(state = initialState, action) {
       {
         const { error } = action;
 
-        const { file, answer } = state;
+        const { file, answer, mode } = state;
         const { isValid, invalidReason } = validate(file, answer, mode);
 
         return {
