@@ -63,7 +63,7 @@ class NewCommentComponent extends React.Component {
   }
   render() {
     const { input, user } = this.props;
-    const { comment, isValid, error, shouldOpenDialog } = input;
+    const { comment, isValid, invalidReason, error, shouldOpenDialog } = input;
 
     let actions = [];
     switch(error.type) {
@@ -108,6 +108,7 @@ class NewCommentComponent extends React.Component {
             <TextField
               className="comment"
               hintText="コメントを入力"
+              errorText={invalidReason}
               floatingLabelText="コメント"
               onChange={this.handleCommentChange}
               value={comment} />

@@ -115,7 +115,7 @@ class NewThreadComponent extends React.Component {
 
   render() {
     const { input, user } = this.props;
-    const { isValid, file, answer, shouldOpenDialog, error } = input;
+    const { isValid, invalidReason, file, answer, shouldOpenDialog, error } = input;
 
     let actions = [];
     switch(error.type) {
@@ -177,6 +177,7 @@ class NewThreadComponent extends React.Component {
                 <TextField
                   className="textfield"
                   hintText="ひらがなのみ"
+                  errorText={invalidReason}
                   floatingLabelText="answer"
                   onChange={this.handleAnswerChange}
                   value={answer} />
@@ -203,6 +204,7 @@ class NewThreadComponent extends React.Component {
                   <TextField
                     hintText="ひらがなのみ"
                     floatingLabelText="answer"
+                    errorText={invalidReason}
                     onChange={this.handleAnswerChange}
                     value={answer} />
                   <FlatButton

@@ -107,6 +107,7 @@ class LoginComponent extends React.Component {
                 <TextField
                   hintText=""
                   floatingLabelText="ユーザー名"
+                  errorText={loginInput.invalidReasonUsername}
                   type="text"
                   onChange={this.handleUsernameChange}
                   value={loginInput.username}
@@ -114,6 +115,7 @@ class LoginComponent extends React.Component {
                 <TextField
                   hintText=""
                   floatingLabelText="パスワード"
+                  errorText={loginInput.invalidReasonPassword}
                   type="password"
                   onChange={this.handlePasswordChange}
                   value={loginInput.password}
@@ -131,6 +133,7 @@ class LoginComponent extends React.Component {
                 <TextField
                   hintText=""
                   floatingLabelText="ユーザー名"
+                  errorText={loginInput.invalidReasonUsername}
                   type="text"
                   onChange={this.handleUsernameChange}
                   value={loginInput.username}
@@ -138,6 +141,7 @@ class LoginComponent extends React.Component {
                 <TextField
                   hintText=""
                   floatingLabelText="パスワード"
+                  errorText={loginInput.invalidReasonPassword}
                   type="password"
                   onChange={this.handlePasswordChange}
                   value={loginInput.password}

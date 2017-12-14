@@ -75,10 +75,12 @@
 - x newpost -> newthread
 - x しりとり成功チェック
 - isFetching でなんか出す
-- welcome ページ
+- welcome ページでしりとりルールの説明など
 - セキュリティチェック, XSS
+- 実験です画像の追加と title の修正
+- axios がTimeout したときの処理、promise を catch して modal ウィンドウを出して強制リロード location.reload();
 - データベースに何も入ってないときの処理の確認
-- ユーザー名のalnum制限や文字数制限 
+- x ユーザー名のalnum制限や文字数制限 
 - threads/100 とかの修正
 - 404ページ
 

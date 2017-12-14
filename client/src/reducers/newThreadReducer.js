@@ -16,10 +16,30 @@ export const initialState = {
   answer: '',
   mode: 'file',
   isValid: false,
+  invalidReason: '',
   isSending: false,
   error: {},
   shouldOpenDialog: false
 };
+
+
+function validate(file, answer, mode) {
+  const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/) && answer.length <= 30) ? true : false;
+  const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/) && answer.length <= 30) ? true : false;
+  const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
+
+  let invalidReason = '';
+  if (answer !== '' && answer.match(/^[\u3040-\u309f]+$/) == null) {
+    invalidReason = '使用できない文字が含まれています';
+  } else if (answer !== '' && answer.length > 30) {
+    invalidReason = '文字列が長すぎます';
+  }
+
+  return {
+    isValid,
+    invalidReason
+  }
+}
 
 export function newThreadReducer(state = initialState, action) {
   switch(action.type) {
@@ -27,27 +47,26 @@ export function newThreadReducer(state = initialState, action) {
       {
         const { file } = action;
         const { answer, mode } = state;
-        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
+        const { isValid, invalidReason } = validate(file, answer, mode);
 
         return {
           ...state,
           file,
-          isValid
+          isValid,
+          invalidReason
         }
       }
     case NEW_THREAD_INPUT_CHANGE_ANSWER:
       {
         const { answer } = action;
         const { file, mode } = state;
-        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false
+        const { isValid, invalidReason } = validate(file, answer, mode);
+
         return {
           ...state,
           answer,
-          isValid
+          isValid,
+          invalidReason
         }
       }
     case NEW_THREAD_INPUT_CLEAR:
@@ -70,14 +89,13 @@ export function newThreadReducer(state = initialState, action) {
       {
         const { mode } = action;
         const { answer, file } = state;
-        const isValidFile = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-        const isValidCanvas = (answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
-        const isValid = ((mode === 'file' && isValidFile) || (mode === 'canvas' && isValidCanvas)) ? true : false;
+        const { isValid, invalidReason } = validate(file, answer, mode);
 
         return {
           ...state,
           mode,
-          isValid
+          isValid,
+          invalidReason
         }
       }
     case SEND_NEW_THREAD:
@@ -105,14 +123,14 @@ export function newThreadReducer(state = initialState, action) {
     case FAILED_NEW_THREAD:
       {
         const { error } = action;
-
         const { file, answer } = state;
-        const isValid = (file && file['name'] && answer !== '' && answer.match(/^[\u3040-\u309f]+$/)) ? true : false;
+        const { isValid, invalidReason } = validate(file, answer, mode);
 
 
         return {
           ...state,
           isValid,
+          invalidReason,
           isSending: false,
           error,
           shouldOpenDialog: true

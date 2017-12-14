@@ -11,23 +11,39 @@ import {
 export const initialState = {
   comment: '',
   isValid: false,
+  invalidReason: '',
   sendingComment: {},
   isSending: false,
   error: {},
   shouldOpenDialog: false
 };
 
+function validate(comment) {
+  const isValid = (comment !== '' && comment.length <= 200) ? true : false;
+
+  let invalidReason = '';
+  if (comment !== '' && comment.length > 200) {
+    invalidReason = '文字列が長すぎます';
+  }
+
+  return {
+    isValid,
+    invalidReason
+  }
+}
+
 export function newCommentReducer(state = initialState, action) {
   switch(action.type) {
     case NEW_COMMENT_INPUT_CHANGE_COMMENT:
       {
         const { comment } = action;
-        const isValid = (comment !== '') ? true : false;
+        const { isValid, invalidReason } = validate(comment);
 
         return {
           ...state,
           comment,
-          isValid
+          isValid,
+          invalidReason
         }
       }
     case NEW_COMMENT_INPUT_CLEAR:
@@ -74,12 +90,13 @@ export function newCommentReducer(state = initialState, action) {
         const { error } = action;
 
         const comment = state.sendingComment.comment;
-        const isValid = (comment !== '') ? true : false;
+        const { isValid, invalidReason } = validate(comment);
 
         return {
           ...state,
           comment,
           isValid,
+          invalidReason,
           sendingComment: {},
           isSending: false,
           error,

@@ -38,9 +38,38 @@ export const initialState = {
   loginInput: {
     username: '',
     password: '',
-    isValid: false
+    isValid: false,
+    invalidReasonUsername: '',
+    invalidReasonPassword: '',
   }
 };
+
+
+function validate(username, password) {
+  const isValid = (username !== '' && username.match(/^\w+$/) && username.length <= 20 &&
+    password !== '' && password.match(/^\w+$/) && password.length <= 20) ? true : false;
+
+  let invalidReasonUsername = '';
+  if (username !== '' && username.match(/^\w+$/) == null) {
+    invalidReasonUsername = '使用できない文字が含まれています';
+  } else if (username !== '' && username.length > 20) {
+    invalidReasonUsername = '文字列が長すぎます';
+  }
+
+  let invalidReasonPassword = '';
+  if (password !== '' && password.match(/^\w+$/) == null) {
+    invalidReasonPassword = '使用できない文字が含まれています';
+  } else if (password !== '' && password.length > 20) {
+    invalidReasonPassword = '文字列が長すぎます';
+  }
+
+  return {
+    isValid,
+    invalidReasonUsername,
+    invalidReasonPassword
+  }
+}
+
 
 export function userInfoReducer(state = initialState, action) {
   switch(action.type) {
@@ -193,13 +222,15 @@ export function userInfoReducer(state = initialState, action) {
           ...state.loginInput,
           ...newInput
         };
-        const isValid = (credentials.username !== '' && credentials.password !== '') ? true : false;
+        const { isValid, invalidReasonUsername, invalidReasonPassword } = validate(credentials.username, credentials.password);
 
         return {
           ...state,
           loginInput: {
             ...credentials,
-            isValid
+            isValid,
+            invalidReasonUsername,
+            invalidReasonPassword
           }
         }
       }
@@ -210,7 +241,9 @@ export function userInfoReducer(state = initialState, action) {
           loginInput: {
             username: '',
             password: '',
-            isValid: false
+            isValid: false,
+            invalidReasonUsername: '',
+            invalidReasonPassword: ''
           }
         }
       }

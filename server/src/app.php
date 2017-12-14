@@ -400,10 +400,28 @@ $app->path('user', function($request) use($app, $conn, $log) {
 
       $response = array();
       if (
-        v::keySet(
+        !v::keySet(
           v::key('username', v::stringType()->notEmpty()),
           v::key('password', v::stringType()->notEmpty()))->validate($credentials)
       ) {
+        $response = [
+          'error' => [
+            'type' => 'EMPTY_INPUT',
+            'message' => 'ユーザー名かパスワードが入力されていません'
+          ]
+        ];
+      } else if (
+        !v::keySet(
+          v::key('username', v::alnum()->noWhitespace()->length(null, 20)),
+          v::key('password', v::alnum()->noWhitespace()->length(null, 20)))->validate($credentials)
+      ) {
+        $response = [
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => 'ユーザー名かパスワードの形式が間違っています'
+          ]
+        ];
+      } else {
         $user = tryLogin($conn, $credentials);
         if (
           v::keySet(
@@ -430,13 +448,6 @@ $app->path('user', function($request) use($app, $conn, $log) {
             ]
           ];
         }
-      } else {
-        $response = [
-          'error' => [
-            'type' => 'EMPTY_INPUT',
-            'message' => 'ユーザー名かパスワードが入力されていません'
-          ]
-        ];
       }
 
       return $app->response(200, $response)
@@ -461,10 +472,28 @@ $app->path('user', function($request) use($app, $conn, $log) {
 
       $response = array();
       if (
-        v::keySet(
+        !v::keySet(
           v::key('username', v::stringType()->notEmpty()),
           v::key('password', v::stringType()->notEmpty()))->validate($credentials)
       ) {
+        $response = [
+          'error' => [
+            'type' => 'EMPTY_INPUT',
+            'message' => 'ユーザー名かパスワードが入力されていません'
+          ]
+        ];
+      } else if (
+        !v::keySet(
+          v::key('username', v::alnum()->noWhitespace()->length(null, 20)),
+          v::key('password', v::alnum()->noWhitespace()->length(null, 20)))->validate($credentials)
+      ) {
+        $response = [
+          'error' => [
+            'type' => 'INVALID_INPUT',
+            'message' => 'ユーザー名かパスワードの形式が間違っています'
+          ]
+        ];
+      } else {
         $user = createUser($conn, $credentials);
         if (
           v::keySet(
@@ -491,13 +520,6 @@ $app->path('user', function($request) use($app, $conn, $log) {
             ]
           ];
         }
-      } else {
-        $response = [
-          'error' => [
-            'type' => 'EMPTY_INPUT',
-            'message' => 'ユーザー名かパスワードが入力されていません'
-          ]
-        ];
       }
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)

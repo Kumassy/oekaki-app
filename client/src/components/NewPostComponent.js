@@ -116,7 +116,7 @@ class NewPostComponent extends React.Component {
   }
   render() {
     const { input, user } = this.props;
-    const { isValid, file, answer, shouldOpenDialog, error } = input;
+    const { isValid, invalidReason, file, answer, shouldOpenDialog, error } = input;
 
     let actions = [];
     switch(error.type) {
@@ -178,6 +178,7 @@ class NewPostComponent extends React.Component {
                 <TextField
                   className="textfield"
                   hintText="ひらがなのみ"
+                  errorText={invalidReason}
                   floatingLabelText="answer"
                   onChange={this.handleAnswerChange}
                   value={answer} />
@@ -203,6 +204,7 @@ class NewPostComponent extends React.Component {
                 <div className="form-file">
                   <TextField
                     hintText="ひらがなのみ"
+                    errorText={invalidReason}
                     floatingLabelText="answer"
                     onChange={this.handleAnswerChange}
                     value={answer} />
