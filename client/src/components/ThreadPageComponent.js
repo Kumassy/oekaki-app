@@ -13,6 +13,7 @@ import { _host, getThread } from '../clientHttp';
 import Post from './PostComponent';
 import {List} from 'material-ui/List';
 import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
 import ClosedIcon from 'material-ui/svg-icons/av/not-interested';
 
 import Comment from './CommentComponent';
@@ -65,6 +66,7 @@ class ThreadPageComponent extends React.Component {
         <Paper
           zDepth={2}
           className="paper">
+          <h1>スレッド #{myThread.id}</h1>
           <List>
             {posts.map(post =>
               <Post
@@ -77,9 +79,16 @@ class ThreadPageComponent extends React.Component {
                 userAvatar={post.user.avatar}
                 style={{ opacity: post.isSending? 0.5 : 1 }} />
               )}
-            {myThread.is_open && (<NewPost threadId={myThreadId}></NewPost>)}
+            {myThread.is_open && (
+              <div>
+                <h3>画像を投稿</h3>
+                <NewPost threadId={myThreadId}></NewPost>
+              </div>
+            )}
             {!myThread.is_open && (<div className="thread-closed"><ClosedIcon/>このスレッドは終了しました</div>)}
           </List>
+          <Divider/>
+          <h3>コメント一覧</h3>
           <List>
           {comments.map(comment =>
             <Comment

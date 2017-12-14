@@ -14,6 +14,7 @@ import { _host } from '../clientHttp';
 import {List} from 'material-ui/List';
 import Post from './PostComponent';
 import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
 import NewThread from './NewThreadComponent';
 
 require('styles//HomePage.scss');
@@ -34,8 +35,12 @@ class HomePageComponent extends React.Component {
         <Paper
           zDepth={2}
           className="paper">
+          <h1>ホーム</h1>
+          <h3>スレッドを作成</h3>
+          <NewThread></NewThread>
+          <Divider/>
+          <h3>スレッド一覧</h3>
           <List>
-            <NewThread></NewThread>
             {posts.map(post =>
               <Post
                 key={post.isSending ? 'sending-post' : post.id}
