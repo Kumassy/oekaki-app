@@ -6,6 +6,8 @@ use Ramsey\Uuid\Uuid;
 use Respect\Validation\Validator as v;
 use \Gurukami\Helpers\Arrays;
 
+ini_set( 'display_errors', 0 );
+
 function getConnection() {
   // return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
   return pg_connect("host=localhost dbname=j150989k user=j150989k");
@@ -571,6 +573,10 @@ function createUser($conn, $credentials)
   // }
   $stmt = pg_prepare($conn, "create_user", 'INSERT INTO users (username, password, image_id, created_at, updated_at) VALUES ($1, $2, NULL, NOW(), NOW()) RETURNING id');
   $stmt = pg_execute($conn, "create_user", array($credentials['username'], $hash));
+
+  if ($stmt === FALSE) {
+    return array();
+  }
   $user = pg_fetch_assoc($stmt);
   pg_query($conn, "DEALLOCATE create_user");
 

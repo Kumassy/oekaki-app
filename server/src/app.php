@@ -9,6 +9,8 @@ use Monolog\Handler\StreamHandler;
 
 const CLIENT_HOST = 'http://localhost:8000';
 
+ini_set( 'display_errors', 0 );
+
 $log = new Logger('my-api-server');
 $log->pushHandler(new StreamHandler(__DIR__ . '/../logs/app.log', Logger::DEBUG));
 
@@ -20,24 +22,29 @@ $app->path('/', function($request) {
 });
 
 $app->path('users', function($request) use($app, $conn, $log) {
-  $app->get(function($request) use($app, $conn) {
+  $app->get(function($request) use($app, $conn, $log) {
+    $log->addInfo('/users');
     $_users = getAllUsers($conn);
     $users = [
       'users' => $_users
     ];
 
+    $log->info('response:', $users);
     return $app->response(200, $users)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
-  $app->param('int', function($request, $id) use($app, $conn) {
-    $app->get(function($request) use($app, $conn, $id) {
+  $app->param('int', function($request, $id) use($app, $conn, $log) {
+    $app->get(function($request) use($app, $conn, $log, $id) {
+      $log->addInfo('/users/'.$id);
+
       $user = getUser($conn, $id);
       $posts = getPostsForUser($conn, $id);
       $response = [
         'user' => $user,
         'posts' => $posts
       ];
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -65,7 +72,7 @@ $app->path('users', function($request) use($app, $conn, $log) {
         ];
       }
 
-      $log->addInfo('response:'.$response);
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -74,21 +81,28 @@ $app->path('users', function($request) use($app, $conn, $log) {
 });
 
 $app->path('posts', function($request) use($app, $conn, $log) {
-  $app->get(function($request) use($app, $conn) {
+  $app->get(function($request) use($app, $conn, $log) {
+    $log->addInfo('/posts');
     $_posts = getAllPosts($conn);
     $posts = [
       'posts' => $_posts
     ];
+
+    $log->info('response:', $posts);
     return $app->response(200, $posts)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
-  $app->param('int', function($request, $id) use($app, $conn) {
-    $app->get(function($request) use($app, $conn, $id) {
+  $app->param('int', function($request, $id) use($app, $conn, $log) {
+    $app->get(function($request) use($app, $conn, $log, $id) {
+      $log->addInfo('/posts/'.$id);
+
       $_post = getPost($conn, $id);
       $post = [
         'post' => $_post
       ];
+
+      $log->info('response:', $post);
       return $app->response(200, $post)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -167,7 +181,6 @@ $app->path('posts', function($request) use($app, $conn, $log) {
       }
 
       session_write_close();
-      sleep(2);
 
       $log->info('response:', $response);
       return $app->response(200, $response)
@@ -179,21 +192,28 @@ $app->path('posts', function($request) use($app, $conn, $log) {
 });
 
 $app->path('threads', function($request) use($app, $conn, $log) {
-  $app->get(function($request) use($app, $conn) {
+  $app->get(function($request) use($app, $conn, $log) {
+    $log->addInfo('/threads');
+
     $_threads = getAllThreads($conn);
     $threads = [
       'threads' => $_threads
     ];
+
+    $log->info('response:', $threads);
     return $app->response(200, $threads)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
   $app->param('int', function($request, $id) use($app, $conn, $log) {
-    $app->get(function($request) use($app, $conn, $id) {
+    $app->get(function($request) use($app, $conn, $log, $id) {
+      $log->addInfo('/threads/'.$id);
       $_thread = getThread($conn, $id);
       $thread = [
         'thread' => $_thread
       ];
+
+      $log->info('response:', $thread);
       return $app->response(200, $thread)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -252,7 +272,6 @@ $app->path('threads', function($request) use($app, $conn, $log) {
       }
 
       session_write_close();
-      sleep(2);
 
       $log->info('response:', $response);
       return $app->response(200, $response)
@@ -263,12 +282,14 @@ $app->path('threads', function($request) use($app, $conn, $log) {
   });
 });
 
-$app->path('home', function($request) use($app, $conn) {
-  $app->get(function($request) use($app, $conn) {
+$app->path('home', function($request) use($app, $conn, $log) {
+  $app->get(function($request) use($app, $conn, $log) {
+    $log->addInfo('/home');
     $_posts = getHomePosts($conn);
     $posts = [
       'posts' => $_posts
     ];
+    $log->info('response:', $posts);
     return $app->response(200, $posts)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
@@ -276,21 +297,25 @@ $app->path('home', function($request) use($app, $conn) {
 });
 
 $app->path('comments', function($request) use($app, $conn, $log) {
-  $app->get(function($request) use($app, $conn) {
+  $app->get(function($request) use($app, $conn, $log) {
+    $log->addInfo('/comments');
     $_comments = getAllComments($conn);
     $comments = [
       'comments' => $_comments
     ];
+    $log->info('response:', $comments);
     return $app->response(200, $comments)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
-  $app->param('int', function($request, $id) use($app, $conn) {
-    $app->get(function($request) use($app, $conn, $id) {
+  $app->param('int', function($request, $id) use($app, $conn, $log) {
+    $app->get(function($request) use($app, $conn, $log, $id) {
+      $log->addInfo('/comments/'.$id);
       $_comment = getComment($conn, $id);
       $comment = [
         'comment' => $_comment
       ];
+      $log->info('response:', $comment);
       return $app->response(200, $comment)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -348,8 +373,6 @@ $app->path('comments', function($request) use($app, $conn, $log) {
         ];
       }
 
-      // TODO: remove it!
-      sleep(2);
       session_write_close();
 
       $log->info('response:', $response);
@@ -362,7 +385,8 @@ $app->path('comments', function($request) use($app, $conn, $log) {
 
 
 $app->path('user', function($request) use($app, $conn, $log) {
-  $app->get(function($request) use($app, $conn) {
+  $app->get(function($request) use($app, $conn, $log) {
+    $log->addInfo('/user');
     session_name('j150989k');
     session_start();
 
@@ -380,11 +404,12 @@ $app->path('user', function($request) use($app, $conn, $log) {
     }
     session_write_close();
 
+    $log->info('response:', $response);
     return $app->response(200, $response)
       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
       ->header('Access-Control-Allow-Credentials', 'true');
   });
-  $app->path('signin', function($request) use($app, $conn) {
+  $app->path('signin', function($request) use($app, $conn, $log) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
                ->header('Access-Control-Allow-Origin', CLIENT_HOST)
@@ -392,11 +417,14 @@ $app->path('user', function($request) use($app, $conn, $log) {
                ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
                ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $conn) {
+    $app->post(function($request) use($app, $conn, $log) {
+      $log->addInfo('/user/signin');
       $credentials = [
         'username' => Arrays::get('username', $request->params()),
         'password' => Arrays::get('password', $request->params())
       ];
+      // $log->info('request:', $credentials);
+      $log->addInfo('request: *****CENSORED*****');
 
       $response = array();
       if (
@@ -412,8 +440,8 @@ $app->path('user', function($request) use($app, $conn, $log) {
         ];
       } else if (
         !v::keySet(
-          v::key('username', v::alnum()->noWhitespace()->length(null, 20)),
-          v::key('password', v::alnum()->noWhitespace()->length(null, 20)))->validate($credentials)
+          v::key('username', v::regex('/^[A-Za-z0-9_]+$/')->noWhitespace()->length(null, 20)),
+          v::key('password', v::regex('/^[A-Za-z0-9_]+$/')->noWhitespace()->length(null, 20)))->validate($credentials)
       ) {
         $response = [
           'error' => [
@@ -450,13 +478,14 @@ $app->path('user', function($request) use($app, $conn, $log) {
         }
       }
 
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
     });
   });
   // sign up
-  $app->path('signup', function($request) use($app, $conn) {
+  $app->path('signup', function($request) use($app, $conn, $log) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
@@ -464,11 +493,14 @@ $app->path('user', function($request) use($app, $conn, $log) {
         ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
         ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $conn, $request) {
+    $app->post(function($request) use($app, $conn, $log, $request) {
+      $log->addInfo('/user/signup');
       $credentials = [
         'username' => Arrays::get('username', $request->params()),
         'password' => Arrays::get('password', $request->params())
       ];
+      // $log->info('request:', $credentials);
+      $log->addInfo('request: *****CENSORED*****');
 
       $response = array();
       if (
@@ -484,8 +516,8 @@ $app->path('user', function($request) use($app, $conn, $log) {
         ];
       } else if (
         !v::keySet(
-          v::key('username', v::alnum()->noWhitespace()->length(null, 20)),
-          v::key('password', v::alnum()->noWhitespace()->length(null, 20)))->validate($credentials)
+          v::key('username', v::regex('/^[A-Za-z0-9_]+$/')->noWhitespace()->length(null, 20)),
+          v::key('password', v::regex('/^[A-Za-z0-9_]+$/')->noWhitespace()->length(null, 20)))->validate($credentials)
       ) {
         $response = [
           'error' => [
@@ -521,6 +553,8 @@ $app->path('user', function($request) use($app, $conn, $log) {
           ];
         }
       }
+
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -528,7 +562,7 @@ $app->path('user', function($request) use($app, $conn, $log) {
   });
 
   // sign OutOfBoundsException
-  $app->path('signout', function($request) use($app, $conn) {
+  $app->path('signout', function($request) use($app, $conn, $log) {
     $app->options(function($request) use($app, $request) {
       return $app->response(200, "new")
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
@@ -536,7 +570,8 @@ $app->path('user', function($request) use($app, $conn, $log) {
         ->header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE')
         ->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'));
     });
-    $app->post(function($request) use($app, $conn, $request) {
+    $app->post(function($request) use($app, $conn, $log, $request) {
+      $log->addInfo('/user/signout');
       session_name('j150989k');
       session_start();
 
@@ -560,6 +595,7 @@ $app->path('user', function($request) use($app, $conn, $log) {
       }
 
       session_write_close();
+      $log->info('response:', $response);
       return $app->response(200, $response)
         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
         ->header('Access-Control-Allow-Credentials', 'true');
@@ -584,7 +620,8 @@ $app->path('user', function($request) use($app, $conn, $log) {
         'currentPassword' =>  Arrays::get('currentPassword', $request->params()),
         'newPassword' =>  Arrays::get('newPassword', $request->params())
       ];
-      $log->info('request:', $credentials);
+      // $log->info('request:', $credentials);
+      $log->addInfo('request: *****CENSORED*****');
 
       $response = array();
       if (!v::key('id', v::intType()->positive())->validate($credentials)) {
@@ -711,70 +748,70 @@ $app->path('user', function($request) use($app, $conn, $log) {
 
 
 
-$app->path('test', function($request) use($app, $conn) {
-  $app->get(function($request) use($app, $conn) {
-    print_stderr($request->params());
-    return $app->response(200, $request->params())
-      ->header('Access-Control-Allow-Origin', CLIENT_HOST)
-      ->header('Access-Control-Allow-Credentials', 'true');
-  });
-  $app->path('set-session', function($request) use($app, $conn) {
-    $app->get(function($request) use($app, $conn) {
-      session_name('j150989k');
-      session_start();
-      $_SESSION['message'] = 'hogemessage';
-
-      session_write_close();
-      return $app->response(200, 'set-session')
-        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
-        ->header('Access-Control-Allow-Credentials', 'true');
-    });
-  });
-  $app->path('get-session', function($request) use($app, $conn) {
-    $app->get(function($request) use($app, $conn) {
-      session_name('j150989k');
-      session_start();
-      $message = $_SESSION['message'];
-
-      session_write_close();
-      return $app->response(200, $message)
-        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
-        ->header('Access-Control-Allow-Credentials', 'true');
-    });
-  });
-  $app->path('regex', function($request) use($app, $conn) {
-    $app->get(function($request) use($app, $conn) {
-      $post = [
-        'user_id' => 1,
-        'thread_id' =>  1,
-        'answer' =>  'あ'
-      ];
-
-      $response = array();
-
-      if (v::keySet(
-        v::key('user_id', v::intType()->positive()),
-        v::key('thread_id', v::intType()->positive()),
-        v::key('answer', v::stringType()->notEmpty()->regex('/^[ぁ-ん]+$/u'))
-      )->validate($post)) {
-        $response = [
-          'validation' => 'ok',
-          'post' => $post
-        ];
-      } else {
-        $response = [
-          'validation' => 'ng',
-          'post' => $post
-        ];
-      }
-
-
-      return $app->response(200, $response)
-        ->header('Access-Control-Allow-Origin', CLIENT_HOST)
-        ->header('Access-Control-Allow-Credentials', 'true');
-    });
-  });
-});
+// $app->path('test', function($request) use($app, $conn) {
+//   $app->get(function($request) use($app, $conn) {
+//     print_stderr($request->params());
+//     return $app->response(200, $request->params())
+//       ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+//       ->header('Access-Control-Allow-Credentials', 'true');
+//   });
+//   $app->path('set-session', function($request) use($app, $conn) {
+//     $app->get(function($request) use($app, $conn) {
+//       session_name('j150989k');
+//       session_start();
+//       $_SESSION['message'] = 'hogemessage';
+//
+//       session_write_close();
+//       return $app->response(200, 'set-session')
+//         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+//         ->header('Access-Control-Allow-Credentials', 'true');
+//     });
+//   });
+//   $app->path('get-session', function($request) use($app, $conn) {
+//     $app->get(function($request) use($app, $conn) {
+//       session_name('j150989k');
+//       session_start();
+//       $message = $_SESSION['message'];
+//
+//       session_write_close();
+//       return $app->response(200, $message)
+//         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+//         ->header('Access-Control-Allow-Credentials', 'true');
+//     });
+//   });
+//   $app->path('regex', function($request) use($app, $conn) {
+//     $app->get(function($request) use($app, $conn) {
+//       $post = [
+//         'user_id' => 1,
+//         'thread_id' =>  1,
+//         'answer' =>  'あ'
+//       ];
+//
+//       $response = array();
+//
+//       if (v::keySet(
+//         v::key('user_id', v::intType()->positive()),
+//         v::key('thread_id', v::intType()->positive()),
+//         v::key('answer', v::stringType()->notEmpty()->regex('/^[ぁ-ん]+$/u'))
+//       )->validate($post)) {
+//         $response = [
+//           'validation' => 'ok',
+//           'post' => $post
+//         ];
+//       } else {
+//         $response = [
+//           'validation' => 'ng',
+//           'post' => $post
+//         ];
+//       }
+//
+//
+//       return $app->response(200, $response)
+//         ->header('Access-Control-Allow-Origin', CLIENT_HOST)
+//         ->header('Access-Control-Allow-Credentials', 'true');
+//     });
+//   });
+// });
 
 // Run the app! (takes $method, $url or Bullet\Request object)
 // echo $app->run(new Bullet\Request());
