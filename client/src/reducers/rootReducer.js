@@ -10,6 +10,7 @@ import { settingsReducer } from './settingsReducer';
 import { newPostReducer } from './newPostReducer';
 import { newThreadReducer } from './newThreadReducer';
 import { newCommentReducer } from './newCommentReducer';
+import { globalReducer } from './globalReducer';
 import { routerReducer } from 'react-router-redux'
 
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   newPost: newPostReducer,
   newComment: newCommentReducer,
   newThread: newThreadReducer,
+  global: globalReducer,
   router: routerReducer
 })
 

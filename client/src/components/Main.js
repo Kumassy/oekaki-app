@@ -51,6 +51,7 @@ import PostsPage from './PostsPageComponent';
 import SettingsPage from './SettingsPageComponent';
 import LoginPage from './LoginPageComponent';
 import WelcomePage from './WelcomePageComponent';
+import GlobalErrorReporter from './GlobalErrorReporterComponent';
 
 
 const _posts = [
@@ -135,6 +136,7 @@ class AppComponent extends React.Component {
           <MuiThemeProvider>
             <div>
               <AppInitializerContainer/>
+              <GlobalErrorReporter />
               <AppBar
                 title={<span>おえかきしりとり</span>}
                 showMenuIconButton={false}

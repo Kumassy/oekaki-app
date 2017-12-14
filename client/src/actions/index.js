@@ -106,7 +106,9 @@ import {
 
   REQUEST_UPDATE_AVATAR,
   RECEIVE_UPDATE_AVATAR,
-  FAILED_UPDATE_AVATAR
+  FAILED_UPDATE_AVATAR,
+
+  GLOBAL_SERVER_ERROR
 } from './actionTypes';
 
 import { push } from 'react-router-redux';
@@ -130,7 +132,8 @@ function fetchThread(id) {
   return dispatch => {
     dispatch(requestThread(id));
     return getThread(id)
-      .then(thread => dispatch(receiveThread(thread)));
+      .then(thread => dispatch(receiveThread(thread)))
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -200,6 +203,7 @@ export function createComment(comment, form) {
           dispatch(failedNewComment(response.error, comment.thread_id))
         }
       })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -259,7 +263,8 @@ export function createPost(post, form, onSuccess) {
               onSuccess();
             }
           }
-        });
+        })
+        .catch(() => dispatch(raiseGlobalError()));
     })
   }
 }
@@ -306,7 +311,8 @@ export function createThread(post, form, onSuccess) {
           } else {
             dispatch(failedNewThread(response.error))
           }
-        });
+        })
+        .catch(() => dispatch(raiseGlobalError()));
     })
   }
 }
@@ -330,7 +336,8 @@ export function fetchHomePosts(id) {
   return dispatch => {
     dispatch(requestHomePosts());
     return getHomePosts()
-      .then(posts => dispatch(receiveHomePosts(posts)));
+      .then(posts => dispatch(receiveHomePosts(posts)))
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -352,7 +359,8 @@ export function fetchUsers() {
   return dispatch => {
     dispatch(requestUsers());
     return getUsers()
-      .then(users => dispatch(receiveUsers(users)));
+      .then(users => dispatch(receiveUsers(users)))
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -374,7 +382,8 @@ export function fetchSearchUsers(keyword) {
   return dispatch => {
     dispatch(requestSearchUsers());
     return searchUsers(keyword)
-      .then(users => dispatch(receiveSearchUsers(users)));
+      .then(users => dispatch(receiveSearchUsers(users)))
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -404,7 +413,8 @@ export function fetchUserPosts(id) {
   return dispatch => {
     dispatch(requestUserPosts());
     return getUserPosts(id)
-      .then(response => dispatch(receiveUserPosts(response.user, response.posts)));
+      .then(response => dispatch(receiveUserPosts(response.user, response.posts)))
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -426,7 +436,8 @@ export function fetchPosts() {
   return dispatch => {
     dispatch(requestPosts());
     return getPosts()
-      .then(posts => dispatch(receivePosts(posts)));
+      .then(posts => dispatch(receivePosts(posts)))
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -466,7 +477,8 @@ export function trySignIn(credentials) {
         } else {
           dispatch(failedSignIn(response.error))
         }
-      });
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -503,7 +515,8 @@ export function trySignUp(credentials) {
         } else {
           dispatch(failedSignUp(response.error))
         }
-      });
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -538,7 +551,8 @@ export function trySignOut() {
         } else {
           dispatch(failedSignOut(response.error))
         }
-      });
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -563,7 +577,8 @@ export function fetchLoggedInUser() {
     return getLoggedInUser()
       .then(response => {
         dispatch(receiveLoggedInUser(response.user))
-      });
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -758,7 +773,8 @@ export function updatePassword(credentials) {
         } else {
           dispatch(failedUpdatePassword(response.error))
         }
-      });
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -794,6 +810,14 @@ export function updateAvatar(user) {
         } else {
           dispatch(failedUpdateAvatar(response.error))
         }
-      });
+      })
+      .catch(() => dispatch(raiseGlobalError()));
+  }
+}
+
+
+function raiseGlobalError() {
+  return {
+    type: GLOBAL_SERVER_ERROR
   }
 }

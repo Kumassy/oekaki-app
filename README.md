@@ -78,7 +78,7 @@
 - x welcome ページでしりとりルールの説明など
 - x セキュリティチェック, XSS
 - x 実験です画像の追加と title の修正
-- axios がTimeout したときの処理、promise を catch して modal ウィンドウを出して強制リロード location.reload();
+- x axios がTimeout したときの処理、promise を catch して modal ウィンドウを出して強制リロード location.reload();
 - データベースに何も入ってないときの処理の確認
 - x ユーザー名のalnum制限や文字数制限 
 - threads/100 とかの修正
