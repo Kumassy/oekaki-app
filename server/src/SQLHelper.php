@@ -36,7 +36,7 @@ function getUser($conn, $id) {
   //
   // $user = $stmt->fetch(PDO::FETCH_ASSOC);
   // $stmt = pg_prepare($conn, "get_user", 'SELECT id, username, image_id FROM users WHERE id = $1');
-  $stmt = pg_prepare($conn, "get_user", 'SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id WHERE u.id = $1 group by u.id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count
+  $stmt = pg_prepare($conn, "get_user", 'SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id WHERE u.id = $1 group by u.id, u.username, u.image_id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count
   ');
   $stmt = pg_execute($conn, "get_user", array($id));
   $user = pg_fetch_assoc($stmt);
@@ -60,7 +60,7 @@ function getAllUsers($conn)
   // $stmt->execute();
   // $_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
   // $stmt = pg_prepare($conn, "get_all_users", 'SELECT id, username, image_id FROM users');
-  $stmt = pg_prepare($conn, "get_all_users", 'SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id group by u.id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count
+  $stmt = pg_prepare($conn, "get_all_users", 'SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id group by u.id, u.username, u.image_id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count
   ');
   $stmt = pg_execute($conn, "get_all_users", array());
   $_users = pg_fetch_all($stmt);
