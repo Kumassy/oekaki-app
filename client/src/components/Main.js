@@ -30,6 +30,7 @@ import UsersListIcon from 'material-ui/svg-icons/social/people';
 import SearchUsersIcon from 'material-ui/svg-icons/action/search';
 import PostsListIcon from 'material-ui/svg-icons/image/collections';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import StarIcon from 'material-ui/svg-icons/action/help';
 import FontIcon from 'material-ui/FontIcon';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -49,6 +50,7 @@ import UsersSearchPage from './UsersSearchPageComponent';
 import PostsPage from './PostsPageComponent';
 import SettingsPage from './SettingsPageComponent';
 import LoginPage from './LoginPageComponent';
+import WelcomePage from './WelcomePageComponent';
 
 
 const _posts = [
@@ -141,23 +143,13 @@ class AppComponent extends React.Component {
               <div className="container">
                 <div className="left-panel">
                   <List>
-                    <Link to="/" className="link"><ListItem primaryText="ホーム" leftIcon={<HomeIcon />} /></Link>
+                    <Link to="/home" className="link"><ListItem primaryText="ホーム" leftIcon={<HomeIcon />} /></Link>
                     <Link to="/users" className="link"><ListItem primaryText="ユーザー一覧" leftIcon={<UsersListIcon />} /></Link>
                     <Link to="/users/search" className="link"><ListItem primaryText="ユーザー検索" leftIcon={<SearchUsersIcon />} /></Link>
                     <Link to="/posts" className="link"><ListItem primaryText="画像一覧" leftIcon={<PostsListIcon />} /></Link>
                     <Link to="/settings" className="link"><ListItem primaryText="設定" leftIcon={<SettingsIcon />} /></Link>
+                    <Link to="/welcome" className="link"><ListItem primaryText="あそびかた" leftIcon={<StarIcon />} /></Link>
                   </List>
-                  <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/about">About</Link></li>
-                    <li><Link to="/topics">Topics</Link></li>
-                    <li><Link to="/users">Users</Link></li>
-                    <li><Link to="/users/search">Search  Users</Link></li>
-                    <li><Link to="/posts">Posts</Link></li>
-                    <li><Link to="/threads/1">/thread/1</Link></li>
-                    <li><Link to="/threads/2">/thread/2</Link></li>
-                    <li><Link to="/settings">/settings</Link></li>
-                  </ul>
                 </div>
                 <br/>
 
@@ -166,7 +158,9 @@ class AppComponent extends React.Component {
 
                 <div className="main">
                   <Switch>
-                    <Route exact path="/" component={HomePage}/>
+                    <Route exact path="/" component={WelcomePage}/>
+                    <Route path="/welcome" component={WelcomePage}/>
+                    <Route path="/home" component={HomePage}/>
                     <Route path="/about" component={About}/>
                     <Route exact path="/users/search" component={UsersSearchPage}/>
                     <Route path="/users/:id" component={UserPage}/>

@@ -1,0 +1,10 @@
+@import 'base.scss';
+
+.welcomepage-component {
+  .paper {
+    @include paper();
+  }
+  img {
+    width: 100%;
+  }
+}
