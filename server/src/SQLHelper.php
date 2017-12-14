@@ -96,7 +96,7 @@ function getAllUsers($conn)
 function searchUsers($conn, $keyword)
 {
   $word = '%'.$keyword.'%';
-  $stmt = pg_prepare($conn, "search_users", 'SELECT z.id, z.username, z.image_id, z.posts_count, z.comments_count FROM (SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id group by u.id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count) z WHERE z.username like $1');
+  $stmt = pg_prepare($conn, "search_users", 'SELECT z.id, z.username, z.image_id, z.posts_count, z.comments_count FROM (SELECT x.id, x.username, x.image_id, x.posts_count, count(c.id) as comments_count FROM (SELECT u.id, u.username, u.image_id, count(p.id) as posts_count FROM users u LEFT OUTER JOIN posts p ON p.user_id = u.id group by u.id, u.username, u.image_id) x LEFT OUTER JOIN comments c ON c.user_id = x.id group by x.id, x.username, x.image_id, x.posts_count) z WHERE z.username like $1');
   $stmt = pg_execute($conn, "search_users", array($word));
   $_users = pg_fetch_all($stmt);
   pg_query($conn, "DEALLOCATE search_users");
