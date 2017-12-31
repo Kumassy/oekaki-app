@@ -69,6 +69,7 @@
     "canvas-toBlob": "^1.0.0",
     "core-js": "^2.0.0",
     "history": "^4.7.2",
+    "http-server": "^0.10.0",
     "jquery": "^3.2.1",
     "material-ui": "^0.19.4",
     "normalize.css": "^4.0.0",

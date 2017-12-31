@@ -1,0 +1,47 @@
+# See: https://qiita.com/oshin/items/0d011610238eb4df83fd
+
+version: '2'
+services:
+  db:
+    image: mariadb:10.3.2
+    expose:
+     - "3306"
+    environment:
+      # MYSQL_ROOT_PASSWORD: $MYAPP_DATABASE_PASSWORD
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: database_development
+    # volumes:
+    #   - ./db:/var/lib/mysql
+
+  # app:
+  #   build: .
+  #   environment:
+  #     MYAPP_DATABASE_USERNAME: root
+  #     MYAPP_DATABASE_PASSWORD: $MYAPP_DATABASE_PASSWORD
+  #     MYAPP_DATABASE_HOST: db
+  api:
+    # extends:
+    #   service: app
+    image: node:8.9.3
+    # command: node /myapp/index.js
+    working_dir: /myapp
+    command: ./bin/www
+    volumes:
+      - ./server-node:/myapp
+    ports:
+      - "3000:3000"
+    links:
+      - db
+  web:
+    # extends:
+    #   service: app
+    image: node:8.9.3
+    command: node /myapp/node_modules/.bin/http-server /myapp/dist -p 8000
+    volumes:
+      - ./client:/myapp
+    ports:
+      - "8000:8000"
+
+volumes:
+  db-data:
+    driver: local
