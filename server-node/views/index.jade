@@ -23,16 +23,16 @@ block content
           = user.username
         | &nbsp;
         a(href="/users/" + user.id + "/destroy", class="btn btn-xs btn-warning") delete
-        ul
-          li
-            | Create task
-            form(action="/users/" + user.id + "/tasks/create", method="post", class="form-inline")
-              div(class="form-group")
-                input(type="text", name="title", class="input-sm form-control")
-                input(type="submit", class="btn btn-sm btn-default")
-          each task in user.Tasks
-            li
-              strong
-                = task.title
-              | &nbsp;
-              a(href="/users/" + user.id + "/tasks/" + task.id + "/destroy",  class="btn btn-xs btn-warning") delete
+        //- ul
+        //-   li
+        //-     | Create task
+        //-     form(action="/users/" + user.id + "/tasks/create", method="post", class="form-inline")
+        //-       div(class="form-group")
+        //-         input(type="text", name="title", class="input-sm form-control")
+        //-         input(type="submit", class="btn btn-sm btn-default")
+        //-   each task in user.Tasks
+        //-     li
+        //-       strong
+        //-         = task.title
+        //-       | &nbsp;
+        //-       a(href="/users/" + user.id + "/tasks/" + task.id + "/destroy",  class="btn btn-xs btn-warning") delete

@@ -10,6 +10,7 @@ services:
       # MYSQL_ROOT_PASSWORD: $MYAPP_DATABASE_PASSWORD
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_DATABASE: database_development
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     # volumes:
     #   - ./db:/var/lib/mysql
 
@@ -25,6 +26,8 @@ services:
     image: node:8.9.3
     # command: node /myapp/index.js
     working_dir: /myapp
+    env_file:
+      - api-variables.env
     command: ./bin/www
     volumes:
       - ./server-node:/myapp

@@ -1,14 +1,25 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const TWITTER_CONSUMER_KEY = process.env.TWITTER_CONSUMER_KEY;
+const TWITTER_CONSUMER_SECRET = process.env.TWITTER_CONSUMER_SECRET;
+const HOST = 'http://localhost:3000'
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+const express = require('express');
+const session = require('express-session')
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
-var app = express();
+const passport = require('passport');
+const TwitterStrategy = require('passport-twitter');
+
+const models = require('./models');
+
+const index = require('./routes/index');
+const users = require('./routes/users');
+const authTwitter = require('./routes/auth/twitter');
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,10 +31,56 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({secret: 'kumassecret'}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  models.User
+    .findById(id)
+    .then(user => {
+      done(null, user);
+    })
+    .catch(err => {
+      done(err);
+    });
+});
+// twitter
+passport.use(new TwitterStrategy({
+    consumerKey: TWITTER_CONSUMER_KEY,
+    consumerSecret: TWITTER_CONSUMER_SECRET,
+    callbackURL: `${HOST}/auth/twitter/callback`
+  }, (token, tokenSecret, profile, done) => {
+    models.User
+      .create({ username: profile.displayName })
+      .then(user => {
+        return models.Account.create({
+          UserId: user.get('id'),
+          provider: 'twitter',
+          uid: profile.id,
+          token,
+          tokenSecret
+        })
+      })
+      .then(account => {
+        return done(null, account.user);
+      })
+      .catch(err => {
+        done(err);
+      });
+    // return done(null, profile);
+}));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/auth/twitter', authTwitter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

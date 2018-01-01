@@ -9,7 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
+        allowNull: false,
         type: Sequelize.STRING
+      },
+      avatar: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
