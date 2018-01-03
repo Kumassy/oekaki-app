@@ -1,0 +1,26 @@
+fixtures:
+  - model: User
+    data:
+      id: 1
+      username: kumassy
+
+  - model: User
+    data:
+      id: 2
+      username: pandaman
+
+  - model: Account
+    data:
+      UserId: 1
+      provider: twitter
+      uid: 123456
+      token: SUPER_SECRET_TOKEN
+      tokenSecret: MEGA_SECRET_TOKEN_SECRET
+
+  - model: Account
+    data:
+      UserId: 2
+      provider: twitter
+      uid: 345678
+      token: SUPER_SECRET_TOKEN
+      tokenSecret: MEGA_SECRET_TOKEN_SECRET

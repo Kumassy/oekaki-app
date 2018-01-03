@@ -17,6 +17,7 @@ const models = require('./models');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
+const posts = require('./routes/posts');
 const authTwitter = require('./routes/auth/twitter');
 
 const app = express();
@@ -79,6 +80,7 @@ passport.use(new TwitterStrategy({
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/posts', posts);
 app.use('/auth/twitter', authTwitter);
 
 
@@ -99,5 +101,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// show stack trace within Promise
+// https://qiita.com/syuilo/items/0800d7e44e93203c7285
+process.on('unhandledRejection', console.dir);
 
 module.exports = app;

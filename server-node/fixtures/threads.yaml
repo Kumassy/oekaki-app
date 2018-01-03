@@ -1,0 +1,30 @@
+fixtures:
+  - model: Thread
+    data:
+      id: 1
+      isOpen: 'true'
+
+  - model: Image
+    data:
+      id: 1
+      name: apple.png
+
+  - model: Image
+    data:
+      id: 10
+      name: orange.png
+
+  - model: Post
+    data:
+      id: 1
+      UserId: 1
+      ThreadId: 1
+      ImageId: 1
+      caption: orange
+  - model: Post
+    data:
+      id: 2
+      UserId: 2
+      ThreadId: 1
+      ImageId: 10
+      caption: pen

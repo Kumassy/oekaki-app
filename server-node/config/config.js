@@ -15,7 +15,7 @@ module.exports = {
     "username": "root",
     "password": null,
     "database": "database_test",
-    "host": "db",
+    "host": "localhost",
     "dialect": "mysql",
     "define": {
       "charset": "utf8",
