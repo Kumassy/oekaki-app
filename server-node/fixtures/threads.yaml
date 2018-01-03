@@ -3,6 +3,10 @@ fixtures:
     data:
       id: 1
       isOpen: 'true'
+  - model: Thread
+    data:
+      id: 2
+      isOpen: 'false'
 
   - model: Image
     data:
@@ -17,14 +21,14 @@ fixtures:
   - model: Post
     data:
       id: 1
-      UserId: 1
-      ThreadId: 1
-      ImageId: 1
+      userId: 1
+      threadId: 1
+      imageId: 1
       caption: orange
   - model: Post
     data:
       id: 2
-      UserId: 2
-      ThreadId: 1
-      ImageId: 10
+      userId: 2
+      threadId: 2
+      imageId: 10
       caption: pen

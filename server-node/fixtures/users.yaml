@@ -11,7 +11,7 @@ fixtures:
 
   - model: Account
     data:
-      UserId: 1
+      userId: 1
       provider: twitter
       uid: 123456
       token: SUPER_SECRET_TOKEN
@@ -19,7 +19,7 @@ fixtures:
 
   - model: Account
     data:
-      UserId: 2
+      userId: 2
       provider: twitter
       uid: 345678
       token: SUPER_SECRET_TOKEN

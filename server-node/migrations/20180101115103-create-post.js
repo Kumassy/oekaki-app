@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      UserId: {
+      userId: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         allowNull: false,
@@ -17,7 +17,7 @@ module.exports = {
           key: 'id'
         }
       },
-      ThreadId: {
+      threadId: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         allowNull: false,
@@ -26,7 +26,7 @@ module.exports = {
           key: 'id'
         }
       },
-      ImageId: {
+      imageId: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         allowNull: false,

@@ -13,7 +13,7 @@ module.exports = {
     }, {
       id: 2,
       UserId: 2,
-      ThreadId: 1,
+      ThreadId: 2,
       ImageId: 10,
       caption: 'pen',
       createdAt : new Date(),

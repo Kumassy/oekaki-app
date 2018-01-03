@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Account = sequelize.define('Account', {
-    UserId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     provider: DataTypes.STRING,
     uid: DataTypes.STRING,
     token: DataTypes.STRING,
@@ -11,9 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   Account.associate = function(models) {
     models.Account.belongsTo(models.User, {
       onDelete: "CASCADE",
-      foreignKey: {
-        allowNull: false
-      }
+      foreignKey: 'userId'
     });
   };
 

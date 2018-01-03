@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Thread.associate = function(models) {
-    models.Thread.hasMany(models.Post);
+    models.Thread.hasMany(models.Post, { foreignKey: 'postId' });
   };
 
   return Thread;

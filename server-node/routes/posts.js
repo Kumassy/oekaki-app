@@ -8,7 +8,7 @@ const uuidv4 = require('uuid/v4');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  models.Post.findAll().then(posts => {
+  models.Post.findAll({attributes: ['id', 'caption', ['ThreadId', 'thread_id'], 'createdAt', 'updatedAt'], include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]}).then(posts => {
     res.json({
       posts
     });
@@ -16,14 +16,29 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:post_id', function(req, res, next) {
-  models.Post.findById(req.params.post_id).then(post => {
-    res.json({
-      post
+  models.Post
+    .findOne({
+      where: {id: req.params.post_id},
+      attributes: ['id', 'caption', ['ThreadId', 'thread_id'], 'createdAt', 'updatedAt'],
+      include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+    })
+    .then(post => {
+      res.json({
+        post
+      });
     });
-  });
 });
 
 router.post('/', function(req, res, next) {
+  if (req.user == null) {
+    res.status(401).json({
+      error: {
+        type: 'SIGNIN_REQUIRED',
+        message: '画像を投稿するにはログインが必要です'
+      }
+    })
+    return;
+  }
   Promise.resolve()
     .then(() => {
       return new Promise(function(resolve, reject) {
@@ -42,15 +57,23 @@ router.post('/', function(req, res, next) {
       });
     })
     .then(image => {
-      models.Post.create({
-        UserId: req.user.id,
-        ThreadId: req.body.thread_id,
-        ImageId: image.id,
+      return models.Post.create({
+        userId: req.user.id,
+        threadId: req.body.thread_id,
+        imageId: image.id,
         caption: req.body.caption
-      }).then(post => {
-        res.json({
-          post
-        });
+      })
+    })
+    .then(post => {
+      return models.Post.findOne({
+        where: {id: post.id},
+        attributes: ['id', 'caption', ['ThreadId', 'thread_id'], 'createdAt', 'updatedAt'],
+        include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+      })
+    })
+    .then(post => {
+      res.status(201).json({
+        post
       });
     });
 });

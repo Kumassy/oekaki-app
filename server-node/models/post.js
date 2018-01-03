@@ -1,30 +1,27 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define('Post', {
-    UserId: DataTypes.INTEGER,
-    ThreadId: DataTypes.INTEGER,
-    ImageId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
+    threadId: DataTypes.INTEGER,
+    imageId: DataTypes.INTEGER,
     caption: DataTypes.STRING
   });
 
   Post.associate = function(models) {
     models.Post.belongsTo(models.User, {
+      as: 'user',
       onDelete: 'CASCADE',
-      foreignKey: {
-        allowNull: false
-      }
+      foreignKey: 'userId'
     });
     models.Post.belongsTo(models.Thread, {
+      as: 'thread',
       onDelete: 'CASCADE',
-      foreignKey: {
-        allowNull: false
-      }
+      foreignKey: 'threadId'
     });
     models.Post.belongsTo(models.Image, {
+      as: 'image',
       onDelete: 'CASCADE',
-      foreignKey: {
-        allowNull: false
-      }
+      foreignKey: 'imageId'
     });
   };
 

@@ -25,10 +25,10 @@ describe('express: /users', function() {
     });
 
     it('should have one account for user kumassy', function() {
-      return models.User.findOne({ where: {username: 'kumassy'}, include: [ models.Account ] }).then(user => {
+      return models.User.findOne({ where: {username: 'kumassy'}, include: [ {model: models.Account, as: 'accounts'} ] }).then(user => {
         expect(user.username).to.equal('kumassy');
-        expect(user.Accounts).to.have.lengthOf(1);
-        expect(user.Accounts[0].provider).to.equal('twitter');
+        expect(user.accounts).to.have.lengthOf(1);
+        expect(user.accounts[0].provider).to.equal('twitter');
       });
     });
 

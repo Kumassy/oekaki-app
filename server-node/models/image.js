@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Image.associate = function(models) {
-    models.Image.hasOne(models.Post);
+    models.Image.hasOne(models.Post, { foreignKey: 'imageId' });
   };
 
   return Image;

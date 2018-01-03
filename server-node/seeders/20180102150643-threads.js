@@ -7,6 +7,11 @@ module.exports = {
       isOpen: true,
       createdAt : new Date(),
       updatedAt : new Date()
+    },{
+      id: 2,
+      isOpen: false,
+      createdAt : new Date(),
+      updatedAt : new Date()
     }], {});
   },
 
