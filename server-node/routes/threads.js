@@ -5,28 +5,39 @@ const fs = require('fs');
 const path = require('path');
 const uuidv4 = require('uuid/v4');
 
-/* GET users listing. */
+/* GET threads listing. */
 router.get('/', function(req, res, next) {
-  models.Post.findAll({attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'], include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]}).then(posts => {
+  models.Thread.findAll({
+    include: [{
+      model: models.Post,
+      as: 'posts',
+      attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+      include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+    }]
+  })
+  .then(threads => {
     res.json({
-      posts
+      threads
     });
   });
 });
 
-router.get('/:post_id', function(req, res, next) {
-  models.Post
-    .findOne({
-      where: {id: req.params.post_id},
+router.get('/:thread_id', function(req, res, next) {
+  models.Thread.findOne({
+    where: {id: req.params.thread_id},
+    include: [{
+      model: models.Post,
+      as: 'posts',
       attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
       include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
-    })
-    .then(post => {
-      res.json({
-        post
-      });
+    }]
+  }).then(thread => {
+    res.json({
+      thread
     });
+  });
 });
+
 
 router.post('/', function(req, res, next) {
   if (req.user == null) {
@@ -51,36 +62,40 @@ router.post('/', function(req, res, next) {
       });
     })
     .then(filename => {
-      return models.Image.create({
-        name: filename
-      });
+      return Promise.all([
+        models.Image.create({
+          name: filename
+        }),
+        models.Thread.create({
+          isOpen: true
+        })]);
     })
-    .then(image => {
+    .then(values => {
+      const [image, thread] = values;
       return models.Post.create({
         userId: req.user.id,
-        threadId: req.body.thread_id,
+        threadId: thread.id,
         imageId: image.id,
         caption: req.body.caption
       })
     })
     .then(post => {
-      return models.Post.findOne({
-        where: {id: post.id},
-        attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
-        include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+      return models.Thread.findOne({
+        where: {id: post.threadId},
+        include: [{
+          model: models.Post,
+          as: 'posts',
+          attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+          include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+        }]
       })
     })
-    .then(post => {
+    .then(thread => {
       res.status(201).json({
-        post
+        thread
       });
     });
 });
 
-// models.User.create({
-// //     username: req.body.username
-// //   }).then(function() {
-// //     res.redirect('/');
-// //   });
 
 module.exports = router;

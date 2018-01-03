@@ -7,8 +7,8 @@ const fixtures = require('sequelize-fixtures');
 const passportStub = require('passport-stub');
 const models  = require('../models');
 
-describe('express: /posts', function() {
-  describe('GET /posts', function() {
+describe('express: /threads', function() {
+  describe('GET /threads', function() {
     this.timeout(10000);
 
     before(function() {
@@ -22,24 +22,25 @@ describe('express: /posts', function() {
     });
 
 
-    it('should have two posts', function() {
-      return models.Post.findAll().then(posts => {
-        expect(posts).to.have.lengthOf(2);
+    it('should have two threads', function() {
+      return models.Thread.findAll().then(threads => {
+        expect(threads).to.have.lengthOf(2);
       });
     });
 
-    it('should respond with two posts for /posts', function() {
+    it('should respond with two posts for /threads', function() {
       return request(app)
-        .get('/posts')
+        .get('/threads')
         .expect(200)
         .then(res => {
-          expect(res.body).to.have.all.keys('posts');
-          expect(res.body.posts).to.have.lengthOf(2);
+          expect(res.body).to.have.all.keys('threads');
+          expect(res.body.threads).to.have.lengthOf(2);
+          expect(res.body.threads[0]).to.include.all.keys('posts');
         })
     });
   });
 
-  describe('POST /posts', function() {
+  describe('POST /threads', function() {
     this.timeout(10000);
 
     before(() => {
@@ -63,32 +64,31 @@ describe('express: /posts', function() {
 
 
 
-    it('should receive new post for POST /post', function() {
+    it('should receive new thread for POST /threads', function() {
       // args are passed to `id` for passport.deserializeUser
-      passportStub.login(2);
+      passportStub.login(1);
 
       return request(app)
-        .post('/posts')
+        .post('/threads')
         .send({
-          thread_id: 1,
-          image: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8zcBwEQAEhwG+eN4+FAAAAABJRU5ErkJggg==',
-          caption: 'apple'
+          image: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8uU3iIgAG0QKKL7cTLwAAAABJRU5ErkJggg==',
+          caption: 'orange'
         })
         .expect(201)
         .then(res => {
-          expect(res.body).to.have.all.keys('post');
-          expect(res.body.post).to.have.all.keys('id', 'user', 'threadId', 'image', 'caption', 'createdAt', 'updatedAt');
-          expect(res.body.post.user.id).to.equal(2);
+          expect(res.body).to.have.all.keys('thread');
+          expect(res.body.thread).to.have.all.keys('id', 'isOpen', 'posts', 'createdAt', 'updatedAt');
+          expect(res.body.thread.posts).to.have.lengthOf(1);
         });
     });
 
-    it('should return 401 when unauthorized for POST /post', function() {
+    it('should return 401 when unauthorized for POST /threads', function() {
       return request(app)
-        .post('/posts')
+        .post('/threads')
         .send({
           thread_id: 1,
-          image: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8zcBwEQAEhwG+eN4+FAAAAABJRU5ErkJggg==',
-          caption: 'apple'
+          image: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8uU3iIgAG0QKKL7cTLwAAAABJRU5ErkJggg==',
+          caption: 'orange'
         })
         .expect(401)
         .then(res => {

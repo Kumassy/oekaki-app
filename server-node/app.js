@@ -18,6 +18,7 @@ const models = require('./models');
 const index = require('./routes/index');
 const users = require('./routes/users');
 const posts = require('./routes/posts');
+const threads = require('./routes/threads');
 const authTwitter = require('./routes/auth/twitter');
 
 const app = express();
@@ -81,6 +82,7 @@ passport.use(new TwitterStrategy({
 app.use('/', index);
 app.use('/users', users);
 app.use('/posts', posts);
+app.use('/threads', threads);
 app.use('/auth/twitter', authTwitter);
 
 
