@@ -7,7 +7,7 @@ const uuidv4 = require('uuid/v4');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  models.Post.findAll({attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'], include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]}).then(posts => {
+  models.Post.findAll({attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'], include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]}).then(posts => {
     res.json({
       posts
     });
@@ -18,7 +18,7 @@ router.get('/:post_id', function(req, res, next) {
   models.Post
     .findOne({
       where: {id: req.params.post_id},
-      attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+      attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
       include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
     })
     .then(post => {
@@ -66,7 +66,7 @@ router.post('/', function(req, res, next) {
     .then(post => {
       return models.Post.findOne({
         where: {id: post.id},
-        attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+        attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
         include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
       })
     })

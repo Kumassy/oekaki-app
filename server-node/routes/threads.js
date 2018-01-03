@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
     include: [{
       model: models.Post,
       as: 'posts',
-      attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+      attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
       include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
     }]
   })
@@ -28,7 +28,7 @@ router.get('/:thread_id', function(req, res, next) {
     include: [{
       model: models.Post,
       as: 'posts',
-      attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+      attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
       include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
     }]
   }).then(thread => {
@@ -85,7 +85,7 @@ router.post('/', function(req, res, next) {
         include: [{
           model: models.Post,
           as: 'posts',
-          attributes: ['id', 'caption', ['ThreadId', 'threadId'], 'createdAt', 'updatedAt'],
+          attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
           include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
         }]
       })

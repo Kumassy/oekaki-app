@@ -19,6 +19,8 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const posts = require('./routes/posts');
 const threads = require('./routes/threads');
+const home = require('./routes/home');
+const comments = require('./routes/comments');
 const authTwitter = require('./routes/auth/twitter');
 
 const app = express();
@@ -63,7 +65,7 @@ passport.use(new TwitterStrategy({
       .create({ username: profile.displayName })
       .then(user => {
         return models.Account.create({
-          UserId: user.get('id'),
+          userId: user.id,
           provider: 'twitter',
           uid: profile.id,
           token,
@@ -83,6 +85,8 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/posts', posts);
 app.use('/threads', threads);
+app.use('/comments', comments);
+app.use('/home', home);
 app.use('/auth/twitter', authTwitter);
 
 

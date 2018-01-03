@@ -25,6 +25,7 @@ fixtures:
       threadId: 1
       imageId: 1
       caption: orange
+
   - model: Post
     data:
       id: 2
@@ -32,3 +33,10 @@ fixtures:
       threadId: 2
       imageId: 10
       caption: pen
+
+  - model: Comment
+    data:
+      id: 1
+      userId: 1
+      threadId: 1
+      message: great
