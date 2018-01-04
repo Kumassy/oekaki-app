@@ -17,6 +17,7 @@ const models = require('./models');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
+const user = require('./routes/user');
 const posts = require('./routes/posts');
 const threads = require('./routes/threads');
 const home = require('./routes/home');
@@ -61,19 +62,26 @@ passport.use(new TwitterStrategy({
     consumerSecret: TWITTER_CONSUMER_SECRET,
     callbackURL: `${HOST}/auth/twitter/callback`
   }, (token, tokenSecret, profile, done) => {
-    models.User
-      .create({ username: profile.displayName })
-      .then(user => {
-        return models.Account.create({
-          userId: user.id,
-          provider: 'twitter',
-          uid: profile.id,
-          token,
-          tokenSecret
-        })
+    Promise.resolve()
+      .then(() => {
+        return models.User.create({ username: profile.displayName })
       })
-      .then(account => {
-        return done(null, account.user);
+      .then(user => {
+        return Promise.all([
+          models.Account.create({
+            userId: user.id,
+            provider: 'twitter',
+            uid: profile.id,
+            token,
+            tokenSecret
+          }),
+          Promise.resolve(user)
+          ]);
+      })
+      .then(values => {
+        const [account, user] = values;
+
+        done(null, user);
       })
       .catch(err => {
         done(err);
@@ -82,6 +90,7 @@ passport.use(new TwitterStrategy({
 }));
 
 app.use('/', index);
+app.use('/user', user);
 app.use('/users', users);
 app.use('/posts', posts);
 app.use('/threads', threads);
