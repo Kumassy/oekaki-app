@@ -2,6 +2,15 @@
 
 version: '2'
 services:
+  nginx:
+    image: nginx:1.13.8
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./web/conf:/etc/nginx/conf.d
+      # - ./web/html:/var/www/html
+      - ./client/dist:/var/www/html
+      - ./web/log:/var/log/nginx/
   db:
     image: mariadb:10.3.2
     expose:
@@ -39,19 +48,21 @@ services:
       "
     volumes:
       - ./server-node:/myapp
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
+    expose:
+      - "3000"
     links:
       - db
-  web:
-    # extends:
-    #   service: app
-    image: node:8.9.3
-    command: node /myapp/node_modules/.bin/http-server /myapp/dist -p 8000
-    volumes:
-      - ./client:/myapp
-    ports:
-      - "8000:8000"
+  # web:
+  #   # extends:
+  #   #   service: app
+  #   image: node:8.9.3
+  #   command: node /myapp/node_modules/.bin/http-server /myapp/dist -p 8000
+  #   volumes:
+  #     - ./client:/myapp
+  #   ports:
+  #     - "8000:8000"
 
 volumes:
   db-data:

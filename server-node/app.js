@@ -1,6 +1,6 @@
 const TWITTER_CONSUMER_KEY = process.env.TWITTER_CONSUMER_KEY;
 const TWITTER_CONSUMER_SECRET = process.env.TWITTER_CONSUMER_SECRET;
-const HOST = 'http://localhost:3000'
+const HOST = 'http://localhost:8080'
 
 const express = require('express');
 const session = require('express-session')
