@@ -70,6 +70,7 @@ describe('express: /comments', function() {
         .then(res => {
           expect(res.body).to.have.all.keys('comment');
           expect(res.body.comment).to.have.all.keys('id', 'user', 'threadId', 'message', 'createdAt', 'updatedAt');
+          expect(res.body.comment.message).to.equal('looks nice');
           expect(res.body.comment.user.id).to.equal(1);
         });
     });

@@ -13,6 +13,11 @@ router.get('/', function(req, res, next) {
       as: 'posts',
       attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
       include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+    },{
+      model: models.Comment,
+      as: 'comments',
+      attributes: ['id', 'threadId', 'message', 'createdAt', 'updatedAt'],
+      include: [{model: models.User, as: 'user'}]
     }]
   })
   .then(threads => {
@@ -30,6 +35,11 @@ router.get('/:thread_id', function(req, res, next) {
       as: 'posts',
       attributes: ['id', 'caption', 'threadId', 'createdAt', 'updatedAt'],
       include: [{model: models.User, as: 'user'}, {model: models.Image, as: 'image'}]
+    },{
+      model: models.Comment,
+      as: 'comments',
+      attributes: ['id', 'threadId', 'message', 'createdAt', 'updatedAt'],
+      include: [{model: models.User, as: 'user'}]
     }]
   }).then(thread => {
     res.json({

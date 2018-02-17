@@ -2,9 +2,17 @@ var models  = require('../models');
 var express = require('express');
 var router = express.Router();
 
+var _ = require('lodash');
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  models.User.findAll().then(users => {
+  models.User.findAll({
+    attributes: ['id', 'username', 'avatar', 'createdAt', 'updatedAt', [models.sequelize.fn('COUNT', models.sequelize.col('posts.id')), 'postsCount'], [models.sequelize.fn('COUNT', models.sequelize.col('comments.id')), 'commentsCount']],
+    include: [{model: models.Post, as: 'posts'}, {model: models.Comment, as: 'comments'}],
+    group: 'id'
+  }).then(users => {
+    return users.map(user => _.omit(user.dataValues, ['posts', 'comments']))
+  }).then(users => {
     res.json({
       users
     });
@@ -12,7 +20,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:user_id', function(req, res, next) {
-  models.User.findById(req.params.user_id).then(user => {
+  models.User.findOne({
+    where: {id: req.params.user_id},
+    attributes: ['id', 'username', 'avatar', 'createdAt', 'updatedAt', [models.sequelize.fn('COUNT', models.sequelize.col('posts.id')), 'postsCount'], [models.sequelize.fn('COUNT', models.sequelize.col('comments.id')), 'commentsCount']],
+    include: [{model: models.Post, as: 'posts'}, {model: models.Comment, as: 'comments'}],
+    group: 'id'
+  }).then(user => {
     res.json({
       user
     });
