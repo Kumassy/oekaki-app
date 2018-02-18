@@ -200,7 +200,7 @@ export function createComment(comment, form) {
           dispatch(newCommentInputClear());
           form.reset();
         } else {
-          dispatch(failedNewComment(response.error, comment.thread_id))
+          dispatch(failedNewComment(response.error, comment.threadId))
         }
       })
       .catch(() => dispatch(raiseGlobalError()));

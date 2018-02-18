@@ -37,6 +37,7 @@ router.post('/', function(req, res, next) {
   }
   Promise.resolve()
     .then(() => {
+      console.log(req.body);
       return models.Comment.create({
         userId: req.user.id,
         threadId: req.body.thread_id,

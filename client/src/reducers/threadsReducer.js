@@ -78,7 +78,7 @@ export function threadsReducer(state = initialState, action) {
       {
         const { comment } = action;
         const threads = state.threads.map(threadContainer => {
-          if (threadContainer.thread.id !== comment.thread_id) {
+          if (threadContainer.thread.id !== comment.threadId) {
             return threadContainer;
           } else {
             return {
@@ -102,7 +102,7 @@ export function threadsReducer(state = initialState, action) {
       {
         const { comment } = action;
         const threads = state.threads.map(threadContainer => {
-          if (threadContainer.thread.id !== comment.thread_id) {
+          if (threadContainer.thread.id !== comment.threadId) {
             return threadContainer;
           } else {
             return {
@@ -150,7 +150,7 @@ export function threadsReducer(state = initialState, action) {
       {
         const { post } = action;
         const threads = state.threads.map(threadContainer => {
-          if (threadContainer.thread.id !== post.thread_id) {
+          if (threadContainer.thread.id !== post.threadId) {
             return threadContainer;
           } else {
             return {
@@ -174,7 +174,7 @@ export function threadsReducer(state = initialState, action) {
       {
         const { post } = action;
         const threads = state.threads.map(threadContainer => {
-          if (threadContainer.thread.id !== post.thread_id) {
+          if (threadContainer.thread.id !== post.threadId) {
             return threadContainer;
           } else {
             return {

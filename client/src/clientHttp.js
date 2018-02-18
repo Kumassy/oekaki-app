@@ -1,10 +1,10 @@
 'use strict';
 import axios from 'axios';
 
-export const _host = 'http://localhost:3000';
+export const _host = 'http://localhost:8080';
 
 export const client = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://localhost:8080/api/v0/',
   timeout: 5000,
   withCredentials: true
 });
@@ -12,16 +12,19 @@ export const client = axios.create({
 export function newComment(comment) {
   const config = {
     headers: {
-      'content-type': 'multipart/form-data',
+      // 'content-type': 'multipart/form-data',
       'Access-Control-Allow-Origin': '*'
     }
   }
-  const params = new FormData();
-  params.append('user_id', comment.user.id);
-  params.append('thread_id', comment.thread_id);
-  params.append('comment', comment.comment);
+  // const params = new FormData();
+  // // params.append('user_id', comment.user.id);
+  // params.append('thread_id', comment.thread_id);
+  // params.append('message', comment.comment);
 
-  return client.post('/comments/new', params, config).then(json => json.data);
+  return client.post('/comments', {
+      thread_id: comment.threadId,
+      message: comment.message
+    }, config).then(json => json.data);
 }
 
 export function newPost(post) {
@@ -36,7 +39,7 @@ export function newPost(post) {
   params.append('thread_id', post.thread_id);
   params.append('answer', post.answer);
 
-  return client.post('/posts/new', params, config).then(json => json.data);
+  return client.post('/posts', params, config).then(json => json.data);
 }
 
 export function newThread(post) {
@@ -50,7 +53,7 @@ export function newThread(post) {
   params.append('user_id', post.user.id);
   params.append('answer', post.answer);
 
-  return client.post('/threads/new', params, config).then(json => json.data);
+  return client.post('/threads', params, config).then(json => json.data);
 }
 
 export function getThread(id) {
