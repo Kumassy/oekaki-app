@@ -32,3 +32,4 @@
 - [ ] 404ページ
 
 - [ ] skip ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新
+- reducer で thread_id としているため newcomment コンポーネントが RECEIVE_NEW_COMMENT　に反応しない。thread_id -> threadId に統一を検討

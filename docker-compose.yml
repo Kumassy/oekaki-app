@@ -11,7 +11,7 @@ services:
       # - ./web/html:/var/www/html
       - ./client/dist:/var/www/html
       - ./server-node/images:/var/www/html/images
-      - ./web/log:/var/log/nginx/
+      - ./web/logs:/var/log/nginx/
   db:
     image: mariadb:10.3.2
     expose:
