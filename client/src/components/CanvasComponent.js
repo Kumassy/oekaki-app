@@ -83,6 +83,10 @@ class CanvasComponent extends React.Component {
     return this.refs.canvas.toBlob(callback);
   }
 
+  toDataURL() {
+    return this.refs.canvas.toDataURL();
+  }
+
   clearCanvas() {
     const { width, height } = this.props;
     this.state.context && this.state.context.clearRect(0, 0, width, height);

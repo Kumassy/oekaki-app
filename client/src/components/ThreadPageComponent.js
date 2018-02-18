@@ -79,7 +79,7 @@ class ThreadPageComponent extends React.Component {
                 userAvatar={post.user.avatar}
                 style={{ opacity: post.isSending? 0.5 : 1 }} />
               )}
-            {myThread.is_open && (
+            {myThread.isOpen && (
               <div>
                 <h3>画像を投稿</h3>
                 <NewPost threadId={myThreadId}></NewPost>

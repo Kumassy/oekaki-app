@@ -33,13 +33,17 @@ export function newPost(post) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  const params = new FormData();
-  params.append('image', post.image);
-  // params.append('user_id', post.user.id);
-  params.append('thread_id', post.thread_id);
-  params.append('answer', post.answer);
+  // const params = new FormData();
+  // params.append('image', post.image);
+  // // params.append('user_id', post.user.id);
+  // params.append('thread_id', post.threadId);
+  // params.append('answer', post.answer);
 
-  return client.post('/posts', params, config).then(json => json.data);
+  return client.post('/posts', {
+    image: post.image,
+    thread_id: post.threadId,
+    caption: post.caption
+  }, config).then(json => json.data);
 }
 
 export function newThread(post) {
@@ -48,12 +52,16 @@ export function newThread(post) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  const params = new FormData();
-  params.append('image', post.image);
-  params.append('user_id', post.user.id);
-  params.append('answer', post.answer);
+  // const params = new FormData();
+  // params.append('image', post.image);
+  // params.append('user_id', post.user.id);
+  // params.append('answer', post.answer);
 
-  return client.post('/threads', params, config).then(json => json.data);
+  return client.post('/threads', {
+    image: post.image,
+    user_id: post.user.id,
+    answer: post.answer
+  }, config).then(json => json.data);
 }
 
 export function getThread(id) {
@@ -156,11 +164,14 @@ export function patchUserPassword(credentials) {
       'Access-Control-Allow-Origin': '*'
     }
   }
-  const params = new FormData();
-  params.append('currentPassword', credentials.currentPassword);
-  params.append('newPassword', credentials.newPassword);
+  // const params = new FormData();
+  // params.append('currentPassword', credentials.currentPassword);
+  // params.append('newPassword', credentials.newPassword);
 
-  return client.post('/user/password', params, config).then(json => json.data);
+  return client.post('/user/password', {
+    currentPassword: credentials.currentPassword,
+    newPassword: credentials.newPassword
+  }, config).then(json => json.data);
 }
 
 export function patchUserAvatar(user) {

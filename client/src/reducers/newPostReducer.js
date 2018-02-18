@@ -14,7 +14,7 @@ import {
 export const initialState = {
   file: '',
   answer: '',
-  mode: 'file',
+  mode: 'canvas',
   isValid: false,
   invalidReason: '',
   sendingPost: {},
@@ -43,19 +43,19 @@ function validate(file, answer, mode) {
 
 export function newPostReducer(state = initialState, action) {
   switch(action.type) {
-    case NEW_POST_INPUT_CHANGE_FILE:
-      {
-        const { file } = action;
-        const { answer, mode } = state;
-        const { isValid, invalidReason } = validate(file, answer, mode);
-
-        return {
-          ...state,
-          file,
-          isValid,
-          invalidReason
-        }
-      }
+    // case NEW_POST_INPUT_CHANGE_FILE:
+    //   {
+    //     const { file } = action;
+    //     const { answer, mode } = state;
+    //     const { isValid, invalidReason } = validate(file, answer, mode);
+    //
+    //     return {
+    //       ...state,
+    //       file,
+    //       isValid,
+    //       invalidReason
+    //     }
+    //   }
     case NEW_POST_INPUT_CHANGE_ANSWER:
       {
         const { answer } = action;
@@ -85,20 +85,20 @@ export function newPostReducer(state = initialState, action) {
           shouldOpenDialog: false
         }
       }
-    case SWITCH_NEW_POST_MODE:
-      {
-        const { mode } = action;
-
-        const { answer, file } = state;
-        const { isValid, invalidReason } = validate(file, answer, mode);
-
-        return {
-          ...state,
-          mode,
-          isValid,
-          invalidReason
-        }
-      }
+    // case SWITCH_NEW_POST_MODE:
+    //   {
+    //     const { mode } = action;
+    //
+    //     const { answer, file } = state;
+    //     const { isValid, invalidReason } = validate(file, answer, mode);
+    //
+    //     return {
+    //       ...state,
+    //       mode,
+    //       isValid,
+    //       invalidReason
+    //     }
+    //   }
     case SEND_NEW_POST:
       {
         const { post } = action;

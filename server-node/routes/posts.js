@@ -41,7 +41,9 @@ router.post('/', function(req, res, next) {
   Promise.resolve()
     .then(() => {
       return new Promise(function(resolve, reject) {
-        const data = new Buffer(req.body.image, 'base64');
+        console.log(req.body);
+        const data = new Buffer(req.body.image.replace(/^.*,/,""), 'base64');
+        // const data = new Buffer(req.body.image, 'base64');
         const filename = `${uuidv4()}.png`;
 
         fs.writeFile(path.resolve('images', filename), data, function(err) {
@@ -72,7 +74,8 @@ router.post('/', function(req, res, next) {
     })
     .then(post => {
       res.status(201).json({
-        post
+        post,
+        status: 'SUCCESS'   // TODO: しりとりの判定をする SUCCESS / FAILURE
       });
     });
 });

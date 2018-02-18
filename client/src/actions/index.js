@@ -232,40 +232,63 @@ function failedNewPost(error, threadId) {
 
 // comment:
 //   - user
-//   - thread_id
+//   - threadId
 //   - image: file
 //   - answer
-export function createPost(post, form, onSuccess) {
+export function createPost(post, onSuccess) {
   return dispatch => {
-    return getBase64(post.image).then((base64) => {
-      const postbase64 = {
-        ...post,
-        image: base64
-      };
-      dispatch(sendNewPost(postbase64));
+    // return getBase64(post.image).then((base64) => {
+    //   const postbase64 = {
+    //     ...post,
+    //     image: base64
+    //   };
+    //   dispatch(sendNewPost(postbase64));
+    //   return newPost(post)
+    //     .then(response => {
+    //       if (response.error) {
+    //         dispatch(failedNewPost(response.error, post.threadId))
+    //
+    //       } else if(response.status === 'SUCCESS') {
+    //         dispatch(receiveNewPost(response.post));
+    //         dispatch(newPostInputClear());
+    //         form.reset();
+    //         if (onSuccess) {
+    //           onSuccess();
+    //         }
+    //       } else if(response.status === 'FAILURE') {
+    //         dispatch(receiveThread(response.thread));
+    //         dispatch(newPostInputClear());
+    //         form.reset();
+    //         if (onSuccess) {
+    //           onSuccess();
+    //         }
+    //       }
+    //     })
+    //     .catch(() => dispatch(raiseGlobalError()));
+    // })
+    dispatch(sendNewPost(post));
       return newPost(post)
         .then(response => {
           if (response.error) {
-            dispatch(failedNewPost(response.error, post.thread_id))
+            dispatch(failedNewPost(response.error, post.threadId))
 
           } else if(response.status === 'SUCCESS') {
             dispatch(receiveNewPost(response.post));
             dispatch(newPostInputClear());
-            form.reset();
+            // form.reset();
             if (onSuccess) {
               onSuccess();
             }
           } else if(response.status === 'FAILURE') {
             dispatch(receiveThread(response.thread));
             dispatch(newPostInputClear());
-            form.reset();
+            // form.reset();
             if (onSuccess) {
               onSuccess();
             }
           }
         })
         .catch(() => dispatch(raiseGlobalError()));
-    })
   }
 }
 
