@@ -36,7 +36,7 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
-import { _host } from '../clientHttp';
+// import { _host } from '../clientHttp';
 import Header from './HeaderComponent';
 import Post from './PostComponent';
 import Comment from './CommentComponent';

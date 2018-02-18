@@ -30,14 +30,14 @@ class UserIconButtonComponent extends React.Component {
     const { user } = this.props;
     return (
       <div className="usericonbutton-component">
-        {user.id &&
+        {user &&
           <MyAvatar
             src={user.avatar}
             onClick={this.handleAvatarClick}
             style={{cursor: 'pointer'}}
           />
         }
-        {!user.id &&
+        {!user &&
           <FlatButton
             label="ログイン"
             primary={true}

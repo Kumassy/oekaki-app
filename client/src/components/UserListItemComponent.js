@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { _host } from '../clientHttp';
+// import { _host } from '../clientHttp';
 import pluralize from 'pluralize';
 
 import MyAvatar from './MyAvatar';
@@ -13,7 +13,7 @@ require('styles//UserListItem.css');
 class UserListItemComponent extends React.Component {
   render() {
     const { disabled, user } = this.props;
-    const { avatar, username, posts_count, comments_count } = user;
+    const { avatar, username, postsCount, commentsCount } = user;
     return (
       <ListItem
         disabled={disabled}
@@ -24,7 +24,7 @@ class UserListItemComponent extends React.Component {
         }
         primaryText={username}
         secondaryText={
-          `${posts_count} ${pluralize('post', posts_count)}, ${comments_count} ${pluralize('comment', comments_count)}`
+          `${postsCount} ${pluralize('post', postsCount)}, ${commentsCount} ${pluralize('comment', commentsCount)}`
         }
       />
     );

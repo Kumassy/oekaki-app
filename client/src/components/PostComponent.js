@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 import MyAvatar from './MyAvatar';
 
-import { _host } from '../clientHttp';
+// import { _host } from '../clientHttp';
 import {
   Link
 } from 'react-router-dom';
@@ -18,7 +18,7 @@ class PostComponent extends React.Component {
     return (
       <div className="post-component">
         <div className="post-image">
-          <img src={image.startsWith('images/') ? `${_host}/${image}` : image} />
+          <img src={`/images/${image}`} />
 
         </div>
         <div className="post-meta">

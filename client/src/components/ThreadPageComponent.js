@@ -9,7 +9,7 @@ import {
   fetchThreadIfNeeded
 } from '../actions';
 
-import { _host, getThread } from '../clientHttp';
+import { getThread } from '../clientHttp';
 import Post from './PostComponent';
 import {List} from 'material-ui/List';
 import Paper from 'material-ui/Paper';
@@ -71,9 +71,9 @@ class ThreadPageComponent extends React.Component {
             {posts.map(post =>
               <Post
                 key={post.isSending ? 'sending-post' : post.id}
-                image={post.image}
-                timestamp={post.updated_at}
-                text={myThread.is_open ? '' : post.answer}
+                image={post.image.name}
+                timestamp={post.updatedAt}
+                text={myThread.isOpen ? '' : post.caption}
                 userId={post.user.id}
                 userName={post.user.username}
                 userAvatar={post.user.avatar}
@@ -85,7 +85,7 @@ class ThreadPageComponent extends React.Component {
                 <NewPost threadId={myThreadId}></NewPost>
               </div>
             )}
-            {!myThread.is_open && (<div className="thread-closed"><ClosedIcon/>このスレッドは終了しました</div>)}
+            {!myThread.isOpen && (<div className="thread-closed"><ClosedIcon/>このスレッドは終了しました</div>)}
           </List>
           <Divider/>
           <h3>コメント一覧</h3>
@@ -95,8 +95,8 @@ class ThreadPageComponent extends React.Component {
               key={comment.isSending ? 'sending-comment' : comment.id}
               userAvatar={comment.user.avatar}
               userName={comment.user.username}
-              comment={comment.comment}
-              timestamp={comment.updated_at}
+              comment={comment.message}
+              timestamp={comment.updatedAt}
               style={{ opacity: comment.isSending? 0.5 : 1 }} />
             )}
             <NewComment threadId={myThreadId}></NewComment>

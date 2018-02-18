@@ -38,10 +38,10 @@ class PostsPageComponent extends React.Component {
             {posts.map(post =>
               <Post
                 key={post.id}
-                threadId={post.thread_id}
-                image={post.image}
-                timestamp={post.updated_at}
-                text={post.answer}
+                threadId={post.threadId}
+                image={post.image.name}
+                timestamp={post.updatedAt}
+                text={post.caption}
                 userId={post.user.id}
                 userName={post.user.username}
                 userAvatar={post.user.avatar}

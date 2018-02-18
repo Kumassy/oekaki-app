@@ -9,7 +9,7 @@ import {
 import {
   fetchHomePosts
 } from '../actions/index';
-import { _host } from '../clientHttp';
+// import { _host } from '../clientHttp';
 
 import {List} from 'material-ui/List';
 import Post from './PostComponent';
@@ -44,9 +44,9 @@ class HomePageComponent extends React.Component {
             {posts.map(post =>
               <Post
                 key={post.isSending ? 'sending-post' : post.id}
-                threadId={post.thread_id}
-                image={post.image}
-                timestamp={post.updated_at}
+                threadId={post.threadId}
+                image={post.image.name}
+                timestamp={post.updatedAt}
                 text={''}
                 userId={post.user.id}
                 userName={post.user.username}

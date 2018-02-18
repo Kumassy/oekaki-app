@@ -54,8 +54,8 @@ class NewCommentComponent extends React.Component {
     const { dispatch, user, threadId, input } = this.props;
     const comment = {
       'user': user,
-      'thread_id': parseInt(threadId),
-      'comment': input.comment
+      'threadId': parseInt(threadId),
+      'message': input.comment
     }
     dispatch(createComment(comment, this.refs.form));
 
