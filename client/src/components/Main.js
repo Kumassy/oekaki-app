@@ -53,65 +53,6 @@ import LoginPage from './LoginPageComponent';
 import WelcomePage from './WelcomePageComponent';
 import GlobalErrorReporter from './GlobalErrorReporterComponent';
 
-
-const _posts = [
-  {
-    'id': 1,
-    'text': 'textbody',
-    'image': 'image.png'
-  },
-  {
-    'id': 2,
-    'text': 'aasdfbody',
-    'image': 'image.jpg'
-  },
-  {
-    'id': 3,
-    'text': 'ssssfdsfsdf',
-    'image': 'fsdfsdds.jpg'
-  }
-];
-
-const About = () => (
-  <div>
-    <h2>About</h2>
-  </div>
-)
-
-const Topic = ({ match }) => (
-  <div>
-    <h3>{match.params.topicId}</h3>
-  </div>
-)
-
-const Topics = ({ match }) => (
-  <div>
-    <h2>Topics</h2>
-    <ul>
-      <li>
-        <Link to={`${match.url}/rendering`}>
-          Rendering with React
-        </Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/components`}>
-          Components
-        </Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/props-v-state`}>
-          Props v. State
-        </Link>
-      </li>
-    </ul>
-
-    <Route path={`${match.url}/:topicId`} component={Topic}/>
-    <Route exact path={match.url} render={() => (
-      <h3>Please select a topic.</h3>
-    )}/>
-  </div>
-)
-
 class AppInitializer extends React.Component {
   componentWillMount() {
     const { dispatch } = this.props;
@@ -148,7 +89,6 @@ class AppComponent extends React.Component {
                     <Link to="/home" className="link"><ListItem primaryText="ホーム" leftIcon={<HomeIcon />} /></Link>
                     <Link to="/users" className="link"><ListItem primaryText="ユーザー一覧" leftIcon={<UsersListIcon />} /></Link>
                     <Link to="/users/search" className="link"><ListItem primaryText="ユーザー検索" leftIcon={<SearchUsersIcon />} /></Link>
-                    <Link to="/posts" className="link"><ListItem primaryText="画像一覧" leftIcon={<PostsListIcon />} /></Link>
                     <Link to="/settings" className="link"><ListItem primaryText="設定" leftIcon={<SettingsIcon />} /></Link>
                     <Link to="/welcome" className="link"><ListItem primaryText="あそびかた" leftIcon={<StarIcon />} /></Link>
                   </List>
@@ -163,12 +103,10 @@ class AppComponent extends React.Component {
                     <Route exact path="/" component={WelcomePage}/>
                     <Route path="/welcome" component={WelcomePage}/>
                     <Route path="/home" component={HomePage}/>
-                    <Route path="/about" component={About}/>
                     <Route exact path="/users/search" component={UsersSearchPage}/>
                     <Route path="/users/:id" component={UserPage}/>
                     <Route path="/users" component={UsersPage}/>
                     <Route path="/posts" component={PostsPage}/>
-                    <Route path="/topics" component={Topics}/>
                     <Route path="/login" component={LoginPage}/>
                     <Route path="/settings" component={SettingsPage}/>
                     <Route path="/threads/:id" component={ThreadPage}/>

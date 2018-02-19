@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import {
-  fetchSearchUsers,
+  fetchUsers,
   searchUsersInputChanged
 } from '../actions/index';
 import UserListItem from './UserListItemComponent';
@@ -23,28 +23,50 @@ class UsersSearchPageComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onSubmit = this.onSubmit.bind(this);
+    this.state = {
+      keyword: '',
+      matchUsers: []
+    };
+
+    // this.onSubmit = this.onSubmit.bind(this);
     this.handleKeywordChange = this.handleKeywordChange.bind(this);
   }
-  // componentDidMount() {
-  //   const { dispatch } = this.props;
-  //   dispatch(fetchSearchUsers());
-  // }
-  handleKeywordChange(e, newValue) {
-    const { dispatch } = this.props;
-    dispatch(searchUsersInputChanged(newValue));
-  }
-  onSubmit(e) {
-    e.preventDefault();
 
-    const { dispatch, keyword } = this.props;
-    dispatch(fetchSearchUsers(keyword));
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchUsers());
+    // dispatch(fetchSearchUsers());
   }
+
+  componentWillReceiveProps(nextProps) {
+    const { users } = nextProps;
+    const { keyword } = this.state;
+    this.setState({
+      keyword: keyword,
+      matchUsers: users.filter(user => user.username.match(keyword))
+    });
+  }
+
+  handleKeywordChange(e, keyword) {
+    // const { dispatch } = this.props;
+    // dispatch(searchUsersInputChanged(newValue));
+
+    this.setState({
+      keyword: keyword,
+      matchUsers: this.props.users.filter(user => user.username.match(keyword))
+    });
+  }
+  // onSubmit(e) {
+  //   e.preventDefault();
+  //
+  //   const { dispatch, keyword } = this.props;
+  //   dispatch(fetchSearchUsers(keyword));
+  // }
 
 
 
   render() {
-    const { users, keyword } = this.props;
+    const { matchUsers, keyword } = this.state;
     return (
       <div className="userssearchpage-component">
         <Paper
@@ -61,7 +83,7 @@ class UsersSearchPageComponent extends React.Component {
             onClick={this.onSubmit} />
           <List>
             <Subheader>ユーザー一覧</Subheader>
-            {users.map(user =>
+            {matchUsers.map(user =>
               <Link
                 className="link"
                 to={`/users/${user.id}`}
@@ -72,7 +94,7 @@ class UsersSearchPageComponent extends React.Component {
                 />
               </Link>)}
             {(() => {
-              if (keyword !== '' && users.length === 0) {
+              if (keyword !== '' && matchUsers.length === 0) {
                 return <div>ユーザーが見つかりませんでした</div>
               }
             })()}
@@ -90,12 +112,18 @@ UsersSearchPageComponent.displayName = 'UsersSearchPageComponent';
 // UsersSearchPageComponent.defaultProps = {};
 
 function mapStateToProps(state) {
-  const { pageSearchUsers } = state;
-  const { users, keyword } = pageSearchUsers;
+  // const { pageSearchUsers } = state;
+  // const { users, keyword } = pageSearchUsers;
+  //
+  // return {
+  //   users,
+  //   keyword
+  // }
+  const { pageUsers } = state;
+  const { users } = pageUsers;
 
   return {
-    users,
-    keyword
+    users
   }
 }
 const UsersSearchPageContainer = connect(mapStateToProps)(UsersSearchPageComponent);
