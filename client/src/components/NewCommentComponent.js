@@ -99,7 +99,7 @@ class NewCommentComponent extends React.Component {
         <div className="form-container">
           <MyAvatar
             className="avatar"
-            src={user.avatar}
+            src={user && user.avatar}
           />
           <form
             method="POST"

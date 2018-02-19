@@ -41,7 +41,7 @@ router.post('/', function(req, res, next) {
   Promise.resolve()
     .then(() => {
       return new Promise(function(resolve, reject) {
-        console.log(req.body);
+        // console.log(req.body);
         const data = new Buffer(req.body.image.replace(/^.*,/,""), 'base64');
         // const data = new Buffer(req.body.image, 'base64');
         const filename = `${uuidv4()}.png`;

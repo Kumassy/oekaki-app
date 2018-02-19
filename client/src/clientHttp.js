@@ -60,7 +60,7 @@ export function newThread(post) {
   return client.post('/threads', {
     image: post.image,
     user_id: post.user.id,
-    answer: post.answer
+    caption: post.caption
   }, config).then(json => json.data);
 }
 

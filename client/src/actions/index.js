@@ -237,58 +237,29 @@ function failedNewPost(error, threadId) {
 //   - answer
 export function createPost(post, onSuccess) {
   return dispatch => {
-    // return getBase64(post.image).then((base64) => {
-    //   const postbase64 = {
-    //     ...post,
-    //     image: base64
-    //   };
-    //   dispatch(sendNewPost(postbase64));
-    //   return newPost(post)
-    //     .then(response => {
-    //       if (response.error) {
-    //         dispatch(failedNewPost(response.error, post.threadId))
-    //
-    //       } else if(response.status === 'SUCCESS') {
-    //         dispatch(receiveNewPost(response.post));
-    //         dispatch(newPostInputClear());
-    //         form.reset();
-    //         if (onSuccess) {
-    //           onSuccess();
-    //         }
-    //       } else if(response.status === 'FAILURE') {
-    //         dispatch(receiveThread(response.thread));
-    //         dispatch(newPostInputClear());
-    //         form.reset();
-    //         if (onSuccess) {
-    //           onSuccess();
-    //         }
-    //       }
-    //     })
-    //     .catch(() => dispatch(raiseGlobalError()));
-    // })
     dispatch(sendNewPost(post));
-      return newPost(post)
-        .then(response => {
-          if (response.error) {
-            dispatch(failedNewPost(response.error, post.threadId))
+    return newPost(post)
+      .then(response => {
+        if (response.error) {
+          dispatch(failedNewPost(response.error, post.threadId))
 
-          } else if(response.status === 'SUCCESS') {
-            dispatch(receiveNewPost(response.post));
-            dispatch(newPostInputClear());
-            // form.reset();
-            if (onSuccess) {
-              onSuccess();
-            }
-          } else if(response.status === 'FAILURE') {
-            dispatch(receiveThread(response.thread));
-            dispatch(newPostInputClear());
-            // form.reset();
-            if (onSuccess) {
-              onSuccess();
-            }
+        } else if(response.status === 'SUCCESS') {
+          dispatch(receiveNewPost(response.post));
+          dispatch(newPostInputClear());
+          // form.reset();
+          if (onSuccess) {
+            onSuccess();
           }
-        })
-        .catch(() => dispatch(raiseGlobalError()));
+        } else if(response.status === 'FAILURE') {
+          dispatch(receiveThread(response.thread));
+          dispatch(newPostInputClear());
+          // form.reset();
+          if (onSuccess) {
+            onSuccess();
+          }
+        }
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 
@@ -299,10 +270,11 @@ function sendNewThread(post) {
   }
 }
 
-function receiveNewThread(newPost) {
+function receiveNewThread(newThread) {
   return {
     type: RECEIVE_NEW_THREAD,
-    post: newPost,
+    thread: newThread,
+    post: newThread.posts[0],
     receivedAt: Date.now()
   }
 }
@@ -314,29 +286,23 @@ function failedNewThread(error) {
   }
 }
 
-export function createThread(post, form, onSuccess) {
+export function createThread(post, onSuccess) {
   return dispatch => {
-    return getBase64(post.image).then((base64) => {
-      const postbase64 = {
-        ...post,
-        image: base64
-      };
-      dispatch(sendNewThread(postbase64));
-      return newThread(post)
-        .then(response => {
-          if (response.post) {
-            dispatch(receiveNewThread(response.post));
-            dispatch(newThreadInputClear());
-            form.reset();
-            if (onSuccess) {
-              onSuccess();
-            }
-          } else {
-            dispatch(failedNewThread(response.error))
+    dispatch(sendNewThread(post));
+    return newThread(post)
+      .then(response => {
+        if (response.thread) {
+          dispatch(receiveNewThread(response.thread));
+          dispatch(newThreadInputClear());
+          // form.reset();
+          if (onSuccess) {
+            onSuccess();
           }
-        })
-        .catch(() => dispatch(raiseGlobalError()));
-    })
+        } else {
+          dispatch(failedNewThread(response.error))
+        }
+      })
+      .catch(() => dispatch(raiseGlobalError()));
   }
 }
 

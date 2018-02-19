@@ -173,7 +173,7 @@ class NewPostComponent extends React.Component {
               <div className="input-wrapper">
                 <MyAvatar
                   className="avatar"
-                  src={user.avatar}
+                  src={user && user.avatar}
                 />
                 <div className="form-file">
                   <TextField
@@ -210,6 +210,8 @@ NewPostComponent.displayName = 'NewPostComponent';
 // Uncomment properties you need
 // NewPostComponent.propTypes = {};
 // NewPostComponent.defaultProps = {};
+
+export { NewPostComponent };
 
 
 function mapStateToProps(state) {

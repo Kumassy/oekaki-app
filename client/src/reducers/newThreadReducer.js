@@ -14,7 +14,7 @@ import {
 export const initialState = {
   file: '',
   answer: '',
-  mode: 'file',
+  mode: 'canvas',
   isValid: false,
   invalidReason: '',
   isSending: false,
