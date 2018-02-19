@@ -402,7 +402,7 @@ export function fetchUserPosts(id) {
   return dispatch => {
     dispatch(requestUserPosts());
     return getUserPosts(id)
-      .then(response => dispatch(receiveUserPosts(response.user, response.posts)))
+      .then(response => dispatch(receiveUserPosts(response.user, response.user.posts)))
       .catch(() => dispatch(raiseGlobalError()));
   }
 }
