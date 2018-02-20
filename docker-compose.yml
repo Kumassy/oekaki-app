@@ -64,7 +64,22 @@ services:
   #     - ./client:/myapp
   #   ports:
   #     - "8000:8000"
-
+  dev_server:
+    # image: node:8.9.4-alpine
+    build: .
+    working_dir: /myapp
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./client:/myapp
+    command: > 
+      /bin/sh -c "
+        npm rebuild node-sass --force &&
+        npm start 
+      "
+      
 volumes:
   db-data:
     driver: local
