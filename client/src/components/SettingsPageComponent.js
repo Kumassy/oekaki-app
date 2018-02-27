@@ -51,16 +51,16 @@ class SettingsPageComponent extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onSubmitPassword = this.onSubmitPassword.bind(this);
-    this.onSubmitAvatar = this.onSubmitAvatar.bind(this);
-    this.handleFileChange = this.handleFileChange.bind(this);
-    this.handleCurrentPasswordChange = this.handleCurrentPasswordChange.bind(this);
-    this.handleNewPasswordChange = this.handleNewPasswordChange.bind(this);
-    this.handleNewPasswordConfirmChange = this.handleNewPasswordConfirmChange.bind(this);
-    this.closeDialogPassword = this.closeDialogPassword.bind(this);
-    this.closeDialogPasswordAndRedirect = this.closeDialogPasswordAndRedirect.bind(this);
-    this.closeDialogAvatar = this.closeDialogAvatar.bind(this);
-    this.closeDialogAvatarAndRedirect = this.closeDialogAvatarAndRedirect.bind(this);
+    // this.onSubmitPassword = this.onSubmitPassword.bind(this);
+    // this.onSubmitAvatar = this.onSubmitAvatar.bind(this);
+    // this.handleFileChange = this.handleFileChange.bind(this);
+    // this.handleCurrentPasswordChange = this.handleCurrentPasswordChange.bind(this);
+    // this.handleNewPasswordChange = this.handleNewPasswordChange.bind(this);
+    // this.handleNewPasswordConfirmChange = this.handleNewPasswordConfirmChange.bind(this);
+    // this.closeDialogPassword = this.closeDialogPassword.bind(this);
+    // this.closeDialogPasswordAndRedirect = this.closeDialogPasswordAndRedirect.bind(this);
+    // this.closeDialogAvatar = this.closeDialogAvatar.bind(this);
+    // this.closeDialogAvatarAndRedirect = this.closeDialogAvatarAndRedirect.bind(this);
     this.doSignOut = this.doSignOut.bind(this);
   }
 
@@ -80,159 +80,159 @@ class SettingsPageComponent extends React.Component {
     }
   }
 
-  handleFileChange(e) {
-    const { dispatch } = this.props;
-    dispatch(settingsInputFileChanged(this.refs.image.files[0]));
-  }
-  handleCurrentPasswordChange(e, newValue) {
-    const { dispatch } = this.props;
-    dispatch(settingsInputCurrentPasswordChanged(newValue));
-  }
-  handleNewPasswordChange(e, newValue) {
-    const { dispatch } = this.props;
-    dispatch(settingsInputNewPasswordChanged(newValue));
-  }
-  handleNewPasswordConfirmChange(e, newValue) {
-    const { dispatch } = this.props;
-    dispatch(settingsInputNewPasswordConfirmChanged(newValue));
-  }
-
-  closeDialogPassword() {
-    const { dispatch } = this.props;
-    dispatch(settingsCloseDialogPassword());
-  }
-  closeDialogPasswordAndRedirect() {
-    const { dispatch } = this.props;
-    dispatch(settingsCloseDialogPassword());
-    dispatch(push('/login'));
-  }
-
-  closeDialogAvatar() {
-    const { dispatch } = this.props;
-    dispatch(settingsCloseDialogFile());
-  }
-  closeDialogAvatarAndRedirect() {
-    const { dispatch } = this.props;
-    dispatch(settingsCloseDialogFile());
-    dispatch(push('/login'));
-  }
-
+  // handleFileChange(e) {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsInputFileChanged(this.refs.image.files[0]));
+  // }
+  // handleCurrentPasswordChange(e, newValue) {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsInputCurrentPasswordChanged(newValue));
+  // }
+  // handleNewPasswordChange(e, newValue) {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsInputNewPasswordChanged(newValue));
+  // }
+  // handleNewPasswordConfirmChange(e, newValue) {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsInputNewPasswordConfirmChanged(newValue));
+  // }
+  //
+  // closeDialogPassword() {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsCloseDialogPassword());
+  // }
+  // closeDialogPasswordAndRedirect() {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsCloseDialogPassword());
+  //   dispatch(push('/login'));
+  // }
+  //
+  // closeDialogAvatar() {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsCloseDialogFile());
+  // }
+  // closeDialogAvatarAndRedirect() {
+  //   const { dispatch } = this.props;
+  //   dispatch(settingsCloseDialogFile());
+  //   dispatch(push('/login'));
+  // }
+  //
   doSignOut(e) {
     e.preventDefault();
 
     const { dispatch } = this.props;
     dispatch(trySignOut());
   }
-
-
-  onSubmitPassword(e) {
-    e.preventDefault();
-
-    const { dispatch, settings } = this.props;
-    const { currentPassword, newPassword } = settings.password;
-
-    const credentials = {
-      currentPassword,
-      newPassword
-    }
-
-    dispatch(updatePassword(credentials));
-  }
-  onSubmitAvatar(e) {
-    e.preventDefault();
-
-    const { dispatch, settings } = this.props;
-    const { file } = settings.avatar;
-
-    const user = {
-      avatar: file
-    }
-
-    dispatch(updateAvatar(user));
-  }
+  //
+  //
+  // onSubmitPassword(e) {
+  //   e.preventDefault();
+  //
+  //   const { dispatch, settings } = this.props;
+  //   const { currentPassword, newPassword } = settings.password;
+  //
+  //   const credentials = {
+  //     currentPassword,
+  //     newPassword
+  //   }
+  //
+  //   dispatch(updatePassword(credentials));
+  // }
+  // onSubmitAvatar(e) {
+  //   e.preventDefault();
+  //
+  //   const { dispatch, settings } = this.props;
+  //   const { file } = settings.avatar;
+  //
+  //   const user = {
+  //     avatar: file
+  //   }
+  //
+  //   dispatch(updateAvatar(user));
+  // }
 
   render() {
     const { user, settings } = this.props;
     const { password, avatar } = settings;
 
 
-    let actions = {
-      password: [],
-      avatar: []
-    };
-    switch(password.error.type) {
-      case 'INVALID_INPUT':
-      case 'EMPTY_INPUT':
-        actions.password = [
-          <FlatButton
-            label="OK"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.closeDialogPassword}
-          />
-        ];
-        break;
-      case 'SIGNIN_REQUIRED':
-        actions.password = [
-          <FlatButton
-            label="Cancel"
-            primary={false}
-            onClick={this.closeDialogPassword}
-          />,
-          <FlatButton
-            label="ログインページへ移動"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.closeDialogPasswordAndRedirect}
-          />
-        ];
-        break;
-      default:
-        actions.password = [
-          <FlatButton
-            label="OK"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.closeDialogPassword}
-          />
-        ];
-    }
-    switch(avatar.error.type) {
-      case 'EMPTY_INPUT':
-        actions.avatar = [
-          <FlatButton
-            label="OK"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.closeDialogAvatar}
-          />
-        ];
-        break;
-      case 'SIGNIN_REQUIRED':
-        actions.avatar = [
-          <FlatButton
-            label="Cancel"
-            primary={false}
-            onClick={this.closeDialogAvatar}
-          />,
-          <FlatButton
-            label="ログインページへ移動"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.closeDialogAvatarAndRedirect}
-          />
-        ];
-        break;
-      default:
-        actions.avatar = [
-          <FlatButton
-            label="OK"
-            primary={true}
-            keyboardFocused={true}
-            onClick={this.closeDialogAvatar}
-          />
-        ];
-    }
+    // let actions = {
+    //   password: [],
+    //   avatar: []
+    // };
+    // switch(password.error.type) {
+    //   case 'INVALID_INPUT':
+    //   case 'EMPTY_INPUT':
+    //     actions.password = [
+    //       <FlatButton
+    //         label="OK"
+    //         primary={true}
+    //         keyboardFocused={true}
+    //         onClick={this.closeDialogPassword}
+    //       />
+    //     ];
+    //     break;
+    //   case 'SIGNIN_REQUIRED':
+    //     actions.password = [
+    //       <FlatButton
+    //         label="Cancel"
+    //         primary={false}
+    //         onClick={this.closeDialogPassword}
+    //       />,
+    //       <FlatButton
+    //         label="ログインページへ移動"
+    //         primary={true}
+    //         keyboardFocused={true}
+    //         onClick={this.closeDialogPasswordAndRedirect}
+    //       />
+    //     ];
+    //     break;
+    //   default:
+    //     actions.password = [
+    //       <FlatButton
+    //         label="OK"
+    //         primary={true}
+    //         keyboardFocused={true}
+    //         onClick={this.closeDialogPassword}
+    //       />
+    //     ];
+    // }
+    // switch(avatar.error.type) {
+    //   case 'EMPTY_INPUT':
+    //     actions.avatar = [
+    //       <FlatButton
+    //         label="OK"
+    //         primary={true}
+    //         keyboardFocused={true}
+    //         onClick={this.closeDialogAvatar}
+    //       />
+    //     ];
+    //     break;
+    //   case 'SIGNIN_REQUIRED':
+    //     actions.avatar = [
+    //       <FlatButton
+    //         label="Cancel"
+    //         primary={false}
+    //         onClick={this.closeDialogAvatar}
+    //       />,
+    //       <FlatButton
+    //         label="ログインページへ移動"
+    //         primary={true}
+    //         keyboardFocused={true}
+    //         onClick={this.closeDialogAvatarAndRedirect}
+    //       />
+    //     ];
+    //     break;
+    //   default:
+    //     actions.avatar = [
+    //       <FlatButton
+    //         label="OK"
+    //         primary={true}
+    //         keyboardFocused={true}
+    //         onClick={this.closeDialogAvatar}
+    //       />
+    //     ];
+    // }
 
     return (
       <div className="settingspage-component">
@@ -249,78 +249,6 @@ class SettingsPageComponent extends React.Component {
             label="ログアウト"
             secondary={true}
             onClick={this.doSignOut} />
-          <Divider />
-          <h3>パスワードの変更</h3>
-          <form>
-            <TextField
-              hintText=""
-              floatingLabelText="現在のパスワード"
-              type="password"
-              onChange={this.handleCurrentPasswordChange}
-              value={password.currentPassword}
-            /><br />
-            <TextField
-              hintText=""
-              floatingLabelText="新しいパスワード"
-              type="password"
-              errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
-              onChange={this.handleNewPasswordChange}
-              value={password.newPassword}
-            /><br />
-            <TextField
-              hintText=""
-              floatingLabelText="新しいパスワード（確認用）"
-              type="password"
-              errorText={password.isPasswordMatch ? '' : 'パスワードが一致しません'}
-              onChange={this.handleNewPasswordConfirmChange}
-              value={password.newPasswordConfirm}
-            /><br />
-            <FlatButton
-              label="Submit"
-              disabled={!password.isValid}
-              onClick={this.onSubmitPassword} />
-          </form>
-          <Dialog
-            title={password.title}
-            actions={actions.password}
-            modal={true}
-            open={password.shouldOpenDialog}
-            onRequestClose={this.closeDialogPassword}
-          >
-            {password.message}
-          </Dialog>
-
-          <Divider />
-          <h3>画像の変更</h3>
-          <form>
-            <FlatButton
-              label={avatar.file && avatar.file.name ? avatar.file.name : 'Choose an Image'}
-              labelPosition="before"
-              style={styles.uploadButton}
-              containerElement="label"
-            >
-              <input
-                type="file"
-                name="image"
-                ref="image"
-                style={styles.uploadInput}
-                onChange={this.handleFileChange}
-              />
-            </FlatButton><br />
-            <FlatButton
-              label="Submit"
-              disabled={!avatar.isValid}
-              onClick={this.onSubmitAvatar} />
-          </form>
-          <Dialog
-            title={avatar.title}
-            actions={actions.avatar}
-            modal={true}
-            open={avatar.shouldOpenDialog}
-            onRequestClose={this.closeDialogAvatar}
-          >
-            {avatar.message}
-          </Dialog>
 
         </Paper>
       </div>
