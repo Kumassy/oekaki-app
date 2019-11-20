@@ -1,10 +1,10 @@
 'use strict';
 import axios from 'axios';
 
-export const _host = 'http://localhost:3000';
+export const _host = 'http://192.168.33.10:3000';
 
 export const client = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://192.168.33.10:3000',
   timeout: 5000,
   withCredentials: true
 });
