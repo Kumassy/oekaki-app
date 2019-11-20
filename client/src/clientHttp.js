@@ -1,10 +1,10 @@
 'use strict';
 import axios from 'axios';
 
-export const _host = 'http://192.168.33.10:3000';
+export const _host = 'https://oekaki-app-server.herokuapp.com/';
 
 export const client = axios.create({
-  baseURL: 'http://192.168.33.10:3000',
+  baseURL: _host,
   timeout: 5000,
   withCredentials: true
 });
