@@ -32,3 +32,28 @@
 - [ ] 404ページ
 
 - [ ] skip ThreadPage の更新機能、投稿したときに lastUpdated が古ければ自動更新
+
+
+# Heroku デプロイ
+- DB の接続先の変更
+- client 側で static file を配信する serve.js を追加
+- client 側でサーバーのURLを変更
+- server 側で CROS ドメインの設定
+
+```
+$ heroku login
+
+$ heroku git:remote -a oekaki-app-server -r heroku-server
+$ git subtree push --prefix server/ heroku-server master
+
+$ heroku git:remote -a oekaki-app-client -r heroku-client
+$ git subtree push --prefix client/ heroku-client master
+```
+
+```
+$ cd server/db/
+$ heroku pg:psql
+oekaki-app-server::DATABASE=> \i server/db/create_tables.sql
+```
+
+heroku pg:info でローカルにインストールされている psql のバージョンと合わせる
