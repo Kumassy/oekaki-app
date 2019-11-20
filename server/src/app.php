@@ -7,7 +7,7 @@ use Respect\Validation\Validator as v;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-const CLIENT_HOST = 'http://localhost:8000';
+const CLIENT_HOST = "https://oekaki-app-client.herokuapp.com/";
 
 ini_set( 'display_errors', 0 );
 
