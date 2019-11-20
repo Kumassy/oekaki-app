@@ -10,7 +10,8 @@ ini_set( 'display_errors', 0 );
 
 function getConnection() {
   // return new PDO('pgsql:host=localhost dbname=j150989k user=j150989k');
-  return pg_connect("host=localhost dbname=j150989k user=j150989k");
+  $password = getenv("DB_PASSWORD");
+  return pg_connect("host=localhost dbname=j150989k user=j150989k password=" . $password);
 }
 function getImage($conn, $id) {
   // $stmt = $conn->prepare('SELECT id, name FROM images WHERE id = :id');
